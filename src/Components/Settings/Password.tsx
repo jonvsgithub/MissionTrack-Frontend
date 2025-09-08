@@ -137,7 +137,7 @@ const Password: React.FC = () => {
 
               <button
                 onClick={handleSubmit}
-                className="mt-3 px-4 py-2 rounded bg-blue-600 text-white"
+                className="mt-3 px-4 py-2 rounded bg-primaryColor-600 text-white"
               >
                 Update Password
               </button>

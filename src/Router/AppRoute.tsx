@@ -6,6 +6,7 @@ import LandingPage from "../pages/LandingPage";
 import Profile from "../Components/Settings/Profile";
 import Password from "../Components/Settings/Password";
  import Notification from "../Components/Settings/Notification"
+import Details from "../Components/Request/Details";
 
 
 const AppRoute = () => {
@@ -27,6 +28,7 @@ const AppRoute = () => {
         <Route path="/details" element={<Profile/>} />
         <Route path="/password" element={<Password/>} />
         <Route path="/notifications" element={<Notification/>} />
+        <Route path="/request" element={<Details/>} />
       </Routes>
     </>
   );

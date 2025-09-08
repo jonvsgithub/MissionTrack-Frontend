@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
 
   // Quick actions
   const quickActions = [
-    { icon: VscHome, label: "New Mission Request", path: "/missions/new" },
+    { icon: VscHome, label: "New Mission Request", path: "/request" },
     { icon: VscHome, label: "Manage Missions", path: "/missions/manage" },
     { icon: VscHome, label: "Mission History", path: "/missions/history" },
   ];
