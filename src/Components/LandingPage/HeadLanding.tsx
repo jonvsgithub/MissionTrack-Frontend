@@ -33,11 +33,11 @@ const HeadLanding: React.FC = () => {
           <Link to="/track">Pricing</Link>
         </nav>
 
-        {/* Sign Up Button */}
+        {/* Log In Button */}
         <div>
           <Link
             to="/login"
-            className="bg-primaryColor-500 text-white border rounded-md px-[8px] py-1"
+            className="bg-primaryColor-500 text-white border rounded-lg px-[8px] py-1"
           >
             Log in
           </Link>

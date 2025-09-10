@@ -10,6 +10,10 @@ import MissionOverview from "../Components/MissionOverview";
 import RecentActivities from "../Components/RecentActivities";
 import QuickLinks from "../Components/QuickLinks";
 
+import AnnualMissionStatuses from "../chart/AnnualMissionStatuses";
+import ThisMonthChart from "../chart/ThisMonthChart";
+import ExpensesChart from "../chart/ExpensesChart";
+
 const Dashboard: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
@@ -26,7 +30,7 @@ const Dashboard: React.FC = () => {
   // Quick actions
   const quickActions = [
     { icon: VscHome, label: "New Mission Request", path: "/missions/new" },
-    { icon: VscHome, label: "Manage Missions", path: "/missions/manage" },
+    { icon: VscHome, label: "Expanse Loging", path: "/missions/loging" },
     { icon: VscHome, label: "Mission History", path: "/missions/history" },
   ];
 
@@ -103,14 +107,14 @@ const Dashboard: React.FC = () => {
           {/* Logout Button */}
           <Link
             to="/login"
-            className="bg-orange-500 mt-20 text-white p-2 rounded-2xl text-center text-xl w-32 block "
+            className="bg-green-800 mt-60 justify-center items-center text-white p-2 rounded-2xl text-center text-xl w-32 block "
           >
             Logout
           </Link>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 ml-10 mr-15">
           {/* Overview */}
           <div className="mb-6">
             <h1 className={`font-bold mb-4 ${twTheme("text-black", "text-white")}`}>
@@ -124,6 +128,22 @@ const Dashboard: React.FC = () => {
             <RecentActivities />
             <QuickLinks />
           </div>
+          <div className="flex mt-10 gap-20 p-6">
+            
+             <div className="flex gap-20">
+              <div className="w-100 h-100">
+                <AnnualMissionStatuses/>
+              </div>
+              <div className="w-100 h-100">
+                <ThisMonthChart/>
+              </div>
+               
+    </div>
+   <div className="w-100 ">
+      <ExpensesChart />
+    </div>
+          </div>
+         
         </main>
       </div>
     </div>

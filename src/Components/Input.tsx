@@ -1,5 +1,5 @@
 // src/components/Input.tsx
-import React, { forwardRef, ReactNode } from "react";
+import React, { forwardRef, type ReactNode } from "react";
 
 interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
