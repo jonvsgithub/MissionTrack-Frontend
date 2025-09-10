@@ -5,6 +5,9 @@ import Sidebar from "../Components/Sidebar";
 import MissionOverview from "../Components/MissionOverview";
 import RecentActivities from "../Components/RecentActivities";
 import QuickLinks from "../Components/QuickLinks";
+import AnnualMissionStatuses from "../chart/AnnualMissionStatuses";
+import ThisMonthChart from "../chart/ThisMonthChart";
+import ExpensesChart from "../chart/ExpensesChart";
 
 // Example dark mode helper (if you want)
 const twTheme = (light: string, dark: string) => {
@@ -31,6 +34,22 @@ const Dashboard: React.FC = () => {
             <RecentActivities />
             <QuickLinks />
           </div>
+          <div className="flex mt-10 gap-20 p-6">
+            
+             <div className="flex gap-20">
+              <div className="w-100 h-100">
+                <AnnualMissionStatuses/>
+              </div>
+              <div className="w-100 h-100">
+                <ThisMonthChart/>
+              </div>
+               
+    </div>
+   <div className="w-100 ">
+      <ExpensesChart />
+    </div>
+          </div>
+         
         </main>
       </div>
     </>

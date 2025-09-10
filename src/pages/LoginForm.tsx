@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { BiSolidShow } from "react-icons/bi";
+import { Home } from "lucide-react";
 
 const LoginForm: React.FC = () => {
   const { login } = useAuth();
@@ -26,14 +28,14 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-amber flex gap-40 items-center justify-center
-     bg-gradient-to-br from-primaryColor-10 to-primaryColor-50 ">
+    <div className="min-h-screen flex gap-40 items-center justify-center
+     bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50 relative">
       <div className=" flex justify-between gap-40">
         {/* Left Side Content */}
         <div className=" ">
           <div className="mt-5 grid gap-4">
-            <span className="text-primaryColor-800 font-bold text-2xl">Stay Organized, Stay Ahead</span>
-            <p className="text-accent-800">
+            <span className="text-blue-500 font-bold text-2xl">Stay Organized, Stay Ahead</span>
+            <p className="text-green-600">
               Sign in to submit new requests or follow up on <br /> approvals — all in one place.
             </p>
           </div>
@@ -46,8 +48,14 @@ const LoginForm: React.FC = () => {
         <div className=" bg-white backdrop-blur-md shadow-2xl
          rounded-3xl pr-7 pl-7 pb-8 pt-2 w-full max-w-md border border-white/30
          transition-all duration-300">
-          {/* Header */}
-
+         
+<div className="flex gap-3 mt-3 justify-center items-center">
+  <div className="h-10 w-10 mt-1">
+    <img src="logo.svg" alt="logo" />
+  </div>
+  
+  <h2 className="font-bold mt-3 "><span className="text-blue-700">Mission</span><span className="text-green-700">Track.</span></h2>
+</div>
 
           {/* Main Login Card */}
           <div className="mb-10 ">
@@ -95,6 +103,7 @@ const LoginForm: React.FC = () => {
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
+                  
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -109,7 +118,7 @@ const LoginForm: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500"
                 >
-                  {showPassword ? "Hide" : "Show"}
+                  {showPassword ?  <BiSolidShow />: <BiSolidShow />}
                 </button>
               </div>
             </div>
@@ -125,13 +134,23 @@ const LoginForm: React.FC = () => {
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
-          </form>
+          </form> 
 
           {/* Forgot Password */}
           <div className="mt-6 text-center">
             <button className="text-sm text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors">
               Forgot your password?
             </button>
+          </div>
+
+          <div className="justify-center items-center">
+            <button
+      onClick={() => navigate("/")}
+      className="flex gap-2 mt-5 ml-18 px-4 py-2 bg-blue-600 text-white rounded-2xl shadow-md hover:bg-blue-700 transition"
+    >
+      <Home className="w-5 h-5 " /> {/* home icon */}
+      <span>Back to Home</span>
+    </button>
           </div>
 
           {/* Footer */}
