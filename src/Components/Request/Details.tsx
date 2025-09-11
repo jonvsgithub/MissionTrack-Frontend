@@ -17,12 +17,45 @@ const Details: React.FC = () => {
   });
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const steps = ["Mission Details", "Budget Estimate", "Attachments"];
   const [currentStep, setCurrentStep] = useState(0);
 
+  // ✅ Validation per step
+  const validateStep = () => {
+    let newErrors: { [key: string]: string } = {};
+
+    if (currentStep === 0) {
+      if (!formData.missionTitle) newErrors.missionTitle = "Mission title is required";
+      if (!formData.names) newErrors.names = "Names are required";
+      if (!formData.position) newErrors.position = "Position is required";
+      if (!formData.destination) newErrors.destination = "Destination is required";
+      if (!formData.startDate) newErrors.startDate = "Start date is required";
+      if (!formData.endDate) newErrors.endDate = "End date is required";
+    }
+
+    if (currentStep === 1) {
+      if (uploadedFiles.length === 0) {
+        newErrors.files = "Please upload at least one file";
+      }
+    }
+
+    if (currentStep === 2) {
+      // Example: require description again
+      if (!formData.description) {
+        newErrors.description = "Description is required before submission";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // ✅ true if no errors
+  };
+
   const handleNext = () => {
-    if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
+    if (validateStep()) {
+      setCurrentStep((prev) => prev + 1);
+    }
   };
 
   const handleBack = () => {
@@ -34,11 +67,15 @@ const Details: React.FC = () => {
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrors({ ...errors, [name]: "" }); // clear error on typing
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    console.log("Uploaded Files:", uploadedFiles);
+    if (validateStep()) {
+      console.log("Form submitted:", formData);
+      console.log("Uploaded Files:", uploadedFiles);
+      alert("Form submitted successfully!");
+    }
   };
 
   return (
@@ -48,7 +85,6 @@ const Details: React.FC = () => {
         <Sidebar />
         <div className="h-[650px] w-[800px] mt-10 flex flex-col bg-gradient-to-r to-accent-10/50 rounded-md shadow">
           <div className="flex flex-col mt-5 mx-5 p-4 border border-gray-400 rounded-md">
-            
             {/* Stepper */}
             <Stepper steps={steps} currentStep={currentStep} />
 
@@ -63,57 +99,76 @@ const Details: React.FC = () => {
                     value={formData.missionTitle}
                     onChange={handleChange}
                   />
+                  {errors.missionTitle && (
+                    <span className="text-red-500 text-sm">{errors.missionTitle}</span>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
-                  <Input
-                    label="Names"
-                    type="text"
-                    name="names"
-                    value={formData.names}
-                    onChange={handleChange}
-                  />
-                  <Input
-                    label="Title/Position"
-                    type="text"
-                    name="position"
-                    value={formData.position}
-                    onChange={handleChange}
-                  />
+                  <div>
+                    <Input
+                      label="Names"
+                      type="text"
+                      name="names"
+                      value={formData.names}
+                      onChange={handleChange}
+                    />
+                    {errors.names && (
+                      <span className="text-red-500 text-sm">{errors.names}</span>
+                    )}
+                  </div>
+                  <div>
+                    <Input
+                      label="Title/Position"
+                      type="text"
+                      name="position"
+                      value={formData.position}
+                      onChange={handleChange}
+                    />
+                    {errors.position && (
+                      <span className="text-red-500 text-sm">{errors.position}</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-6">
-                  <Input
-                    label="Destination"
-                    type="text"
-                    name="destination"
-                    value={formData.destination}
-                    onChange={handleChange}
-                  />
-                  <Input
-                    label="Start Date"
-                    type="date"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
-                  />
-                  <Input
-                    label="End Date"
-                    type="date"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
-                  />
+                  <div>
+                    <Input
+                      label="Destination"
+                      type="text"
+                      name="destination"
+                      value={formData.destination}
+                      onChange={handleChange}
+                    />
+                    {errors.destination && (
+                      <span className="text-red-500 text-sm">{errors.destination}</span>
+                    )}
+                  </div>
+                  <div>
+                    <Input
+                      label="Start Date"
+                      type="date"
+                      name="startDate"
+                      value={formData.startDate}
+                      onChange={handleChange}
+                    />
+                    {errors.startDate && (
+                      <span className="text-red-500 text-sm">{errors.startDate}</span>
+                    )}
+                  </div>
+                  <div>
+                    <Input
+                      label="End Date"
+                      type="date"
+                      name="endDate"
+                      value={formData.endDate}
+                      onChange={handleChange}
+                    />
+                    {errors.endDate && (
+                      <span className="text-red-500 text-sm">{errors.endDate}</span>
+                    )}
+                  </div>
                 </div>
-
-                <Input
-                  label="Description"
-                  type="text"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="h-30 px-5"
-                />
               </div>
             )}
 
@@ -121,16 +176,6 @@ const Details: React.FC = () => {
             {currentStep === 1 && (
               <div className="grid grid-cols-2 gap-6 text-gray-700">
                 <div className="flex flex-col mt-6 space-y-4">
-                  <Input
-                    label="What the document is this?"
-                    type="text"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="px-5"
-                  />
-
-                  {/* Resizable drag & drop */}
                   <div className="resize-y overflow-auto min-h-[150px] max-h-[400px] border-2 border-dashed border-gray-400 rounded-md">
                     <DragDrop
                       onFileSelect={(files) =>
@@ -138,6 +183,9 @@ const Details: React.FC = () => {
                       }
                     />
                   </div>
+                  {errors.files && (
+                    <span className="text-red-500 text-sm">{errors.files}</span>
+                  )}
                 </div>
 
                 {/* Uploaded files preview */}
@@ -150,9 +198,7 @@ const Details: React.FC = () => {
                       <span>{file.name}</span>
                       <button
                         onClick={() =>
-                          setUploadedFiles(
-                            uploadedFiles.filter((_, i) => i !== index)
-                          )
+                          setUploadedFiles(uploadedFiles.filter((_, i) => i !== index))
                         }
                         className="text-red-500 hover:text-red-700 text-sm"
                       >
@@ -169,11 +215,14 @@ const Details: React.FC = () => {
               <div className="text-center text-gray-700">
                 <h2 className="text-lg font-semibold mb-4">Attachments</h2>
                 <input type="file" multiple className="border p-2 rounded" />
+                {errors.description && (
+                  <span className="text-red-500 text-sm">{errors.description}</span>
+                )}
               </div>
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex gap-6 justify-center  mt-6">
+            <div className="flex gap-6 justify-center mt-6">
               {currentStep > 0 && (
                 <button
                   onClick={handleBack}

@@ -1,16 +1,20 @@
 import React from "react";
 import { IoDocumentText } from "react-icons/io5";
+import { FaCheck } from "react-icons/fa";
+import { RiMoneyDollarCircleLine } from "react-icons/ri";
+import { BsGraphUp } from "react-icons/bs";
+
 
 
 const Working: React.FC = () => {
     return (
-        <div className="flex justify-center">
-            <div className=" w-[1300px] h-[500px]">
+        <div className="flex mt-20 justify-center">
+            <div className="w-full p-[120px] h-[500px]">
                 {/* Header */}
                 <div className="flex justify-center">
                     <div className="text-center">
                         <h1 className="text-3xl font-bold">How it works</h1>
-                        <p className="text-2xl text-gray-600 mt-5">
+                        <p className="text-2xl text-gray-600 p-5">
                             A simple four-step process from mission request to expense tracking
                         </p>
                     </div>
@@ -21,9 +25,9 @@ const Working: React.FC = () => {
 
                 <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                    <div className="p-6 rounded-lg shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
-                        <div className=" bg-blue-100  rounded-full p-2">
-                            <IoDocumentText size={50} className="text-[#4D8FFAE5]" />
+                    <div className="p-6 rounded-lg bg-white shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
+                        <div className=" ">
+                            <IoDocumentText size={50} className=" text-primaryColor-500" />
                         </div>
                         <div>
                             <h1 className="text-xl text-center font-semibold"> Request</h1>
@@ -34,9 +38,9 @@ const Working: React.FC = () => {
                     </div>
 
 
-                    <div className="p-6 rounded-lg shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
-                        <div className=" bg-blue-100  rounded-full p-2">
-                            <IoDocumentText size={50} className="text-[#4D8FFAE5]" />
+                    <div className="p-6 rounded-lg bg-white shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
+                        <div className=" ">
+                            <FaCheck size={50} className="text-accent-500" />
                         </div>
                         <div>
                             <h1 className="text-xl text-center font-semibold">Approval</h1>
@@ -47,9 +51,9 @@ const Working: React.FC = () => {
                     </div>
 
 
-                    <div className="p-6 rounded-lg shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
-                        <div className=" bg-blue-100  rounded-full p-2">
-                             <IoDocumentText size={50} className="text-[#4D8FFAE5]" />
+                    <div className="p-6 rounded-lg bg-white shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
+                        <div className="">
+                             <RiMoneyDollarCircleLine  size={50} className="" />
                         </div>
                         <div>
                             <h1 className="text-xl text-center font-semibold">Finance</h1>
@@ -60,9 +64,9 @@ const Working: React.FC = () => {
                     </div>
 
                     {/* Card 4 */}
-                    <div className="p-6 rounded-lg shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
-                        <div className=" bg-blue-100  rounded-full p-2">
-                             <IoDocumentText size={50} className="text-[#4D8FFAE5]" />
+                    <div className="p-6 rounded-lg bg-white shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
+                        <div className=" ">
+                             <BsGraphUp size={50} className="text-[#FFB361]" />
                         </div>
                         <div>
                             <h1 className="text-xl text-center font-semibold">Tracking</h1>

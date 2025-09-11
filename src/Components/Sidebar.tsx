@@ -20,7 +20,7 @@ const Sidebar: React.FC = () => {
 
   // Quick actions
   const quickActions = [
-    { icon: VscHome, label: "New Mission Request", path: "/missions/new" },
+    { icon: VscHome, label: "New Mission Request", path: "/request" },
     { icon: VscHome, label: "Manage Missions", path: "/missions/manage" },
     { icon: VscHome, label: "Mission History", path: "/missions/history" },
   ];
@@ -62,13 +62,7 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Logout Button */}
-      <Link
-        to="/login"
-        className="bg-orange-500 mt-20 text-white p-2 rounded-2xl text-center text-xl w-32 block "
-      >
-        Logout
-      </Link>
+     
     </aside>
   );
 };

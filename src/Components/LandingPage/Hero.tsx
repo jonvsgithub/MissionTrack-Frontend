@@ -1,25 +1,29 @@
 import React from "react";
+import rectImg from "../../assets/Rectangle51.jpg";
+import dashImg from "../../assets/Group40.png";
+import frameImg from "../../assets/Frame400.png"
+
 
 const Hero: React.FC = () => {
   return (
     <div className="h-[650px] w-full font-bold relative overflow-hidden">
-      {/* Background image with blur */}
+      {/* Background image */}
       <div
-        className="absolute inset-0 bg-cover bg-center blur-lg"
-        style={{ backgroundImage: "url('src/assets/Rectangle52.jpeg')" }}
+        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        style={{ backgroundImage: `url(${rectImg})` }}
       ></div>
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primaryColor-10 via-primaryColor-100 to-accent-10"></div>
+     <div className="absolute inset-0 bg-D9D9D9"></div>
 
       {/* Content */}
       <div className="relative flex justify-center">
-        <div className="h-[600px] w-[1300px]">
+        <div className="h-[600px]  w-[1300px]">
           {/* Left text */}
-          <div className="h-[400px] w-[1000px] mt-30 ml-30 flex items-center justify-between">
-            <div className="flex flex-col gap-10">
+          <div className="mt-20 m-auto flex   items-center justify-between">
+            <div className="flex flex-col  gap-10">
               <div className="flex flex-col max-sm:mt-0 max-sm:ml-2 gap-4 max-sm:gap-10">
-                <p className="text-gray-800 max-sm:text-xl text-4xl">
+                <p className="text-gray-800 max-sm:text-xl text-7xl leading-18">
                   Your Missions,
                   <br />
                   Streamlined from <br />
@@ -31,26 +35,27 @@ const Hero: React.FC = () => {
                   From Request to mission expenses. All in One Flow
                 </p>
               </div>
-              <div>
-                <button className="bg-primaryColor-500 text-white rounded-lg px-6 max-sm:p-1 ml-2 py-2">
+              <div className="flex justify-center gap-5">
+                <button className="bg-primaryColor-700 text-white rounded-lg px-15 max-sm:p-1 ml-2 py-2">
                   Get Started
+                </button>
+                <button className="bg-accent-400 text-white rounded-lg px-15 max-sm:p-1 ml-2 py-2">
+                  Request Demo
                 </button>
               </div>
             </div>
 
             {/* Right images stacked */}
             <div className="relative h-120 w-auto max-sm:h-100">
-              {/* Base image */}
               <img
-                src="src/assets/dash.png"
+                src={dashImg}
                 alt="Mission preview background"
                 className="h-120 w-auto max-sm:h-100 border-gray-50"
               />
-              {/* Overlay image positioned at top-left */}
               <img
-                src="src/assets/Frame402.png"
+                src={frameImg}
                 alt="Mission preview overlay"
-                className="absolute top-0 left-0 h-40 w-auto border-gray-50 z-10"
+                className="relative  w-[400px] bottom-10 left-20 h-30  border-gray-50 z-10"
               />
             </div>
           </div>
