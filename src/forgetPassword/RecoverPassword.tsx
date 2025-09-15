@@ -8,16 +8,18 @@ const RecoverPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<{ email?: string }>({});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState<string | null>(null);
 
-  // Replace this with your actual backend API call
+  // Mock API: returns a fake reset token
   const send = async (email: string) => {
-    return new Promise((resolve) => setTimeout(resolve, 1000));
+    return new Promise<{ token: string }>((resolve) => {
+      setTimeout(() => {
+        resolve({ token: "mock-reset-token-123" });
+      }, 1000);
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccess(null);
     const newErrors: { email?: string } = {};
 
     if (!email.trim()) {
@@ -34,9 +36,9 @@ const RecoverPassword: React.FC = () => {
 
     setLoading(true);
     try {
-      await send(email);
-      setSuccess("✅ Check your email for the password reset link.");
-      setEmail(""); // clear email after success
+      const res = await send(email);
+      // ✅ Navigate to update password page with token
+      navigate(`/reset-password/${res.token}`);
     } catch (err: any) {
       setErrors({ email: err.message });
     } finally {
@@ -76,12 +78,6 @@ const RecoverPassword: React.FC = () => {
           <h2 className="text-2xl font-bold text-green-700 text-center mb-15">
             Forgot Password
           </h2>
-
-          {success && (
-            <div className="mb-5 p-3 text-green-700 bg-green-100 border border-green-400 rounded-lg text-center">
-              {success}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="grid gap-5">
             {/* Email */}

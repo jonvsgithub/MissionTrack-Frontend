@@ -16,19 +16,20 @@ const twTheme = (light: string, dark: string) => {
 
 const Dashboard: React.FC = () => {
   return (
-    <>
+   <div className="bg-gray-100">
+     <>
       <Header />
-      <div className={`flex gap-6  ${twTheme("bg-gray-100", "bg-gray-900")}`} >
+      <div className={`flex gap-70 mt-20  ${twTheme("bg-gray-100", "bg-gray-900")}`} >
         <Sidebar />
         <main
-          className={`flex-1 p-6 left-20 mt-20 ml-72 mr-12 min-h-screen ${twTheme(
-            "bg-gray-100",
+          className={`min-h-screen   ${twTheme(
+            "",
             "bg-gray-900"
           )}`}
         >
           {/* Overview */}
-          <div className="mb-6">
-            <div className="bg-gradient-to-r mb-5 ml-4 from-blue-400 to-green-300 p-3 rounded-lg shadow">
+          <div className="mb-6 mt-5 mr-5">
+            <div className="bg-gradient-to-r mb-5 ml-4 from-primaryColor-10 to-accent-10 p-3 rounded-lg shadow">
               <h1 className={`font-bold ${twTheme("text-black", "text-white")}`}>
                 Here's your mission request overview
               </h1>
@@ -37,42 +38,44 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Grid Sections */}
-         <div className="flex ">
-           <div className="flex gap-4 w-f p-5 ml-0">
-            <RecentActivities />
-            <div className="w-120">
+          <div className="flex gap-10">
+            {/* <div className="flex bg-accent-300 gap-4 w-f p-5 ml-0"> */}
+            <div className="w-[445px] ml-4">
+              <RecentActivities />
+            </div>
+            <div className=" w-[445px]">
               <QuickLinks />
             </div>
-            
+
+            {/* </div> */}
+            <div className="grid w-[350px]">
+
+              <div>
+                <OngoingMissions />
+              </div>
+              <div>
+                <MissionProgress />
+              </div>
+            </div>
           </div>
-          <div className="grid mt-6">
-              
-            <div>
-              <OngoingMissions/>
-            </div>
-            <div>
-              <MissionProgress/>
-            </div>
-            </div>
-         </div>
 
           {/* Charts Section */}
-          <div className="flex mt-10 gap-6 flex-wrap">
-            <div className="flex gap-6 flex-1">
-              <div className="w-full  p-4">
-                <AnnualMissionStatuses />
-              </div>
-              <div className="w-full p-4">
-                <ThisMonthChart />
-              </div>
-              <div className="w-full p-4">
+          <div className="flex mt-10 gap-6 flex-1">
+            <div className="w-full  p-4 ">
+              <AnnualMissionStatuses />
+            </div>
+            <div className="w-[500] p-4">
+              <ThisMonthChart />
+            </div>
+            <div className="w-full p-4">
               <ExpensesChart />
             </div>
-            </div>
+
           </div>
         </main>
       </div>
     </>
+   </div>
   );
 };
 

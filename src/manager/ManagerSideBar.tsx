@@ -2,11 +2,11 @@ import React from "react";
 import { CiBellOn } from "react-icons/ci";
 import { FiUser, FiFileText, FiList, FiPlusCircle } from "react-icons/fi";
 import { VscHome } from "react-icons/vsc";
-import { BiWallet } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../hook/useTheme";
+import { RiTeamLine } from "react-icons/ri";
 
-const Sidebar: React.FC = () => {
+const ManagerSideBar: React.FC = () => {
   const { theme } = useTheme();
   const location = useLocation();
 
@@ -22,10 +22,9 @@ const Sidebar: React.FC = () => {
 
   // Quick actions (fixed icons)
   const quickActions = [
-    { icon: FiPlusCircle, label: "New Mission Request", path: "/request" },
-    { icon: FiList, label: "Request List/Tracking", path: "/requestList" },
-    { icon: BiWallet, label: "Expense Logging", path: "/missions/history" },
-    { icon: FiFileText, label: "Mission Reporting", path: "/report" },
+    { icon: RiTeamLine, label: "Team Management", path: "/team" },
+    { icon: FiList, label: "Requests", path: "/requests" },
+    { icon: FiFileText, label: "Reports", path: "/reports" },
   ];
 
   return (
@@ -89,4 +88,4 @@ const Sidebar: React.FC = () => {
   );
 };
 
-export default Sidebar;
+export default ManagerSideBar;

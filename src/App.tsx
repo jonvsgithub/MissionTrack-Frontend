@@ -3,6 +3,9 @@
 // import Details from "./Components/Request/Details";
 
 
+// import MissionList from "./Components/MissionList";
+// import MissionList from "./Components/MissionList";
+// import Report from "./Components/Report";
 import AppRoute from "./Router/AppRoute";
 
 
@@ -16,11 +19,12 @@ function App() {
 
   return (
  
-    // <Settings/>
+ 
     <>
-    {/* <Details/> */}
-    
+   
+    {/* <MissionList/> */}
        <AppRoute/>
+       {/* <Report/> */}
     
     </>
 

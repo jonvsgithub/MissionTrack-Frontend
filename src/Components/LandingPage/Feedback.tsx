@@ -7,13 +7,13 @@ import { FaStar } from "react-icons/fa6";
 const Feedback: React.FC = () => {
     return (
         <div className="flex  justify-center">
-            <div className=" w-[1300px] h-[400px]">
+            <div className=" w-full  bg-primaryColor-600  p-[120px] h-[600px]">
                 {/* Header */}
                 <div className="flex justify-center">
-                    <div className="text-center">
-                        <h1 className="text-3xl font-bold">How it works</h1>
-                        <p className="text-2xl text-gray-600 mt-5">
-                            A simple four-step process from mission request to expense tracking
+                    <div className="text-center text-white">
+                        <h1 className="text-3xl font-bold">What Our Users Say</h1>
+                        <p className="  mt-5">
+                           Trusted by companies of all sizes to streamline their mission management
                         </p>
                     </div>
                 </div>
@@ -21,13 +21,11 @@ const Feedback: React.FC = () => {
                 {/* Cards */}
 
 
-                <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                    <div className="p-6 rounded-lg shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
-                        <div className=" bg-blue-100  rounded-full p-2">
-
-                        </div>
-                        <div className="flex flex-col items-center">
+                    <div className="p-6  bg-white rounded-lg shadow-sm flex flex-col items-start gap-4 w-[320px] mx-auto">
+                       
+                        <div className="flex flex-col items-start">
                             {/* Stars Row */}
                             <div className="flex space-x-1">
                                 <FaStar className="text-yellow-400" />
@@ -38,7 +36,7 @@ const Feedback: React.FC = () => {
                             </div>
 
                             {/* Testimonial Text */}
-                            <p className="text-sm mt-5 text-center text-gray-800">
+                            <p className="text-sm mt-5 text-start text-gray-800">
                                 MissionFlow has transformed how we handle business trips. What used to take days now takes minutes, and the expense tracking is phenomenal.
                             </p>
                         </div>
@@ -53,11 +51,9 @@ const Feedback: React.FC = () => {
                     </div>
 
 
-                    <div className="p-6 rounded-lg shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
-                        <div className=" bg-blue-100  rounded-full p-2">
-
-                        </div>
-                        <div className="flex flex-col items-center">
+                    <div className="p-6  bg-white rounded-lg shadow-sm flex flex-col items-start gap-4 w-[320px] mx-auto">
+                      
+                        <div className="flex flex-col items-start">
                             {/* Stars Row */}
                             <div className="flex space-x-1">
                                 <FaStar className="text-yellow-400" />
@@ -68,7 +64,7 @@ const Feedback: React.FC = () => {
                             </div>
 
                             {/* Testimonial Text */}
-                            <p className="text-sm mt-5 text-center text-gray-800">
+                            <p className="text-sm mt-5 text-start text-gray-800">
                                 MissionFlow has transformed how we handle business trips. What used to take days now takes minutes, and the expense tracking is phenomenal.
                             </p>
                             <div className="flex justify-between gap-5 mt-7">
@@ -83,11 +79,9 @@ const Feedback: React.FC = () => {
                     </div>
 
 
-                    <div className="p-6 rounded-lg shadow-sm flex flex-col items-center gap-4 w-[250px] mx-auto">
-                        <div className=" bg-blue-100  rounded-full p-2">
-
-                        </div>
-                        <div className="flex flex-col items-center">
+                    <div className="p-6 bg-white rounded-lg shadow-sm flex flex-col items-start gap-4 w-[320px] mx-auto">
+                        
+                        <div className="flex flex-col items-start">
                             {/* Stars Row */}
                             <div className="flex space-x-1">
                                 <FaStar className="text-yellow-400" />
@@ -98,7 +92,7 @@ const Feedback: React.FC = () => {
                             </div>
 
                             {/* Testimonial Text */}
-                            <p className="text-sm mt-5 text-center text-gray-800">
+                            <p className="text-sm mt-5 text-start text-gray-800">
                                 MissionFlow has transformed how we handle business trips. What used to take days now takes minutes, and the expense tracking is phenomenal.
                             </p>
                         </div>

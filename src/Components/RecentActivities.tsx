@@ -17,7 +17,7 @@ const RecentActivities: React.FC = () => {
       <div className="space-y-3">
         {/* Activity 1 - Mission approved */}
         <div
-          className={`flex items-start gap-3 rounded-lg px-4 py-3 w-120 bg-green-100`}
+          className={`flex items-start gap-3 rounded-lg px-4 py-3  bg-green-100`}
         >
           <span className="w-3 h-3 rounded-full mt-1 bg-green-400" />
           <div>
@@ -30,7 +30,7 @@ const RecentActivities: React.FC = () => {
 
         {/* Activity 2 - New request submitted */}
         <div
-          className={`flex items-start gap-3 rounded-lg px-4 py-3 w-120 bg-blue-100`}
+          className={`flex items-start gap-3 rounded-lg px-4 py-3  bg-blue-100`}
         >
           <span className="w-3 h-3 rounded-full mt-1 bg-blue-500" />
           <div>
@@ -41,7 +41,7 @@ const RecentActivities: React.FC = () => {
 
         {/* Activity 3 - Budget review pending */}
         <div
-          className={`flex items-start gap-3 rounded-lg px-4 py-3 w-120 bg-orange-100`}
+          className={`flex items-start gap-3 rounded-lg px-4 py-3  bg-orange-100`}
         >
           <span className="w-3 h-3 rounded-full mt-1 bg-orange-400" />
           <div>

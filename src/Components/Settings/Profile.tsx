@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
       <Header />
      <div className="flex gap-6">
   <Sidebar />
-  <div className="h-[400px] w-[1000px] ml-65 mt-25 flex bg-gradient-to-br  to-accent-10/50 rounded-md shadow">
+  <div className="h-[400px] w-[1000px] ml-65 mt-25 flex  rounded-md shadow">
 
         <div className="flex flex-col w-full">
           {/* Top navigation with full-width border */}
@@ -81,7 +81,7 @@ const Profile: React.FC = () => {
                   <span>Password</span>
                 </Link>
 
-                <Link to={'/notifications'}
+                <Link to={'/preferences'}
                   className="flex items-center gap-1 border-b-2 border-transparent hover:border-blue-600 transition-all duration-300 -mb-[2px]"
                 >
                   <FaBell size={20} />
