@@ -56,11 +56,11 @@ const LoginForm: React.FC = () => {
   return (
     <div className="min-h-screen grid grid-cols-2 ">
       {/* Left Side */}
-      <div className="bg-primaryColor-10  flex flex-col justify-center  pl-40">
-        <h2 className="text-blue-600 font-bold text-2xl mb-4">
+      <div className="bg-primaryColor-10  flex flex-col justify-center  items-center">
+        <h2 className="text-primaryColor-800 font-bold text-2xl mb-4">
           Stay Organized, Stay Ahead
         </h2>
-        <p className="text-green-600 mb-10 ">
+        <p className="text-accent-800 mb-10 ">
           Sign in to submit new requests or follow up on <br/> approvals all in one
           place.
         </p>

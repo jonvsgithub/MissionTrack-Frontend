@@ -1,5 +1,7 @@
 // import Profile from "./Components/Settings/Profile";
 
+// import ApplicationForm from "./Components/ApplicationForm";
+
 // import ManagerDashboard from "./pages/ManagerDashboard";
 
 // import Details from "./Components/Request/Details";
@@ -23,7 +25,8 @@ function App() {
  
  
     <>
-   
+   {/* <ApplicationForm/> */}
+
     {/* <MissionList/> */}
        <AppRoute/>
        {/* <Report/> */}

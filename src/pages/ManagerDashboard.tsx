@@ -18,11 +18,12 @@ const ManagerDashboard: React.FC = () => {
    <div className="bg-gray-100">
      <>
       <Header />
-      <div className={`flex gap-70 mt-20  ${twTheme("bg-gray-100", "bg-gray-900")}`} >
+      <div className={`flex gap-70 mt-20   ${twTheme("bg-gray-100", "bg-gray-900")}`} >
         <SidebarManager />
         <main
-          className={`min-h-screen   ${twTheme(
+          className={`min-h-screen  w-[1200px] ${twTheme(
             "",
+            
             "bg-gray-900"
           )}`}
         >
