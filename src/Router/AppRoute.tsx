@@ -3,9 +3,9 @@ import { Route, Routes} from "react-router-dom";
 import LoginForm from "../pages/LoginForm"; // ✅ corrected import
 import Dashboard from "../pages/EmployeeDashboard";
 import LandingPage from "../pages/LandingPage";
-import Profile from "../Components/EmployeeDashboard/Settings/Profile";
-import Password from "../Components/EmployeeDashboard/Settings/Password";
- import Notification from "../Components/EmployeeDashboard/Settings/Notification"
+import Profile from "../Components/Settings/Profile";
+import Password from "../Components/Settings/Password";
+ import Notification from "../Components/Settings/Notification";
 import Details from "../Components/EmployeeDashboard/Request/Details";
 
 import RecoverPassword from "../Components/forgetPassword/RecoverPassword";
@@ -17,6 +17,7 @@ import MissionExpenses from "../Components/EmployeeDashboard/expenseLogging/Miss
 import UpdatePassword from "../Components/forgetPassword/UpdatePassword";
 import ManagerDashboard from "../pages/ManagerDashboard";
 import ApplicationForm from "../Components/ApplicationForm";
+import TeamManagement from "../manager/TeamManagement";
 
 
 const AppRoute = () => {
@@ -48,6 +49,7 @@ const AppRoute = () => {
         <Route path="/missions/history" element={<MissionExpenses/>}/>
         <Route path="/manager" element={<ManagerDashboard/>}/>
         <Route path="/apply" element={<ApplicationForm/>}/>
+        <Route path="/team" element={<TeamManagement/>}/>
       </Routes>
     </>
   );

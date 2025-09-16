@@ -1,13 +1,13 @@
 import React from "react";
-import Header from "../Components/HeaderDash";
+import Header from "../Components/EmployeeDashboard/HeaderDash";
 import Sidebar from "../Components/EmployeeDashboard/Sidebar";
 import MissionOverview from "../Components/MissionOverview";
-import RecentActivities from "../Components/RecentActivities";
+import RecentActivities from "../manager/RecentActivities";
 import QuickLinks from "../Components/EmployeeDashboard/QuickLinks";
 import AnnualMissionStatuses from "../Components/EmployeeDashboard/chart/AnnualMissionStatuses";
 import ThisMonthChart from "../Components/EmployeeDashboard/chart/ThisMonthChart";
 import ExpensesChart from "../Components/EmployeeDashboard/chart/ExpensesChart";
-import MissionProgress from "../Components/MissionProgress";
+import MissionProgress from "../Components/EmployeeDashboard/MissionProgress";
 import OngoingMissions from "../Components/EmployeeDashboard/OngoingMissions";
 
 const twTheme = (light: string, dark: string) => {
@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
         >
           {/* Overview */}
           <div className="mb-6 mt-5">
-            <div className="bg-gradient-to-r mb-5 ml-4 from-primaryColor-10 to-accent-10 p-3 rounded-lg shadow">
+            <div className=" mb-5 ml-4 bg-gradient-to-r from-primaryColor-10 to-accent-10 p-3 rounded-lg shadow">
               <h1 className={`font-bold ${twTheme("text-black", "text-white")}`}>
                 Here's your mission request overview
               </h1>

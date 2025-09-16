@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Input from "../../Input";
+import Input from "../Input";
 import { FiUser } from "react-icons/fi";
 import { MdLockOutline } from "react-icons/md";
 import { FaBell, FaCalendar } from "react-icons/fa";
-import Header from "../HeaderDash";
-import Sidebar from "../Sidebar";
+import Header from "../EmployeeDashboard/HeaderDash";
+import Sidebar from "../EmployeeDashboard/Sidebar";
 import { Link } from "react-router-dom";
 
 

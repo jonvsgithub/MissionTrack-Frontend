@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "../hook/useTheme";
+import { useTheme } from "../../hook/useTheme";
 
 // Example progress data
 const progress = [

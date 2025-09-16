@@ -1,7 +1,7 @@
 import React from "react";
 import { FiBell, FiUser } from "react-icons/fi";
-import { useTheme } from "../hook/useTheme";
-import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../../hook/useTheme";
+import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
@@ -18,6 +18,7 @@ const Header: React.FC = () => {
         "bg-gray-800 border-gray-700"
       )}`}
     >
+
       {/* Logo + Title */}
       <div className="flex items-center gap-2">
         <img src="/logo.svg" alt="logo" className="h-8" />
