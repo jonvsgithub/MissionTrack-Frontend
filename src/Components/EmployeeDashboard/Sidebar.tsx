@@ -4,7 +4,7 @@ import { FiUser, FiFileText, FiList, FiPlusCircle } from "react-icons/fi";
 import { VscHome } from "react-icons/vsc";
 import { BiWallet } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
-import { useTheme } from "../hook/useTheme";
+import { useTheme } from "../../hook/useTheme";
 
 const Sidebar: React.FC = () => {
   const { theme } = useTheme();

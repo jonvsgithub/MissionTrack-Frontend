@@ -1,14 +1,14 @@
 import React from "react";
 import Header from "../Components/HeaderDash";
-import Sidebar from "../Components/Sidebar";
+import Sidebar from "../Components/EmployeeDashboard/Sidebar";
 import MissionOverview from "../Components/MissionOverview";
 import RecentActivities from "../Components/RecentActivities";
-import QuickLinks from "../Components/QuickLinks";
-import AnnualMissionStatuses from "../chart/AnnualMissionStatuses";
-import ThisMonthChart from "../chart/ThisMonthChart";
-import ExpensesChart from "../chart/ExpensesChart";
+import QuickLinks from "../Components/EmployeeDashboard/QuickLinks";
+import AnnualMissionStatuses from "../Components/EmployeeDashboard/chart/AnnualMissionStatuses";
+import ThisMonthChart from "../Components/EmployeeDashboard/chart/ThisMonthChart";
+import ExpensesChart from "../Components/EmployeeDashboard/chart/ExpensesChart";
 import MissionProgress from "../Components/MissionProgress";
-import OngoingMissions from "../Components/OngoingMissions";
+import OngoingMissions from "../Components/EmployeeDashboard/OngoingMissions";
 
 const twTheme = (light: string, dark: string) => {
   return `${light} dark:${dark}`;

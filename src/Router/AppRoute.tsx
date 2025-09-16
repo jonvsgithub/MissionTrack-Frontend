@@ -3,17 +3,17 @@ import { Route, Routes} from "react-router-dom";
 import LoginForm from "../pages/LoginForm"; // ✅ corrected import
 import Dashboard from "../pages/EmployeeDashboard";
 import LandingPage from "../pages/LandingPage";
-import Profile from "../Components/Settings/Profile";
-import Password from "../Components/Settings/Password";
- import Notification from "../Components/Settings/Notification"
-import Details from "../Components/Request/Details";
+import Profile from "../Components/EmployeeDashboard/Settings/Profile";
+import Password from "../Components/EmployeeDashboard/Settings/Password";
+ import Notification from "../Components/EmployeeDashboard/Settings/Notification"
+import Details from "../Components/EmployeeDashboard/Request/Details";
 
 import RecoverPassword from "../Components/forgetPassword/RecoverPassword";
 
-import NotificationPage from "../Components/NotificationPage";
-import MissionList from "../Components/MissionList";
-import Report from "../Components/Report";
-import MissionExpenses from "../Components/expenseLogging/MissionExpenses";
+import NotificationPage from "../Components/EmployeeDashboard/NotificationPage";
+import MissionList from "../Components/EmployeeDashboard/MissionList";
+import Report from "../Components/EmployeeDashboard/Report";
+import MissionExpenses from "../Components/EmployeeDashboard/expenseLogging/MissionExpenses";
 import UpdatePassword from "../Components/forgetPassword/UpdatePassword";
 import ManagerDashboard from "../pages/ManagerDashboard";
 import ApplicationForm from "../Components/ApplicationForm";

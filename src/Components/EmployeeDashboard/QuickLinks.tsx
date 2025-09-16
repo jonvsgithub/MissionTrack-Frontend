@@ -1,6 +1,6 @@
 import React from "react";
 import { FiFilePlus, FiCalendar, FiBarChart2 } from "react-icons/fi";
-import { useTheme } from "../hook/useTheme";
+import { useTheme } from "../../hook/useTheme";
 import { Link } from "react-router-dom";
 
 

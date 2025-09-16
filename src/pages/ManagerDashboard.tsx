@@ -4,10 +4,10 @@ import Header from "../Components/HeaderDash";
 import SidebarManager from "../Components/SidebarManager";
 import MissionOverview from "../Components/MissionOverview";
 import RecentActivities from "../Components/RecentActivities";
-import QuickLinks from "../Components/QuickLinks";
+import QuickLinks from "../Components/EmployeeDashboard/QuickLinks";
 
 import MissionProgress from "../Components/MissionProgress";
-import OngoingMissions from "../Components/OngoingMissions";
+import OngoingMissions from "../Components/EmployeeDashboard/OngoingMissions";
 
 const twTheme = (light: string, dark: string) => {
   return `${light} dark:${dark}`;

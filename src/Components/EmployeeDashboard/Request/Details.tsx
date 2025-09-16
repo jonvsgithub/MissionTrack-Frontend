@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Input from "../Input";
+import Input from "../../Input";
 import Header from "../HeaderDash";
 import Sidebar from "../Sidebar";
-import Stepper from "../Stepper";
-import DragDrop from "../DragDrop";
-import { useCreateMissionMutation } from "../../app/api/missions";
+import Stepper from "../../Stepper";
+import DragDrop from "../../DragDrop";
+import { useCreateMissionMutation } from "../../../app/api/missions";
 
 import {
   FaFilePdf,

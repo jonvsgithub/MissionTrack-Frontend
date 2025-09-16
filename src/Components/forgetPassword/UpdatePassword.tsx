@@ -77,7 +77,7 @@ const UpdatePassword: React.FC = () => {
 
         {/* Reset Password Card */}
         <div className="bg-white shadow-2xl rounded-2xl px-15 w-full max-w-md">
-          <h2 className="text-2xl font-bold text-accent-600 text-center mb-10">
+          <h2 className="text-2xl font-bold text-accent-600 text-center  ">
             Create New Password
           </h2>
           <p className="font-bold text-center mb-6">Choose a new password</p>

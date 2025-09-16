@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 import { useTheme } from "../hook/useTheme";
 
 // Import the components you are rendering
-import Profile from "../Components/Settings/Profile";
-import Password from "../Components/Settings/Password";
-import Notification from "../Components/Settings/Notification";
+import Profile from "../Components/EmployeeDashboard/Settings/Profile";
+import Password from "../Components/EmployeeDashboard/Settings/Password";
+import Notification from "../Components/EmployeeDashboard/Settings/Notification";
 
 const Settings: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
