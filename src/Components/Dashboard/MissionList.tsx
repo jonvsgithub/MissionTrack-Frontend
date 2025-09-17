@@ -4,7 +4,7 @@ import { FaCheck } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { RiFileCloseLine } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
-import Header from "./HeaderDash";
+import Header from "../HeaderDash";
 import Sidebar from "./Sidebar";
 
 const MissionList: React.FC = () => {
@@ -13,7 +13,7 @@ const MissionList: React.FC = () => {
   return (
     <>
       <Header />
-      <div className="flex gap-70 min-h-screen  bg-primaryColor-10 mt-20">
+      <div className="flex gap-70 min-h-screen  bg-[#E6EAF5] mt-20">
         <Sidebar />
         <div className="flex flex-col">
           <div className="w-[1200px] py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
