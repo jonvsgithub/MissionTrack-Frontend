@@ -11,27 +11,26 @@ import Pricing from "../Components/LandingPage/Pricing";
 
 const LandingPage: React.FC = () => {
   return (
-    <div 
-      className="relative min-h-screen w-full bg-cover bg-center"
-      style={{ backgroundImage: "url('src/assets/Rectangle51.jpg')" }}
-    >
-      {/* Optional overlay for blur/darkening */}
-      <div className="absolute inset-0 bg-primaryColor-10/50 opacity-50 backdrop-blur-sm"></div>
-
-      {/* Content */}
-      <div className="relative z-10">
-        <HeadLanding />
-        <div className="mt-20">
-          <Hero />
-        </div>
-        <Features />
-        <Working />
-        <Pricing/>
-        <Feedback />
-        
-        <Footer/>
+    <div className="relative z-10">
+      <HeadLanding />
+      <div id="hero" className="mt-20">
+        <Hero />
       </div>
+      <div id="features">
+        <Features />
+      </div>
+      <div id="working">
+        <Working />
+      </div>
+      <div id="pricing">
+        <Pricing />
+      </div>
+      <div id="feedback">
+        <Feedback />
+      </div>
+      <Footer />
     </div>
+
   )
 };
 

@@ -34,3 +34,7 @@
   --color-accent-900: oklch(0.4109 0.087083 164.4039);
  
 }
+html {
+  scroll-behavior: smooth;
+}
+

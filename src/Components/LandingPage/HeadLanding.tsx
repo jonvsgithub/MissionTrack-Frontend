@@ -26,12 +26,14 @@ const HeadLanding: React.FC = () => {
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden sm:flex justify-between gap-10">
-          <Link to="/">Features</Link>
-          <Link to="/">How it works</Link>
-          <Link to="/">Testimonials</Link>
-          <Link to="/">Pricing</Link>
+        <nav className="flex gap-6">
+          <a href="#hero" className="hover:text-primaryColor-10">Home</a>
+          <a href="#features" className="hover:text-primaryColor-10">Features</a>
+          <a href="#working" className="hover:text-primaryColor-10">How It Works</a>
+          <a href="#pricing" className="hover:text-primaryColor-10">Pricing</a>
+          <a href="#feedback" className="hover:text-primaryColor-10">Feedback</a>
         </nav>
+
 
         {/* Log In Button */}
         <div>
