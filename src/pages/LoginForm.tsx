@@ -10,48 +10,55 @@ const LoginForm: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("john@mail.com");
-  const [password, setPassword] = useState("changeme");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const newErrors: { email?: string; password?: string } = {};
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const newErrors: { email?: string; password?: string } = {};
 
-    // Email validation
-    if (!email.trim()) {
-      newErrors.email = "Email is required";
-    } else {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email.trim())) {
-        newErrors.email = "Enter a valid email address";
-      }
+  // Email validation
+  if (!email.trim()) {
+    newErrors.email = "Email is required";
+  } else {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      newErrors.email = "Enter a valid email address";
     }
+  }
 
-    // Password validation
-    if (!password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (password.trim().length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
+  // Password validation
+  if (!password.trim()) {
+    newErrors.password = "Password is required";
+  } else if (password.trim().length < 6) {
+    newErrors.password = "Password must be at least 6 characters";
+  }
 
-    setErrors(newErrors);
+  setErrors(newErrors);
+  if (Object.keys(newErrors).length > 0) return;
 
-    // Stop if any errors
-    if (Object.keys(newErrors).length > 0) return;
+  setLoading(true);
+  try {
+    // 🔹 login should return response with user + token
+    const res = await login(email, password);
 
-    setLoading(true);
-    try {
-      await login(email, password);
+    if (res?.user?.role === "manager") {
+      navigate("/manager");
+    } else if (res?.user?.role === "employee") {
       navigate("/dashboard");
-    } catch (err: any) {
-      setErrors({ password: err.message }); // show backend error under password
-    } finally {
-      setLoading(false);
+    } else {
+      navigate("/login"); // fallback
     }
-  };
+  } catch (err: any) {
+    setErrors({ password: err.message });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-primaryColor-10 via-primaryColor-10 to-primaryColor-50  flex justify-center gap-40  ">

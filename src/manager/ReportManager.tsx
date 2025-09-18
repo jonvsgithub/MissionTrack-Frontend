@@ -52,7 +52,7 @@ const ReportManager: React.FC = () => {
                 <ManagerSideBar />
                 <div className="flex flex-col">
                     <div className="w-[1200px] py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
-                        <h1 className="font-bold text-2xl text-center">Your Missions</h1>
+                        <h1 className="font-bold text-2xl text-center">Reports</h1>
                     </div>
                     <div className="grid grid-cols-3 mt-5 gap-2">
 

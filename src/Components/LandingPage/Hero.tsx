@@ -1,10 +1,5 @@
 import React from "react";
-import rectImg from "../../assets/Rectangle51.jpg";
-import dashImg from "../../assets/Group40.png";
-import frameImg from "../../assets/Frame400.png"
 import { Link } from "react-router-dom";
-
-
 
 const Hero: React.FC = () => {
   return (
@@ -12,11 +7,11 @@ const Hero: React.FC = () => {
       {/* Background image */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${rectImg})` }}
+        style={{ backgroundImage: "url('/Rectangle51.jpg')" }}
       ></div>
 
       {/* Gradient overlay */}
-     <div className="absolute inset-0 bg-D9D9D9"></div>
+      <div className="absolute inset-0 bg-D9D9D9"></div>
 
       {/* Content */}
       <div className="relative flex justify-center">
@@ -38,7 +33,10 @@ const Hero: React.FC = () => {
                 </p>
               </div>
               <div className="flex justify-center gap-5">
-                <Link to="/login" className="bg-primaryColor-700 text-white rounded-lg px-15 max-sm:p-1 ml-2 py-2">
+                <Link
+                  to="/login"
+                  className="bg-primaryColor-700 text-white rounded-lg px-15 max-sm:p-1 ml-2 py-2"
+                >
                   Get Started
                 </Link>
                 <button className="bg-accent-400 text-white rounded-lg px-15 max-sm:p-1 ml-2 py-2">
@@ -50,14 +48,14 @@ const Hero: React.FC = () => {
             {/* Right images stacked */}
             <div className="relative h-120 w-auto max-sm:h-100">
               <img
-                src={dashImg}
+                src="/Group40.png"
                 alt="Mission preview background"
                 className="h-120 w-auto max-sm:h-100 border-gray-50"
               />
               <img
-                src={frameImg}
+                src="/Frame400.png"
                 alt="Mission preview overlay"
-                className="relative  w-[400px] bottom-10 left-20 h-30  border-gray-50 z-10"
+                className="relative w-[400px] bottom-10 left-20 h-30 border-gray-50 z-10"
               />
             </div>
           </div>

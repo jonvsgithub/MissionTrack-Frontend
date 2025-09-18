@@ -14,7 +14,7 @@ const OngoingMissions: React.FC = () => {
 
   return (
     <div
-      className={`rounded-xl shadow-sm p-5 ${
+      className={`rounded-xl bg-white shadow-sm p-5 ${
         theme === "light" ? "bg- text-black" : "bg-gray-800 text-white"
       }`}
     >

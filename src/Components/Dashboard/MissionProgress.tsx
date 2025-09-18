@@ -13,7 +13,7 @@ const MissionProgress: React.FC = () => {
 
   return (
     <div
-      className={`rounded-xl h-37 shadow-sm p-5 ${
+      className={`rounded-xl bg-white h-37 shadow-sm p-5 ${
         theme === "light" ? "bg-[#E6EAF5] text-black" : "bg-gray-800 text-white"
       }`}
     >

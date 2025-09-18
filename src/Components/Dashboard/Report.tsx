@@ -106,7 +106,7 @@ const Report: React.FC = () => {
                 <div className="flex flex-col ">
                     <div className="w-[1000px]  py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
                         <h1 className="font-bold text-2xl text-center">
-                            Notifications
+                            Daily Mission Report Form
                         </h1>
                     </div>
                     <form
