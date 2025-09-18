@@ -1,3 +1,4 @@
+
 // src/components/ApplicationForm.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -5,12 +6,12 @@ import { useAuth } from "../context/AuthContext";
 import Input from "./Input";
 import Select from "./Select";
 import Checkbox from "./Checkbox";
+import SuccessCard from "./SuccessCard";
 
 const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Example login, replace with your logic
+  const { login } = useAuth();
 
-  // One state object for all form values
   const [formData, setFormData] = useState({
     organizationName: "",
     email: "",
@@ -23,11 +24,10 @@ const ApplicationForm: React.FC = () => {
     agree: false,
   });
 
-  // Error + loading states
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  // Rwandan administrative divisions
   const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
   const districts = {
     Kigali: ["Gasabo", "Kicukiro", "Nyarugenge"],
@@ -41,14 +41,13 @@ const ApplicationForm: React.FC = () => {
     Kicukiro: ["Nyarutarama", "Kanombe", "Gahanga"],
     Nyarugenge: ["Nyamirambo", "Kimisagara", "Muhima"],
     Musanze: ["Musanze", "Muhoza", "Kinigi"],
-    // Add more as needed
   };
   const orgTypes = ["Non-profit", "Startup", "Corporate", "Governmental"];
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    let newErrors: typeof errors = {};
+
+    const newErrors: { [key: string]: string } = {};
 
     if (!formData.organizationName) newErrors.organizationName = "Organization name is required";
     if (!formData.email) newErrors.email = "Email is required";
@@ -61,22 +60,20 @@ const ApplicationForm: React.FC = () => {
     if (!formData.agree) newErrors.agree = "You must agree to the terms & conditions";
 
     setErrors(newErrors);
+
     if (Object.keys(newErrors).length > 0) return;
 
-    try {
-      setLoading(true);
-      // Replace with your actual submission logic
-      console.log(formData);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-    } finally {
+    setLoading(true);
+
+    setTimeout(() => {
+      console.log("Submitted Data:", formData);
       setLoading(false);
-    }
+      setSuccess(true); // Replace form with success card
+    }, 1000);
   };
 
   return (
-    <div className=" min-h-screen bg-gradient-to-r from-primaryColor-10 via-primaryColor-10 to-accent-10  gap-20 flex justify-center w-full">
+    <div className="min-h-screen bg-gradient-to-r from-primaryColor-10 via-primaryColor-10 to-accent-10 gap-20 flex justify-center w-full">
       {/* Left Side */}
       <div className="flex flex-col justify-center items-center p-10">
         <h1 className="text-accent-800 text-3xl text-center font-bold mb-10">
@@ -87,8 +84,7 @@ const ApplicationForm: React.FC = () => {
 
       {/* Right Side */}
       <div className="flex flex-col items-center justify-start pt-10">
-        {/* Logo */}
-        <div className="flex ">
+        <div className="flex">
           <img src="logo.svg" alt="logo" className="h-10 w-10" />
           <h1 className="font-bold text-xl ml-2">
             <span className="text-primaryColor-700">Mission</span>
@@ -96,111 +92,114 @@ const ApplicationForm: React.FC = () => {
           </h1>
         </div>
 
-        {/* Form Card */}
-        <div className="bg-white shadow-2xl rounded-2xl p-10 w-full max-w-md flex flex-col items-start text-left">
-          <h2 className="text-xl font-bold text-accent-500 mb-6">
-            New Organization Application Form
-          </h2>
+        <div className="bg-white shadow-2xl rounded-2xl p-10 w-full max-w-md flex flex-col items-center justify-center">
+          {success ? (
+            <SuccessCard onClose={() => navigate("/")} />
+          ) : (
+            <>
+              <h2 className="text-xl font-bold text-accent-500 mb-6">
+                New Organization Application Form
+              </h2>
 
-          <form onSubmit={handleSubmit} className="grid gap-4 w-full">
-            <Input
-              label="Organization Name"
-              name="organizationName"
-              value={formData.organizationName}
-              onChange={(e) => setFormData({ ...formData, organizationName: e.target.value })}
-              placeholder="Enter organization name"
-              error={errors.organizationName}
-            />
+              <form onSubmit={handleSubmit} className="grid gap-4 w-full">
+                <Input
+                  label="Organization Name"
+                  name="organizationName"
+                  value={formData.organizationName}
+                  onChange={(e) => setFormData({ ...formData, organizationName: e.target.value })}
+                  placeholder="Enter organization name"
+                  error={errors.organizationName}
+                />
 
-            <div className="grid grid-cols-3 gap-4">
-              {/* Province */}
-              <Select
-                label="Province"
-                name="province"
-                value={formData.province}
-                options={provinces}
-                placeholder="Province"
-                onChange={(e) => setFormData({ ...formData, province: e.target.value })}
-              />
+                <div className="grid grid-cols-3 gap-4">
+                  <Select
+                    label="Province"
+                    name="province"
+                    value={formData.province}
+                    options={provinces}
+                    placeholder="Province"
+                    onChange={(e) => setFormData({ ...formData, province: e.target.value })}
+                  />
 
-              {/* District */}
-              <Select
-                label="District"
-                name="district"
-                value={formData.district}
-                placeholder="District"
-                options={formData.province ? districts[formData.province] : []}
-                onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-              />
+                  <Select
+                    label="District"
+                    name="district"
+                    value={formData.district}
+                    placeholder="District"
+                    options={formData.province ? districts[formData.province] : []}
+                    onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+                  />
 
-              {/* Sector */}
-              <Select
-                label="Sector"
-                name="sector"
-                value={formData.sector}
-                placeholder="Sector"
-                options={
-                  formData.district && sectors[formData.district]
-                    ? sectors[formData.district]
-                    : []
-                }
-                onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
-              />
-            </div>
+                  <Select
+                    label="Sector"
+                    name="sector"
+                    value={formData.sector}
+                    placeholder="Sector"
+                    options={formData.district && sectors[formData.district] ? sectors[formData.district] : []}
+                    onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
+                  />
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Contact Person"
-                name="person"
-                value={formData.person}
-                onChange={(e) => setFormData({ ...formData, person: e.target.value })}
-                placeholder="Enter contact person name"
-                type="text"
-                error={errors.person}
-              />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    label="Contact Person"
+                    name="person"
+                    value={formData.person}
+                    onChange={(e) => setFormData({ ...formData, person: e.target.value })}
+                    placeholder="Enter contact person name"
+                    type="text"
+                    error={errors.person}
+                  />
 
-              <Input
-                label="Phone"
-                name="phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="Enter phone number"
-                type="tel"
-                error={errors.phone}
-              />
-            </div>
+                  <Input
+                    label="Phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="Enter phone number"
+                    type="tel"
+                    error={errors.phone}
+                  />
+                </div>
 
-            <Input
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="Enter email"
-              type="email"
-              error={errors.email}
-            />
+                <Input
+                  label="Email"
+                  name="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="Enter email"
+                  type="email"
+                  error={errors.email}
+                />
 
-            
+                <Select
+                  label="Organization Type"
+                  name="organizationType"
+                  value={formData.organizationType}
+                  options={orgTypes}
+                  placeholder="Select type"
+                  onChange={(e) => setFormData({ ...formData, organizationType: e.target.value })}
+                />
 
-            <div>
-              <Checkbox
-                label="I agree to the Terms & conditions"
-                checked={formData.agree}
-                onChange={(e) => setFormData({ ...formData, agree: e.target.checked })}
-              />
-              {errors.agree && (
-                <p className="text-red-500 text-sm mt-1">{errors.agree}</p>
-              )}
-            </div>
+                <div>
+                  <Checkbox
+                    label="I agree to the Terms & conditions"
+                    checked={formData.agree}
+                    onChange={(e) => setFormData({ ...formData, agree: e.target.checked })}
+                  />
+                  {errors.agree && <p className="text-red-500 text-sm mt-1">{errors.agree}</p>}
+                </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-primaryColor-700 text-white py-2 rounded-2xl hover:bg-primaryColor-800 mt-4"
-            >
-              {loading ? "Submitting..." : "Submit"}
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-primaryColor-700 text-white py-2 rounded-2xl hover:bg-primaryColor-800 mt-4"
+                >
+                  {loading ? "Submitting..." : "Submit"}
+                </button>
+              </form>
+            </>
+          )}
         </div>
       </div>
     </div>
