@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import Input from "./Input";
 import Select from "./Select";
 import Checkbox from "./Checkbox";
+import SuccessCard from "./SuccessCard";
+import Stepper from "./Stepper";
+import DragDrop from "./DragDrop";
 
 const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
@@ -19,93 +22,94 @@ const ApplicationForm: React.FC = () => {
     province: "",
     district: "",
     sector: "",
-    department: "",
-    phoneNumber: "",
+    organizationType: "",
+    companyEmail: "",
+    companyPhoneNumber: "",
     password: "",
-    proofDocument: null as File | null,
     agree: false,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
 
-  const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
-  const districts = {
-    Kigali: ["Gasabo", "Kicukiro", "Nyarugenge"],
-    Northern: ["Musanze", "Gicumbi", "Burera"],
-    Southern: ["Huye", "Nyanza", "Muhanga"],
-    Eastern: ["Rwamagana", "Nyagatare", "Kayonza"],
-    Western: ["Rusizi", "Rubavu", "Nyamasheke"],
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+  // ------------------- Handlers -------------------
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = e.target;
+    setFormData({
+      ...formData,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    });
   };
-  const sectors = {
-    Gasabo: ["Gikomero", "Kacyiru", "Kimironko"],
-    Kicukiro: ["Nyarutarama", "Kanombe", "Gahanga"],
-    Nyarugenge: ["Nyamirambo", "Kimisagara", "Muhima"],
-    Musanze: ["Musanze", "Muhoza", "Kinigi"],
+
+  const validateStep = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (step === 0) {
+      if (!formData.organizationName)
+        newErrors.organizationName = "Organization name is required";
+      if (!formData.province) newErrors.province = "Province is required";
+      if (!formData.district) newErrors.district = "District is required";
+      if (!formData.sector) newErrors.sector = "Sector is required";
+      if (!formData.companyEmail)
+        newErrors.companyEmail = "Company email is required";
+      if (!formData.companyPhoneNumber)
+        newErrors.companyPhoneNumber = "Company phone number is required";
+    }
+
+    if (step === 1) {
+      if (!formData.person) newErrors.person = "Contact Person is required";
+      if (!formData.phone) newErrors.phone = "Phone is required";
+      if (!formData.email) newErrors.email = "Email is required";
+      if (!formData.password) newErrors.password = "Password is required";
+      if (uploadedFiles.length === 0)
+        newErrors.files = "Please upload at least one file";
+    }
+
+    if (step === 2) {
+      if (!formData.agree)
+        newErrors.agree = "You must agree to the terms and conditions";
+    }
+
+    return newErrors;
   };
-  const departments = ["Management", "Finance", "HR", "IT", "Operations"];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    let newErrors: typeof errors = {};
-
-    if (!formData.companyName) newErrors.companyName = "Company name is required";
-    if (!formData.companyEmail) newErrors.companyEmail = "Company email is required";
-    if (!formData.email) newErrors.email = "Manager email is required";
-    if (!formData.companyContact) newErrors.companyContact = "Company contact is required";
-    if (!formData.fullName) newErrors.fullName = "Contact person name is required";
-    if (!formData.province) newErrors.province = "Province is required";
-    if (!formData.district) newErrors.district = "District is required";
-    if (!formData.sector) newErrors.sector = "Sector is required";
-    if (!formData.department) newErrors.department = "Department is required";
-    if (!formData.phoneNumber) newErrors.phoneNumber = "Phone number is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    if (!formData.proofDocument) newErrors.proofDocument = "Proof document is required";
-    if (!formData.agree) newErrors.agree = "You must agree to the terms & conditions";
-
+  const handleNext = () => {
+    const newErrors = validateStep();
     setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-
-    try {
-      setLoading(true);
-
-      const formDataToSend = new FormData();
-      formDataToSend.append("companyName", formData.companyName);
-      formDataToSend.append("companyEmail", formData.companyEmail);
-      formDataToSend.append("email", formData.email); // ✅ required by backend
-      formDataToSend.append("companyContact", formData.companyContact);
-      formDataToSend.append("fullName", formData.fullName);
-      formDataToSend.append("province", formData.province);
-      formDataToSend.append("district", formData.district);
-      formDataToSend.append("sector", formData.sector);
-      formDataToSend.append("department", formData.department);
-      formDataToSend.append("phoneNumber", formData.phoneNumber);
-      formDataToSend.append("password", formData.password);
-      if (formData.proofDocument) {
-        formDataToSend.append("proofDocument", formData.proofDocument);
-      }
-
-      const res = await fetch("https://missiontrack-backend.onrender.com/api/company/register", {
-        method: "POST",
-        body: formDataToSend,
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        console.log("✅ Success:", data);
-        navigate("/login");
-      } else {
-        console.error("❌ Error:", data);
-        alert(data.message || "Registration failed");
-      }
-    } catch (err) {
-      console.error("❌ Network Error:", err);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    if (Object.keys(newErrors).length === 0) {
+      setStep(step + 1);
     }
   };
 
+  const handleBack = () => {
+    setErrors({});
+    setStep(step - 1);
+  };
+  const departments = ["Management", "Finance", "HR", "IT", "Operations"];
+
+  const handleFileRemove = (index: number) => {
+    setUploadedFiles(uploadedFiles.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+
+    const newErrors = validateStep();
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+
+    setSuccess(true);
+  };
+
+
+  // ------------------- Render -------------------
   return (
     <div className="min-h-screen bg-gradient-to-r from-primaryColor-10 via-primaryColor-10 to-accent-10 flex justify-center p-6 lg:p-12 gap-10 w-full">
       {/* Left Side */}
@@ -117,32 +121,17 @@ const ApplicationForm: React.FC = () => {
       </div>
 
       {/* Right Side */}
-      <div className="flex flex-col items-center justify-start lg:w-1/2 w-full">
-        {/* Logo */}
-        <div className="flex items-center mb-6">
-          <img src="logo.svg" alt="logo" className="h-8 w-8 sm:h-10 sm:w-10" />
-          <h1 className="font-bold text-lg sm:text-xl ml-2">
-            <span className="text-primaryColor-700">Mission</span>
-            <span className="text-accent-700">Track.</span>
-          </h1>
-        </div>
-
-        {/* Form Card */}
-        <div className="bg-white shadow-2xl rounded-2xl p-6 sm:p-8 md:p-10 w-full max-w-md flex flex-col items-start text-left">
-          <h2 className="text-lg sm:text-xl font-bold text-accent-500 mb-6">
-            New Company Application Form
-          </h2>
-
-          <form onSubmit={handleSubmit} className="grid gap-4 w-full">
-            <Input
-              label="Company Name"
-              name="companyName"
-              value={formData.companyName}
-              onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-              placeholder="Enter company name"
-              error={errors.companyName}
+      <div className="flex flex-col items-center justify-start pt-10">
+        <div className="bg-white shadow-2xl rounded-2xl p-10 w-[600px] min-h-screen flex flex-col">
+          {success ? (
+            <SuccessCard
+              title="Success!"
+              message="Application submitted successfully, we'll contact you soon."
+              buttonText="Back to Home"
+              onClose={() => navigate("/")}
             />
 
+<<<<<<< HEAD
             <Input
               label="Company Email"
               name="companyEmail"
@@ -267,6 +256,238 @@ const ApplicationForm: React.FC = () => {
               {loading ? "Submitting..." : "Submit"}
             </button>
           </form>
+=======
+              <form onSubmit={handleSubmit} className="grid gap-4 mt-4">
+                {/* Step 0 */}
+                {step === 0 && (
+                  <div>
+                    <div className="mb-4 text-xl">
+                      <h1>Company/Organization’s Information</h1>
+                    </div>
+                    <div className="rounded-2xl border p-6 space-y-4">
+                      <Input
+                        label="Organization Name"
+                        name="organizationName"
+                        value={formData.organizationName}
+                        onChange={handleChange}
+                        placeholder="Enter organization name"
+                        error={errors.organizationName}
+                      />
+
+                      {/* Location */}
+                      <div className="grid grid-cols-3 gap-4">
+                        <Select
+                          label="Province"
+                          name="province"
+                          value={formData.province}
+                          options={provinces}
+                          placeholder="Province"
+                          onChange={handleChange}
+                          error={errors.province}
+                        />
+
+                        <Select
+                          label="District"
+                          name="district"
+                          value={formData.district}
+                          placeholder="District"
+                          options={
+                            formData.province ? districts[formData.province] : []
+                          }
+                          onChange={handleChange}
+                          error={errors.district}
+                        />
+
+                        <Select
+                          label="Sector"
+                          name="sector"
+                          value={formData.sector}
+                          placeholder="Sector"
+                          options={
+                            formData.district && sectors[formData.district]
+                              ? sectors[formData.district]
+                              : []
+                          }
+                          onChange={handleChange}
+                          error={errors.sector}
+                        />
+                      </div>
+
+                      {/* Company Contact */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <Input
+                          label="Company Email"
+                          name="companyEmail"
+                          type="email"
+                          value={formData.companyEmail}
+                          onChange={handleChange}
+                          placeholder="Enter company email"
+                          error={errors.companyEmail}
+                        />
+                        <Input
+                          label="Phone Number"
+                          name="companyPhoneNumber"
+                          value={formData.companyPhoneNumber}
+                          onChange={handleChange}
+                          placeholder="Enter company phone number"
+                          error={errors.companyPhoneNumber}
+                        />
+                      </div>
+                    </div>
+
+                    {/* DragDrop uploader */}
+                    <div className="border mt-5 rounded-2xl p-6">
+                      <div className="resize-y overflow-auto min-h-[150px] border-2 border-dashed border-gray-400 rounded-md">
+                        <DragDrop
+                          onFileSelect={(files) =>
+                            setUploadedFiles([...uploadedFiles, ...files])
+                          }
+                        />
+                      </div>
+
+                      {/* Preview uploaded files */}
+                      {uploadedFiles.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          <h4 className="font-medium text-sm text-gray-700">
+                            Uploaded Files:
+                          </h4>
+                          <ul className="space-y-1 text-sm text-gray-600">
+                            {uploadedFiles.map((file, idx) => (
+                              <li
+                                key={idx}
+                                className="flex items-center justify-between bg-gray-50 p-2 rounded"
+                              >
+                                <span>{file.name}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleFileRemove(idx)}
+                                  className="text-red-500 text-xs hover:underline"
+                                >
+                                  Remove
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {errors.files && (
+                        <p className="text-red-500 text-sm">{errors.files}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 1 */}
+                {step === 1 && (
+                  <>
+                    <div className="gap-4">
+                      <Input
+                        label="Contact Person"
+                        name="person"
+                        value={formData.person}
+                        onChange={handleChange}
+                        placeholder="Enter contact person name"
+                        error={errors.person}
+                      />
+
+                      <Input
+                        label="Phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="Enter phone number"
+                        type="tel"
+                        error={errors.phone}
+                      />
+
+                      <Input
+                        label="Email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Enter email"
+                        type="email"
+                        error={errors.email}
+                      />
+                      <Input
+                        label="Password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Enter password"
+                        type="password"
+                        error={errors.password}
+                      />
+                    </div>
+                  </>
+                )}
+                {/* Step 2 */}
+                {/* Step 2 */}
+                {step === 2 && (
+                  <div className="bg-gray-50 rounded-lg p-4 overflow-auto max-h-[600px]">
+                    <h3 className="font-bold mb-2">Review your details:</h3>
+                    <ul className="text-sm space-y-1">
+                      <li><strong>Organization:</strong> {formData.organizationName}</li>
+                      <li><strong>Location:</strong> {formData.province}, {formData.district}, {formData.sector}</li>
+                      <li><strong>Representative:</strong> {formData.person}</li>
+                      <li><strong>Phone:</strong> {formData.phone}</li>
+                      <li><strong>Email:</strong> {formData.email}</li>
+                      <li>
+                        <strong>Files:</strong>
+                        <ul className="ml-4 list-disc">
+                          {uploadedFiles.map((file, idx) => <li key={idx}>{file.name}</li>)}
+                        </ul>
+                      </li>
+                    </ul>
+
+                    <div className="text-center mt-20 text-gray-700">
+                      <h2 className="text-lg font-semibold mb-4">
+                        All Set? Click Submit to send it for approval.
+                      </h2>
+                    </div>
+                  </div>
+                )}
+
+
+                <div className="flex justify-center gap-4 mt-4">
+                  {step > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleBack}
+                      className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+                    >
+                      Back
+                    </button>
+                  )}
+
+                  {step < 2 ? (
+                    <button
+                      type="button"
+                      onClick={handleNext}
+                      className="px-4 py-2 bg-primaryColor-700 text-white rounded-lg hover:bg-primaryColor-800"
+                    >
+                      Next
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSubmit} 
+                      className="px-4 py-2 bg-primaryColor-700 text-white rounded-lg hover:bg-primaryColor-800"
+                    >
+                      Submit
+                    </button>
+                  )}
+                </div>
+
+
+
+
+
+              </form>
+            </>
+          )}
+>>>>>>> 1ef33375d6d63e4894157e564428dc8ae172d1af
         </div>
       </div>
     </div>
