@@ -94,7 +94,7 @@ const ReportManager: React.FC = () => {
                             const progressPercentage = (mission.budgetUsed / mission.totalBudget) * 100;
 
                             return (
-                                <li
+                                <li 
                                     key={mission.id}
                                     className="flex w-full max-w-sm flex-col rounded-lg bg-white p-6 shadow-md"
                                 >

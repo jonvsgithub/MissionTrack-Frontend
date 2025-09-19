@@ -1,6 +1,12 @@
 
 // import RequestManager from "./manager/RequestManager";
-import AppRoute from "./Router/AppRoute";
+
+import AdminDashboard from "./pages/AdminDashboard";
+
+// import Pending from "./Components/Pending"/;
+
+// import AppRoute from "./Router/AppRoute";
+
 
 
 function App() {
@@ -8,12 +14,9 @@ function App() {
   return (
 
     <>
-   {/* <ApplicationForm/> */}
-
-    {/* <MissionList/> */}
-       <AppRoute/>/
-       {/* <RequestManager/> */}
-    
+   
+       {/* <AppRoute/> */}
+       <AdminDashboard/>
     </>
       );
 }

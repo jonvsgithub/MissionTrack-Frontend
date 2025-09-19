@@ -28,7 +28,7 @@ const sectors: Record<string, string[]> = {
 
 
 // ------------------- Component -------------------
-const ApplicationForm: React.FC = () => {
+const Rejected : React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -292,4 +292,4 @@ const ApplicationForm: React.FC = () => {
   );
 };
 
-export default ApplicationForm;
+export default Rejected;

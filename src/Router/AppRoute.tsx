@@ -21,6 +21,7 @@ import TeamManagement from "../manager/TeamManagement";
 import RequestManager from "../manager/RequestManager";
 import ReportManager from "../manager/ReportManager";
 import ReportDetails from "../manager/ReportDetails";
+import Pending from "../Components/Pending";
 
 
 const AppRoute = () => {
@@ -56,6 +57,7 @@ const AppRoute = () => {
          <Route path="/requested" element={<RequestManager/>}/>
          <Route path="/reported" element={<ReportManager/>}/>
          <Route path="/missions/:id" element={<ReportDetails />} />
+         <Route path="/pending" element={<Pending />} />
       </Routes>
     </>
   );
