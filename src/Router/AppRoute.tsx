@@ -53,9 +53,9 @@ const AppRoute = () => {
         <Route path="/manager" element={<ManagerDashboard/>}/>
         <Route path="/apply" element={<ApplicationForm/>}/>
         <Route path="/team" element={<TeamManagement/>}/>
-         <Route path="/requested" element={<RequestManager/>}/>
-         <Route path="/reported" element={<ReportManager/>}/>
-         <Route path="/missions/:id" element={<ReportDetails />} />
+        <Route path="/requested" element={<RequestManager/>}/>
+        <Route path="/reported" element={<ReportManager/>}/>
+        <Route path="/missions/:id" element={<ReportDetails />} />
       </Routes>
     </>
   );

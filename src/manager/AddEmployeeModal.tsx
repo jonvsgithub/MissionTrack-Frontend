@@ -5,9 +5,10 @@ import { useAuth } from "../context/AuthContext"; // 👈 import auth
 
 interface AddEmployeeModalProps {
   onClose: () => void;
+  onEmployeeAdded: (employee: any) => void; // 👈 callback to parent
 }
 
-const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose }) => {
+const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose, onEmployeeAdded }) => {
   const { user } = useAuth(); // 👈 get logged-in admin
   const [formData, setFormData] = useState({
     fullName: "",
@@ -66,6 +67,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose }) => {
         throw new Error(errData.message || "Failed to create user");
       }
 
+      const newEmployee = await response.json(); // 👈 get created employee data
+      onEmployeeAdded(newEmployee); // 👈 notify parent to update dashboard
       setSuccess(true);
     } catch (error: any) {
       console.error(error);
@@ -91,54 +94,12 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose }) => {
           />
         ) : (
           <form className="space-y-4" onSubmit={handleSubmit}>
-            <Input
-              label="Full Name"
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              error={errors.fullName}
-            />
-            <Input
-              label="Email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-            />
-            <Input
-              label="Phone Number"
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              error={errors.phoneNumber}
-            />
-            <Input
-              label="Department"
-              type="text"
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              error={errors.department}
-            />
-            <Input
-              label="Role"
-              type="text"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              error={errors.role}
-            />
-            <Input
-              label="Password"
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
-            />
+            <Input label="Full Name" type="text" name="fullName" value={formData.fullName} onChange={handleChange} error={errors.fullName} />
+            <Input label="Email" type="email" name="email" value={formData.email} onChange={handleChange} error={errors.email} />
+            <Input label="Phone Number" type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} error={errors.phoneNumber} />
+            <Input label="Department" type="text" name="department" value={formData.department} onChange={handleChange} error={errors.department} />
+            <Input label="Role" type="text" name="role" value={formData.role} onChange={handleChange} error={errors.role} />
+            <Input label="Password" type="password" name="password" value={formData.password} onChange={handleChange} error={errors.password} />
 
             <div className="pt-4 flex justify-center space-x-4">
               <button
