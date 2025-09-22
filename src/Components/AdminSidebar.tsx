@@ -18,15 +18,15 @@ const AdminSidebar: React.FC = () => {
 
     // Sidebar navigation
     const navItems = [
-        { icon: VscHome, label: "Dashboard", path: "/dashboard" },
-        { icon: CiBellOn, label: "Notifications", path: "/notifications" },
-        { icon: FiUser, label: "Profile", path: "/profile" },
+        { icon: VscHome, label: "Dashboard", path: "/admin" },
+        { icon: CiBellOn, label: "Notifications", path: "/notificationsA" },
+        { icon: FiUser, label: "Profile", path: "/profileA" },
     ];
 
     // Quick actions (fixed icons)
     const quickActions = [
-        { icon: GrGroup, label: "All Companies", path: "/" },
-        { icon: FaFileAlt, label: "Billing/Subscription", path: "" },
+        { icon: GrGroup, label: "All Companies", path: "/companies" },
+        { icon: FaFileAlt, label: "Billing/Subscription", path: "/subscriptions" },
         { icon: FaChartBar, label: "Analytics", path: "" },
 
     ];
