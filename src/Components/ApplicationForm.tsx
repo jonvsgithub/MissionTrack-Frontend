@@ -166,6 +166,7 @@ const ApplicationForm: React.FC = () => {
               currentStep={step}
             />
           </div>
+          
 
           {/* Multi-Step Form */}
           <form onSubmit={handleSubmit} className="grid gap-4 mt-4">

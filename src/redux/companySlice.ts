@@ -22,28 +22,28 @@ export const registerCompany = createAsyncThunk(
     try {
       const data = new FormData();
 
-      // Match backend fields
+      // ✅ Match backend schema
       data.append("companyName", formData.organizationName);
       data.append("companyEmail", formData.companyEmail);
-      data.append("phoneNumber", formData.companyPhoneNumber);
+      data.append("companyContact", formData.companyPhoneNumber); // maps correctly
       data.append("province", formData.province);
       data.append("district", formData.district);
       data.append("sector", formData.sector);
-      data.append("fullName", formData.person);
-      data.append("companyContact", formData.phone);
-      data.append("email", formData.email);
-      data.append("password", formData.password);
 
+      // Representative (if backend accepts)
+      if (formData.person) data.append("person", formData.person);
+      if (formData.phone) data.append("phone", formData.phone);
+      if (formData.email) data.append("email", formData.email);
+      if (formData.password) data.append("password", formData.password);
+
+      // ✅ File upload (must be proofDocument)
       if (formData.files && formData.files.length > 0) {
         data.append("proofDocument", formData.files[0]);
       }
 
       const res = await axios.post(
         "https://missiontrack-backend.onrender.com/api/company/register",
-        data,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        data
       );
 
       return res.data;

@@ -40,23 +40,39 @@ const LoginForm: React.FC = () => {
   setErrors(newErrors);
   if (Object.keys(newErrors).length > 0) return;
 
-  setLoading(true);
-  try {
-    // 🔹 login should return response with user + token
-    const res = await login(email, password);
+ setLoading(true);
+ 
+ const res = await login(email, password);
 
-    if (res?.user?.role === "manager") {
+if (res?.user?.role === "manager") {
+  try {
+    // 🔹 Decode JWT token to extract companyStatus
+    const base64Url = res.user.token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const payload = JSON.parse(atob(base64));
+
+    const companyStatus = payload.companyStatus; // 👈 comes from token
+
+    if (companyStatus === "pending") {
+      navigate("/pending");
+    } else if (companyStatus === "rejected") {
+      navigate("/rejected");
+    } else if (companyStatus === "approved") {
       navigate("/manager");
-    } else if (res?.user?.role === "employee") {
-      navigate("/dashboard");
-    } else {
-      navigate("/login"); // fallback
-    }
-  } catch (err: any) {
-    setErrors({ password: err.message });
-  } finally {
-    setLoading(false);
+    } 
+  } catch (err) {
+    console.error("Failed to decode token", err);
+    navigate("/manager"); // fallback
   }
+} else if (res?.user?.role === "employee") {
+  navigate("/dashboard");
+} else if (res?.user?.role === "admin") {
+  navigate("/admin");
+} else {
+  navigate("/login"); // fallback
+}
+
+
 };
 
 

@@ -39,44 +39,49 @@ const EditEmployeeModal: React.FC<EditEmployeeModalProps> = ({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const res = await fetch(
-        `https://missiontrack-backend.onrender.com/api/users/${employee.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const data = await res.json();
-      if (res.ok) {
-        const updatedEmp: Employee = {
-          ...employee,
-          ...formData,
-          initials: formData.fullName
-            .split(" ")
-            .map((n: string) => n[0])
-            .join(""),
-        };
-        onEmployeeUpdated(updatedEmp);
-        onClose();
-      } else {
-        console.error(data.message || "Failed to update employee");
+  try {
+    const res = await fetch(
+      `https://missiontrack-backend.onrender.com/api/users/${employee.id}`,
+      {
+        method: "PATCH", // ✅ use PATCH instead of PUT
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          department: formData.department,
+          role: formData.role,
+        }), // ✅ match backend schema
       }
-    } catch (err) {
-      console.error("Error updating employee:", err);
-    } finally {
-      setLoading(false);
+    );
+
+    const data = await res.json();
+    if (res.ok) {
+      const updatedEmp: Employee = {
+        ...employee,
+        ...formData,
+        initials: formData.fullName
+          .split(" ")
+          .map((n: string) => n[0])
+          .join(""),
+      };
+      onEmployeeUpdated(updatedEmp);
+      onClose();
+    } else {
+      console.error(data.message || "Failed to update employee");
     }
-  };
+  } catch (err) {
+    console.error("Error updating employee:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

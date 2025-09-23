@@ -116,7 +116,7 @@ const TeamManagement: React.FC = () => {
   return (
     <div className="flex">
       <ManagerSideBar />
-      <div className="flex-1 flex flex-col h-screen-full bg-gray-100">
+      <div className="flex-1 flex flex-col min-h-screen bg-[#E6EAF5]">
         <Header />
         <main className="p-6 ml-80 mr-10 mt-20 ">
           <h1 className="bg-gradient-to-r from-primaryColor-10 to-accent-10 text-lg text-black font-bold px-4 py-2 rounded-xl shadow">
