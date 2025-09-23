@@ -69,8 +69,10 @@ const AllCompanies: React.FC = () => {
       <div className={`flex gap-70 mt-20 ${twTheme("bg-[#E6EAF5]", "bg-gray-900")}`}>
         <AdminSidebar />
 
-        <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
-          <AdminStats />
+        <main className={`min-h-screen m ${twTheme("", "bg-gray-900")}`}>
+          <div className="">
+          <AdminStats  />
+          </div>
 
           <button className="bg-primaryColor-700 w-60 mb-5 text-lg text-center rounded-2xl text-white">
             <div className="flex items-center justify-center">
@@ -79,10 +81,10 @@ const AllCompanies: React.FC = () => {
             </div>
           </button>
 
-          <div className="w-[1050px] bg-white rounded-2xl overflow-x-auto">
+          <div className="w-[1050px]  bg-white rounded-2xl overflow-x-auto">
             <div className="flex flex-col sm:flex-row gap-2 items-center justify-center p-4">
               {/* Search Input */}
-              <div className="flex-1 w-full sm:w-auto flex gap-2 items-center bg-white rounded-xl border border-gray-300 shadow-sm py-1 mb-2 sm:mb-0 px-2">
+              <div className="flex-1 w-full   sm:w-auto flex gap-2 items-center bg-white rounded-xl border border-gray-300 shadow-sm py-1 mb-2 sm:mb-0 px-2">
                 <FiSearch className="text-gray-400" />
                 <input
                   type="text"
@@ -125,7 +127,9 @@ const AllCompanies: React.FC = () => {
             </div>
 
             {/* Companies Table */}
+            <div className="w-[970px] ml-5 flex justify-center">
             <CompaniesTable data={filteredCompany} />
+            </div> 
           </div>
         </main>
       </div>

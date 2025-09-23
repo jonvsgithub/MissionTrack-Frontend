@@ -4,6 +4,9 @@ import AdminSidebar from "../Components/AdminSidebar";
 import TopCard from "../Components/TopCard";
 import RegistrationChart from "../Components/RegistrationChart";
 import ActivityChart from "../Components/ActivityChart";
+import PendingActions from "../Components/PendingAction";
+import RecentActivity from "../Components/RecentActivity";
+import Summary from "../Components/Summary";
 
 const twTheme = (light: string, dark: string) => `${light} dark:${dark}`;
 
@@ -19,13 +22,25 @@ const AdminDashboard: React.FC = () => {
                 <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
                     <TopCard />
                     <div className="flex gap-10">
-                        <div>
-                            <RegistrationChart />
-                        </div>
-                        <div  className="w-[400px]">
-                            <ActivityChart />
-                        </div>
+                        <div className="grid grid-cols-2 gap-10 w-[800px]">
+                            <div className="w-[400px]">
+                                <RegistrationChart />
+                            </div>
+                            <div className="w-[400px]">
+                                <ActivityChart />
+                            </div>
+                            <div className="w-[400px]">
+                                <PendingActions />
+                            </div>
+                            <div className="w-[400px]">
+                                <RecentActivity />
+                            </div>
 
+
+                        </div>
+                        <div>
+                            <Summary />
+                        </div>
                     </div>
 
                 </main>
