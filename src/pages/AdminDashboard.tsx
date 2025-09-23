@@ -21,7 +21,7 @@ const AdminDashboard: React.FC = () => {
 
                 <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
                     <TopCard />
-                    <div className="flex gap-10">
+                    <div className="flex gap-10git">
                         <div className="grid grid-cols-2 gap-10 w-[800px]">
                             <div className="w-[400px]">
                                 <RegistrationChart />
