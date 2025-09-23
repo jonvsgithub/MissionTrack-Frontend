@@ -1,7 +1,8 @@
 // src/components/ApplicationForm.tsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom"; 
 import { useDispatch, useSelector } from "react-redux";
+
 import type { RootState, AppDispatch } from "../redux/store";
 import { registerCompany } from "../redux/companySlice";
 
@@ -33,6 +34,7 @@ const sectors: Record<string, string[]> = {
 const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
 
   // ✅ log entire Redux state for debugging
   const companyState = useSelector((state: RootState) => state);
@@ -42,23 +44,47 @@ const ApplicationForm: React.FC = () => {
     (state: RootState) => state.company
   );
 
+  // ✅ Get previousData from navigation state (if any)
+  const previousData = location.state?.formData || {};
+
   const [formData, setFormData] = useState<any>({
-    organizationName: "",
-    companyEmail: "",
-    companyPhoneNumber: "",
-    province: "",
-    district: "",
-    sector: "",
-    person: "",
-    phone: "",
-    email: "",
-    password: "",
+    organizationName: previousData.organizationName || "",
+    companyEmail: previousData.companyEmail || "",
+    companyPhoneNumber: previousData.companyPhoneNumber || "",
+    province: previousData.province || "",
+    district: previousData.district || "",
+    sector: previousData.sector || "",
+    person: previousData.person || "",
+    phone: previousData.phone || "",
+    email: previousData.email || "",
+    password: "", // password should not be prefilled
     agree: false,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [step, setStep] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+// ✅ Restore form data if application was rejected
+useEffect(() => {
+  if (previousData && Object.keys(previousData).length > 0) {
+    setFormData((prev: any) => ({ ...prev, ...previousData }));
+    if (previousData.files) {
+      setUploadedFiles(previousData.files);
+    }
+    setStep(0);
+  }
+
+  // 🔹 navigate here when application was rejected
+  if (error === "REJECTED") {
+    navigate("/rejected", {
+      state: {
+        formData,
+      },
+    });
+  }
+}, [previousData, error, formData, navigate]);
+
 
   // ------------------- Handlers -------------------
   const handleChange = (
