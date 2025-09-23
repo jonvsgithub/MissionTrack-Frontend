@@ -36,7 +36,7 @@ const Pending: React.FC = () => {
                         <p className="text-gray-600">
                             Almost there! Your access will be activated after review. Please check your email for updates.
                         </p>
-                        <Link to={"/home"}
+                        <Link to={"/"}
                         className="w-full px-4 py-3 bg-primaryColor-800 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-150 ease-in-out">
                             Back to Home
                         </Link>

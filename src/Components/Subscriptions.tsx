@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from "./HeaderDash";
-import AdminSidebar from "./AdminSidebar";
+import AdminSidebar from "./Admin/AdminSidebar";
 import Revenue from "./Revenue";
 import Plans from "./Plans";
 

@@ -24,7 +24,7 @@ const RequestManager: React.FC = () => {
                 <ManagerSideBar />
                 <div className="flex flex-col">
                     <div className="w-[1200px] py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
-                        <h1 className="font-bold text-2xl text-center">Your Missions</h1>
+                        <h1 className="font-bold text-2xl text-center">Requests</h1>
                     </div>
 
                     {/* Search Box */}

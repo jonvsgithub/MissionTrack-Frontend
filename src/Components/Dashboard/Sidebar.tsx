@@ -3,12 +3,20 @@ import { CiBellOn } from "react-icons/ci";
 import { FiUser, FiFileText, FiList, FiPlusCircle } from "react-icons/fi";
 import { VscHome } from "react-icons/vsc";
 import { BiWallet } from "react-icons/bi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../hook/useTheme";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar: React.FC = () => {
   const { theme } = useTheme();
   const location = useLocation();
+  const { logout } = useAuth();
+  const navigate = useNavigate(); // ✅ hook
+
+  const handleLogout = () => {
+    logout();          // clear user + token
+    navigate("/login"); // redirect
+  };
 
   const twTheme = (light: string, dark: string) =>
     theme === "light" ? light : dark;
@@ -76,12 +84,18 @@ const Sidebar: React.FC = () => {
               </Link>
             ))}
           </div>
-           {/* Logout Button */}
-      <div className="p-5 mt-58 bg-accent-500 w-30 text-center ml-10 hover:bg-green-600 text-white font-semibold py-2 rounded-2xl">
-        <Link to={"/login"}>
+         <div className="p-5">
+        {/* other nav + quick actions */}
+
+        {/* ✅ Proper Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="mt-6  w-32 bg-green-600 text-white font-semibold py-2 rounded-2xl hover:bg-orange-500 transition"
+        >
           Logout
-        </Link>
+        </button>
       </div>
+
         </div>
       </div>
     </aside>

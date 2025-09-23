@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Header from "../Components/HeaderDash";
-import AdminSidebar from "../Components/AdminSidebar";
-import AdminStats from "../Components/AdminStats";
-import CompaniesTable from "../Components/CompaniesTable";
+import AdminSidebar from "../Components/Admin/AdminSidebar";
+import AdminStats from "../Components/Admin/AdminStats";
+import CompaniesTable from "../Components/Admin/CompaniesTable";
 import { FiSearch } from "react-icons/fi";
 import { BsChevronDown } from "react-icons/bs";
 
