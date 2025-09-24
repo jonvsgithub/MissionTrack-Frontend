@@ -106,6 +106,7 @@ const CompaniesTable = ({ data }) => {
         <div className="text-center text-gray-500 italic py-6">
           No companies found
         </div>
+
       )}
     </div>
   );

@@ -27,6 +27,9 @@ import AdminDashboard from "../pages/AdminDashboard";
 import Rejected from "../Components/Rejected";
 import Subscriptions from "../Components/Subscriptions";
 import FinanceDashboard from "../pages/FinanceDashboard";
+import AdminHome from "../pages/AdminHome";
+import ManagerHome from "../pages/ManagerHome";
+import EmployeeHome from "../pages/EmployeeHome";
 
 
 
@@ -44,11 +47,15 @@ const AppRoute = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Employee */}
+        <Route path="/dashboard" element={<Dashboard />} >
+          <Route index element={<EmployeeHome />} />
+          <Route path="notifications" element={<NotificationPage />} />
+        </Route>
         <Route path="/profile" element={<Profile />} />
         <Route path="/details" element={<Profile />} />
         <Route path="/password" element={<Password />} />
-        <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/preferences" element={<Notification />} />
         <Route path="/request" element={<Details />} />
 
@@ -56,19 +63,35 @@ const AppRoute = () => {
         <Route path="/reset-password/:token" element={<UpdatePassword />} />
         <Route path="/requestList" element={<MissionList />} />
         <Route path="/report" element={<Report />} />
-        <Route path="/missions/history" element={<MissionExpenses />} />
-        <Route path="/manager" element={<ManagerDashboard />} />
+
+
+        {/* <Route path="/missions/history" element={<MissionExpenses />} /> */}
+        <Route path="/manager" element={<ManagerDashboard />} >
+          <Route index element={<ManagerHome />} />
+          <Route path="team" element={<TeamManagement />} />
+          <Route path="requested" element={<RequestManager />} />
+          <Route path="reported" element={<ReportManager />} />
+        </Route>
         <Route path="/apply" element={<ApplicationForm />} />
         <Route path="/team" element={<TeamManagement />} />
-        <Route path="/requested" element={<RequestManager />} />
-        <Route path="/reported" element={<ReportManager />} />
+        {/* <Route path="/requested" element={<RequestManager />} /> */}
+
         <Route path="/missions/:id" element={<ReportDetails />} />
         <Route path="/pending" element={<Pending />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+
+
+
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route index element={<AdminHome />} />
+          <Route path="home" element={<AdminHome />} />
+          <Route path="companies" element={<AllCompanies />} />
+          <Route path="subscriptions" element={<Subscriptions />} />
+        </Route>
+
+
         <Route path="/pending" element={<Pending />} />
         <Route path="/rejected" element={<Rejected />} />
-        <Route path="/companies" element={<AllCompanies/>} />
-        <Route path="/subscriptions" element={<Subscriptions />} />
+
         <Route path="/finance" element={<FinanceDashboard />} />
 
 

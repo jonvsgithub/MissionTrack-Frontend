@@ -19,9 +19,9 @@ const AdminStats: React.FC<AdminStatsProps> = ({
     rejectedCompanies,
 }) => {
     return (
-        <div className="flex flex-col  w-[1050px] md:flex-row space-y-4 md:space-y-0 md:space-x-4 p-4">
+        <div className="grid     sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 md:space-y-0 md:space-x-4 p-4">
             {/* Total Registered Companies Card */}
-            <div className="p-6 bg-white  w-[230px] rounded-xl shadow-md flex-1">
+            <div className="p-6 bg-white  w-[270px] rounded-xl shadow-md flex-1">
                 <div className="flex justify-between items-center">
                     <p className="text-gray-700 font-medium">
                         Total Registered <span className="block">Companies</span>
@@ -39,7 +39,7 @@ const AdminStats: React.FC<AdminStatsProps> = ({
             </div>
 
             {/* Active Companies Card */}
-            <div className="p-6 bg-white w-[220px] rounded-xl shadow-md flex-1">
+            <div className="p-6 bg-white w-[270px] rounded-xl shadow-md flex-1">
                 <div className="flex justify-between items-center">
                     <p className="text-gray-700 font-medium">
                         Active <span className="block">Companies</span>
@@ -54,7 +54,7 @@ const AdminStats: React.FC<AdminStatsProps> = ({
                 </div>
             </div>
             {/* Under Review */}
-            <div className="p-6 bg-white w-[220px] rounded-xl shadow-md flex-1">
+            <div className="p-6 bg-white w-[270px] rounded-xl shadow-md flex-1">
                 <div className="flex justify-between items-center">
                     <p className="text-gray-700 font-medium">
                         Companies <span className="block">Under Review</span>
@@ -69,7 +69,7 @@ const AdminStats: React.FC<AdminStatsProps> = ({
                 </div>
             </div>
             {/* Upcoming*/}
-            <div className="p-6 bg-white w-[220px] rounded-xl shadow-md flex-1">
+            <div className="p-6 bg-white w-[270px] rounded-xl shadow-md flex-1">
                 <div className="flex justify-between items-center">
                     <p className="text-gray-700 font-medium">
                         Upcoming <span className="block"> Payments</span>
@@ -83,7 +83,7 @@ const AdminStats: React.FC<AdminStatsProps> = ({
                     <p className="text-sm text-gray-500">+19 from last month</p>
                 </div>
             </div>
-                   <div className="p-6 bg-white w-[220px] rounded-xl shadow-md flex-1">
+                   <div className="p-6 bg-white w-[270px] rounded-xl shadow-md flex-1">
                 <div className="flex justify-between items-center">
                     <p className="text-gray-700 font-medium">
                         Blocked <span className="block"> Companies</span>
