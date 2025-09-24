@@ -26,7 +26,6 @@ export const registerCompany = createAsyncThunk(
         "https://missiontrack-backend.onrender.com/api/company/register",
         formData
       );
-
       return res.data;
     } catch (error: any) {
       return rejectWithValue(
