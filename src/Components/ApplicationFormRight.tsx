@@ -149,57 +149,120 @@ const ApplicationFormRight: React.FC = () => {
         {/* Multi-Step Form */}
         <form onSubmit={handleSubmit} className="grid gap-4 mt-4">
           {/* --- Step 0: Company Info --- */}
-          {step === 0 && (
-            <>
-              <h2 className="text-xl mb-4">Company/Organization’s Information</h2>
-              <Input
-                label="Organization Name"
-                name="organizationName"
-                value={formData.organizationName}
-                onChange={handleChange}
-                error={errors.organizationName}
-              />
-              <Input
-                label="Company Email"
-                name="companyEmail"
-                type="email"
-                value={formData.companyEmail}
-                onChange={handleChange}
-                error={errors.companyEmail}
-              />
-              <Input
-                label="Company Phone Number"
-                name="companyPhoneNumber"
-                value={formData.companyPhoneNumber}
-                onChange={handleChange}
-                error={errors.companyPhoneNumber}
-              />
-              <Select
-                label="Province"
-                name="province"
-                value={formData.province}
-                options={provinces}
-                onChange={handleChange}
-                error={errors.province}
-              />
-              <Select
-                label="District"
-                name="district"
-                value={formData.district}
-                options={districts[formData.province] || []}
-                onChange={handleChange}
-                error={errors.district}
-              />
-              <Select
-                label="Sector"
-                name="sector"
-                value={formData.sector}
-                options={sectors[formData.district] || []}
-                onChange={handleChange}
-                error={errors.sector}
-              />
-            </>
-          )}
+           {/* Step 0 */}
+           {step === 0 && (
+              <div>
+                <div className="mb-4 text-xl">
+                  <h1>Company/Organization’s Information</h1>
+                </div>
+                <div className="rounded-2xl border p-6 space-y-4">
+                  <Input
+                    label="Organization Name"
+                    name="organizationName"
+                    value={formData.organizationName}
+                    onChange={handleChange}
+                    placeholder="Enter organization name"
+                    error={errors.organizationName}
+                  />
+
+                  {/* Location */}
+                  <div className="grid grid-cols-3 gap-4">
+                    <Select
+                      label="Province"
+                      name="province"
+                      value={formData.province}
+                      options={provinces}
+                      placeholder="Province"
+                      onChange={handleChange}
+                      error={errors.province}
+                    />
+                    <Select
+                      label="District"
+                      name="district"
+                      value={formData.district}
+                      placeholder="District"
+                      options={formData.province ? districts[formData.province] : []}
+                      onChange={handleChange}
+                      error={errors.district}
+                    />
+                    <Select
+                      label="Sector"
+                      name="sector"
+                      value={formData.sector}
+                      placeholder="Sector"
+                      options={
+                        formData.district && sectors[formData.district]
+                          ? sectors[formData.district]
+                          : []
+                      }
+                      onChange={handleChange}
+                      error={errors.sector}
+                    />
+                  </div>
+
+                  {/* Company Contact */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      label="Company Email"
+                      name="companyEmail"
+                      type="email"
+                      value={formData.companyEmail}
+                      onChange={handleChange}
+                      placeholder="Enter company email"
+                      error={errors.companyEmail}
+                    />
+                    <Input
+                      label="Phone Number"
+                      name="companyPhoneNumber"
+                      value={formData.companyPhoneNumber}
+                      onChange={handleChange}
+                      placeholder="Enter company phone number"
+                      error={errors.companyPhoneNumber}
+                    />
+                  </div>
+                </div>
+
+                {/* DragDrop uploader */}
+                <div className="border mt-5 rounded-2xl p-6">
+                  <div className="resize-y overflow-auto min-h-[150px] border-2 border-dashed border-gray-400 rounded-md">
+                    <DragDrop
+                      onFileSelect={(files) =>
+                        setUploadedFiles([...uploadedFiles, ...files])
+                      }
+                    />
+                  </div>
+
+                  {/* Preview uploaded files */}
+                  {uploadedFiles.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      <h4 className="font-medium text-sm text-gray-700">
+                        Uploaded Files:
+                      </h4>
+                      <ul className="space-y-1 text-sm text-gray-600">
+                        {uploadedFiles.map((file, idx) => (
+                          <li
+                            key={idx}
+                            className="flex items-center justify-between bg-gray-50 p-2 rounded"
+                          >
+                            <span>{file.name}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleFileRemove(idx)}
+                              className="text-red-500 text-xs hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {errors.files && (
+                    <p className="text-red-500 text-sm">{errors.files}</p>
+                  )}
+                </div>
+              </div>
+            )}
 
           {/* --- Step 1: Representative --- */}
            {step === 1 && (

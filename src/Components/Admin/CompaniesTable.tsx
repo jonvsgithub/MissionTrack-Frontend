@@ -32,7 +32,7 @@ const Badge = ({ text, type }) => {
 // ✅ Accept data as props instead of hardcoding
 const CompaniesTable = ({ data }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+    <div className="bg-white rounded-xl shadow-lg sm:overflow-x-auto border border-gray-200">
       {/* Table Header */}
       <div className="grid grid-cols-7 gap-4 text-sm font-semibold text-gray-600 bg-gray-50 p-4">
         <div>Company Name</div>

@@ -4,7 +4,7 @@ import AdminSidebar from "../Components/Admin/AdminSidebar";
 import AdminStats from "../Components/Admin/AdminStats";
 import CompaniesTable from "../Components/Admin/CompaniesTable";
 import { FiSearch } from "react-icons/fi";
-import ApplicationForm from "../Components/ApplicationForm";
+import ApplicationFormRight from "../Components/ApplicationFormRight";
 
 const twTheme = (light: string, dark: string) => `${light} dark:${dark}`;
 
@@ -91,16 +91,17 @@ const AllCompanies: React.FC = () => {
           </button>
 
           {/* Filters + Table */}
-          <div className="w-[1050px] bg-white rounded-2xl overflow-x-auto">
+          <div className=" bg-amber-100 sm:overflow-x-auto md:w-[550px] lg:w-full px-10 md:px-6 rounded-2xl ">
             <div className="flex flex-col sm:flex-row gap-2 items-center justify-center p-4">
               {/* Search Input */}
-              <div className="flex-1 w-full sm:w-auto flex gap-2 items-center bg-white rounded-xl border border-gray-300 shadow-sm py-1 mb-2 sm:mb-0 px-2">
+              
+              <div className="flex-1  flex gap-2 items-center bg-accent-100 rounded-xl border border-gray-300 shadow-sm py-1 mb-2 sm:mb-0 px-2">
                 <FiSearch className="text-gray-400" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-8 text-gray-700 placeholder-gray-400 focus:outline-none"
+                  className=" h-8   text-gray-700 placeholder-gray-400 focus:outline-none"
                   placeholder="Search by company, contact, or status"
                 />
               </div>
@@ -133,7 +134,7 @@ const AllCompanies: React.FC = () => {
             </div>
 
             {/* Companies Table */}
-            <div className="w-[970px] ml-5 flex justify-center">
+            <div className="  sm:overflow-x-auto  flex justify-center">
               <CompaniesTable data={filteredCompany} />
             </div>
           </div>
@@ -160,7 +161,7 @@ const AllCompanies: React.FC = () => {
             </button>
 
             {/* Application Form */}
-            <ApplicationForm />
+            <ApplicationFormRight />
           </div>
         </div>
       )}

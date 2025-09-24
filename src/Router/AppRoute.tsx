@@ -27,6 +27,7 @@ import AdminDashboard from "../pages/AdminDashboard";
 import Rejected from "../Components/Rejected";
 import Subscriptions from "../Components/Subscriptions";
 import FinanceDashboard from "../pages/FinanceDashboard";
+import AdminHome from "../pages/AdminHome";
 
 
 
@@ -64,7 +65,15 @@ const AppRoute = () => {
         <Route path="/reported" element={<ReportManager />} />
         <Route path="/missions/:id" element={<ReportDetails />} />
         <Route path="/pending" element={<Pending />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route index element={<AdminHome />} />
+          <Route path="home" element={<AdminHome />} />
+          <Route path="companies" element={<AllCompanies />} />
+          <Route path="subscriptions" element={<Subscriptions />} />
+        </Route>
+
+
         <Route path="/pending" element={<Pending />} />
         <Route path="/rejected" element={<Rejected />} />
         <Route path="/companies" element={<AllCompanies/>} />

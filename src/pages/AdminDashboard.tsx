@@ -8,6 +8,7 @@ import PendingActions from "../Components/Admin/PendingAction";
 import RecentActivity from "../Components/RecentActivity";
 import Summary from "../Components/Admin/Summary";
 import HeaderAdmin from "../Components/Admin/HeaderAdmin";
+import { Outlet } from "react-router-dom";
 
 
 const twTheme = (light: string, dark: string) => `${light} dark:${dark}`;
@@ -20,32 +21,9 @@ const AdminDashboard: React.FC = () => {
             <HeaderAdmin />
             <div className={`flex gap-70 mt-20 ${twTheme("bg-[#E6EAF5]", "bg-gray-900")}`}>
                 <AdminSidebar />
+                <Outlet />
 
-                <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
-                    <TopCard />
-                    <div className="flex gap-10">
-                        <div className="grid grid-cols-2 mt-4 gap-10 ">
-                            <div className="w-[380px]">
-                                <RegistrationChart />
-                            </div>
-                            <div className="w-[380px]">
-                                <ActivityChart />
-                            </div>
-                            <div className="w-[380px]">
-                                <PendingActions />
-                            </div>
-                            <div className="w-[380px]">
-                                <RecentActivity />
-                            </div>
-
-
-                        </div>
-                        <div className=" ">
-                            <Summary />
-                        </div>
-                    </div>
-
-                </main>
+                
             </div>
         </>
     );
