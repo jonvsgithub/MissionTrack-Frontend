@@ -6,6 +6,7 @@ interface CompanyState {
   success: boolean;
   error: string | null;
   message: string | null;
+  companies?: any[];
 }
 
 const initialState: CompanyState = {
@@ -13,6 +14,7 @@ const initialState: CompanyState = {
   success: false,
   error: null,
   message: null,
+  companies: [],
 };
 
 // Async thunk for registering company
@@ -20,32 +22,32 @@ export const registerCompany = createAsyncThunk(
   "company/register",
   async (formData: any, { rejectWithValue }) => {
     try {
-      const data = new FormData();
-
-      // ✅ Match backend schema
-      data.append("companyName", formData.organizationName);
-      data.append("companyEmail", formData.companyEmail);
-      data.append("companyContact", formData.companyPhoneNumber); // maps correctly
-      data.append("province", formData.province);
-      data.append("district", formData.district);
-      data.append("sector", formData.sector);
-
-      // Representative (if backend accepts)
-      if (formData.person) data.append("person", formData.person);
-      if (formData.phone) data.append("phone", formData.phone);
-      if (formData.email) data.append("email", formData.email);
-      if (formData.password) data.append("password", formData.password);
-
-      // ✅ File upload (must be proofDocument)
-      if (formData.files && formData.files.length > 0) {
-        data.append("proofDocument", formData.files[0]);
-      }
-
       const res = await axios.post(
         "https://missiontrack-backend.onrender.com/api/company/register",
-        data
+        formData
       );
 
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+);
+
+export const getAllCompanies = createAsyncThunk(
+  "company/getAll",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        "https://missiontrack-backend.onrender.com/api/company/allCompanies",
+        {
+          headers:{
+            Authorization:`Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
       return res.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -67,6 +69,7 @@ const companySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // create new company
     builder
       .addCase(registerCompany.pending, (state) => {
         state.loading = true;
@@ -77,8 +80,28 @@ const companySlice = createSlice({
         state.loading = false;
         state.success = true;
         state.message = action.payload.message;
+        state.companies?.push(action.payload.company);
       })
       .addCase(registerCompany.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+// GETTING all companies
+    builder
+      .addCase(getAllCompanies.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getAllCompanies.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.message = action.payload.message;
+        state.companies = action.payload.data || []; //save companies
+        state.error = null;
+      })
+      .addCase(getAllCompanies.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

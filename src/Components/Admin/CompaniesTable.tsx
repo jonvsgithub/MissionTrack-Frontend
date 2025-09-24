@@ -2,77 +2,91 @@ import React from "react";
 
 // Reusable component for the status/plan/payment badges
 const Badge = ({ text, type }) => {
-  const getColorClasses = (badgeType) => {
+  const getColorClasses = (badgeType: string) => {
     switch (badgeType) {
-      case "Active":
-      case "Paid":
-        return "bg-green-100 text-green-600";
-      case "Pending":
-      case "Unpaid":
-        return "bg-yellow-100 text-yellow-600";
-      case "Rejected":
-      case "Refunded":
-        return "bg-red-100 text-red-600";
+      case "approved":
+        return "text-blue-600 bg-transparent border border-blue-600";
+      case "rejected":
+        return "text-red-600 bg-transparent border border-red-600";
+      case "pending":
+        return "text-yellow-600 bg-transparent border border-yellow-600";
+      case "active":
+        return "text-green-600 bg-transparent border border-green-600";
+      case "trial":
+        return "text-yellow-600 bg-transparent border border-yellow-600";
+      case "blocked":
+        return "text-red-600 bg-transparent border border-red-600";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "text-gray-600 bg-transparent border border-gray-600";
     }
   };
 
   return (
-    <div
-      className={`px-2 py-1 inline-block rounded-full font-medium text-xs ${getColorClasses(
+    <span
+      className={`px-3 py-1 rounded-full font-medium text-xs whitespace-nowrap ${getColorClasses(
         type
       )}`}
     >
       {text}
-    </div>
+    </span>
   );
 };
 
-// ✅ Accept data as props instead of hardcoding
+// ✅ Styled Companies Table
 const CompaniesTable = ({ data }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
       {/* Table Header */}
-      <div className="grid grid-cols-7 gap-4 text-sm font-semibold text-gray-600 bg-gray-50 p-4">
-        <div>Company Name</div>
+      <div className="grid grid-cols-6 gap-6 text-sm font-semibold text-gray-600 bg-gray-100 px-6 py-3">
+        <div>Company</div>
         <div>Status</div>
+        <div>Manager</div>
         <div>Plan</div>
-        <div>Contact Person</div>
-        <div>Payment</div>
-        <div>Last Activity</div>
-        <div>Actions</div>
+        <div>Created</div>
+        <div className="text-center">Actions</div>
       </div>
 
       {/* Table Rows */}
       {data.length > 0 ? (
-        data.map((company, index) => (
+        data.map((company: { companyName: string; companyEmail: string; status: unknown; manager: { fullName: string | number  } | null | undefined; state: unknown|string; createdAt: string | number | Date }, index: string ) => (
           <div
             key={index}
-            className="grid grid-cols-7 gap-4 items-center text-sm border-b border-gray-200 p-4 last:border-b-0"
+            className="grid grid-cols-6 gap-6 items-center text-sm px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition"
           >
-            <div>
-              <div className="font-semibold text-gray-800">
+            {/* Company Info */}
+            <div className="flex flex-col">
+              <span className="font-semibold text-gray-800">
                 {company.companyName}
-              </div>
-              <div className="text-xs text-gray-500">{company.email}</div>
+              </span>
+              <span className="text-xs text-gray-500">
+                {company.companyEmail}
+              </span>
             </div>
+
+            {/* Status */}
             <div>
               <Badge text={company.status} type={company.status} />
             </div>
+
+            {/* Manager */}
+            <div className="text-gray-700">{company.manager?.fullName}</div>
+
+            {/* Plan/State */}
             <div>
-              <Badge text={company.plan} type="default" />
+              <Badge text={company.state || "N/A"} type={company.state} />
             </div>
-            <div className="text-gray-700">{company.contactPerson}</div>
-            <div>
-              <Badge text={company.payment} type={company.payment} />
+
+            {/* Date */}
+            <div className="text-gray-500 text-sm">
+              {new Date(company.createdAt).toLocaleDateString()}
             </div>
-            <div className="text-gray-700">{company.lastActivity}</div>
+
+            {/* Actions */}
             <div className="flex justify-center">
-              <button className="text-gray-400 hover:text-gray-600">
+              <button className="p-2 rounded-full hover:bg-gray-200 transition">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
+                  className="h-5 w-5 text-gray-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
