@@ -49,20 +49,26 @@ const AppRoute = () => {
         <Route path="/login" element={<LoginForm />} />
 
         {/* Employee */}
-        <Route path="/dashboard" element={<Dashboard />} >
+        <Route path="/employee" element={<Dashboard />} >
           <Route index element={<EmployeeHome />} />
           <Route path="notifications" element={<NotificationPage />} />
+          <Route path="notifications" element={<NotificationPage />} />
+          <Route path="request" element={<Details />} />
+          <Route path="requestList" element={<MissionList />} />
+          <Route path="expenses" element={<MissionExpenses />} />
+          <Route path="report" element={<Report />} />
         </Route>
+
         <Route path="/profile" element={<Profile />} />
         <Route path="/details" element={<Profile />} />
         <Route path="/password" element={<Password />} />
         <Route path="/preferences" element={<Notification />} />
-        <Route path="/request" element={<Details />} />
+      
 
         <Route path="/forgot-password" element={<RecoverPassword />} />
         <Route path="/reset-password/:token" element={<UpdatePassword />} />
-        <Route path="/requestList" element={<MissionList />} />
-        <Route path="/report" element={<Report />} />
+        
+        
 
 
         {/* <Route path="/missions/history" element={<MissionExpenses />} /> */}
