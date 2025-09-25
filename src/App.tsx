@@ -1,6 +1,7 @@
 // import Subscriptions from "./Components/Subscriptions";
 
 // import Rejected from "./Components/Rejected";
+// import FinanceDashboard from "./pages/FinanceDashboard";
 
 
 
@@ -14,6 +15,7 @@ function App() {
   return (
 
     <>
+    {/* <FinanceDashboard/> */}
   {/* <Subscriptions/> */}
        <AppRoute/>
        {/* <AdminDashboard/> */}

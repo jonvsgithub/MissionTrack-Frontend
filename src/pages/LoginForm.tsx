@@ -45,6 +45,14 @@ const LoginForm: React.FC = () => {
   try {
     const res = await login(email, password);
 
+    // ✅ Save token + userId to localStorage for later requests
+    if (res?.token) {
+      localStorage.setItem("token", res.token);
+    }
+    if (res?.user?.id) {
+      localStorage.setItem("userId", res.user.id);
+    }
+
     if (res?.user?.role === "manager") {
       try {
         // ✅ token comes from res.token (not res.user.token)
@@ -57,7 +65,7 @@ const LoginForm: React.FC = () => {
         if (companyStatus === "pending") {
           navigate("/pending");
         } else if (companyStatus === "rejected") {
-          navigate("/rejected", { state: { formData: res.user } }); 
+          navigate("/rejected", { state: { formData: res.user } });
           // 👆 pass old company data for resubmission
         } else if (companyStatus === "approved") {
           navigate("/manager");
@@ -81,6 +89,7 @@ const LoginForm: React.FC = () => {
     setLoading(false);
   }
 };
+
 
 
   return (

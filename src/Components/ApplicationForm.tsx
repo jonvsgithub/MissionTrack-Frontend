@@ -1,6 +1,6 @@
 // src/components/ApplicationForm.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom"; 
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { RootState, AppDispatch } from "../redux/store";
@@ -11,6 +11,7 @@ import Select from "./Select";
 import Stepper from "./Stepper";
 import DragDrop from "./DragDrop";
 import Checkbox from "./Checkbox";
+import { useAuth } from "../context/AuthContext"; // ✅ added
 
 // ------------------- Constants -------------------
 const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
@@ -35,6 +36,7 @@ const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
+  const { user } = useAuth(); // ✅ now we have user with token & companyId
 
   // ✅ log entire Redux state for debugging
   const companyState = useSelector((state: RootState) => state);
@@ -49,13 +51,16 @@ const ApplicationForm: React.FC = () => {
 
   const [formData, setFormData] = useState<any>({
     organizationName: previousData.organizationName || "",
+    companyName: previousData.companyName || "",
     companyEmail: previousData.companyEmail || "",
     companyPhoneNumber: previousData.companyPhoneNumber || "",
+    companyContact: previousData.companyContact || "",
     province: previousData.province || "",
     district: previousData.district || "",
     sector: previousData.sector || "",
-    person: previousData.person || "",
-    phone: previousData.phone || "",
+    person: previousData.fullName || "",
+    fullName: previousData.fullName || "",
+    phone: previousData.phoneNumber || "",
     email: previousData.email || "",
     password: "", // password should not be prefilled
     agree: false,
@@ -63,27 +68,44 @@ const ApplicationForm: React.FC = () => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [step, setStep] = useState(0);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
 
-// ✅ Restore form data if application was rejected
-useEffect(() => {
-  if (previousData && Object.keys(previousData).length > 0) {
-    setFormData((prev: any) => ({ ...prev, ...previousData }));
-    if (previousData.files) {
-      setUploadedFiles(previousData.files);
-    }
-    setStep(0);
-  }
+ useEffect(() => {
+  if (user?.companyId && user?.token) {
+    fetch(`https://missiontrack-backend.onrender.com/api/companies/${user.companyId}`, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // Map backend fields to your form state
+        setFormData({
+          organizationName: data.companyName || "",
+          province: data.province || "",
+          district: data.district || "",
+          sector: data.sector || "",
+          companyEmail: data.companyEmail || user?.email || "",
+          companyPhoneNumber: data.companyContact || "",
+          person: data.manager?.fullName || "",
+          phone: data.manager?.phoneNumber || data.manager?.phone || "",
+          email: data.manager?.email || "",
+          password: "", // never prefill password
+          agree: false,
+        });
 
-  // 🔹 navigate here when application was rejected
-  if (error === "REJECTED") {
-    navigate("/rejected", {
-      state: {
-        formData,
-      },
-    });
+        // Prefill uploaded file if exists
+        if (data.proofDocument) {
+          setUploadedFiles([
+            {
+              name: data.proofDocument.split("/").pop(),
+              url: `https://missiontrack-backend.onrender.com/${data.proofDocument}`,
+              fromServer: true,
+            } as any,
+          ]);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch company:", err));
   }
-}, [previousData, error, formData, navigate]);
+}, [user]);
 
 
   // ------------------- Handlers -------------------
@@ -112,13 +134,21 @@ useEffect(() => {
       if (!formData.sector) newErrors.sector = "Sector is required";
       if (!formData.companyEmail)
         newErrors.companyEmail = "Company email is required";
-      if (!formData.companyPhoneNumber)
+      if (!formData.companyPhoneNumber) {
         newErrors.companyPhoneNumber = "Company phone number is required";
+      } else if (formData.companyPhoneNumber.length < 10) {
+        newErrors.companyPhoneNumber =
+          "Company phone number must be at least 10 digits long";
+      }
     }
 
     if (step === 1) {
       if (!formData.person) newErrors.person = "Contact Person is required";
-      if (!formData.phone) newErrors.phone = "Phone is required";
+      if (!formData.phone) {
+        newErrors.phone = "Phone is required";
+      } else if (formData.phone.length < 10) {
+        newErrors.phone = "Phone number must be at least 10 digits long";
+      }
       if (!formData.email) newErrors.email = "Email is required";
       if (!formData.password) newErrors.password = "Password is required";
       if (uploadedFiles.length === 0)
@@ -148,8 +178,17 @@ useEffect(() => {
     if (Object.keys(newErrors).length > 0) return;
 
     const payload = {
-      ...formData,
-      files: uploadedFiles,
+      companyName: formData.organizationName,
+      companyEmail: formData.companyEmail,
+      companyContact: formData.companyPhoneNumber,
+      district: formData.district,
+      province: formData.province,
+      sector: formData.sector,
+      fullName: formData.person,
+      phoneNumber: formData.phone,
+      email: formData.email,
+      password: formData.password,
+      proofDocument: uploadedFiles[0],
     };
 
     dispatch(registerCompany(payload));
@@ -192,7 +231,6 @@ useEffect(() => {
               currentStep={step}
             />
           </div>
-          
 
           {/* Multi-Step Form */}
           <form onSubmit={handleSubmit} className="grid gap-4 mt-4">
@@ -263,7 +301,7 @@ useEffect(() => {
                       name="companyPhoneNumber"
                       value={formData.companyPhoneNumber}
                       onChange={handleChange}
-                      placeholder="Enter company phone number"
+                      placeholder="+250788888888"
                       error={errors.companyPhoneNumber}
                     />
                   </div>
@@ -282,16 +320,25 @@ useEffect(() => {
                   {/* Preview uploaded files */}
                   {uploadedFiles.length > 0 && (
                     <div className="mt-3 space-y-2">
-                      <h4 className="font-medium text-sm text-gray-700">
-                        Uploaded Files:
-                      </h4>
                       <ul className="space-y-1 text-sm text-gray-600">
-                        {uploadedFiles.map((file, idx) => (
+                        {uploadedFiles.map((file: any, idx) => (
                           <li
                             key={idx}
                             className="flex items-center justify-between bg-gray-50 p-2 rounded"
                           >
-                            <span>{file.name}</span>
+                            {file.fromServer ? (
+                              <a
+                                href={file.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline"
+                              >
+                                {file.name}
+                              </a>
+                            ) : (
+                              <span>{file.name}</span>
+                            )}
+
                             <button
                               type="button"
                               onClick={() => handleFileRemove(idx)}
@@ -304,6 +351,7 @@ useEffect(() => {
                       </ul>
                     </div>
                   )}
+
                   {errors.files && (
                     <p className="text-red-500 text-sm">{errors.files}</p>
                   )}

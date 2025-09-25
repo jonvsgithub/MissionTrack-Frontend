@@ -4,12 +4,12 @@ import { FiUser, FiList, FiPlusCircle } from "react-icons/fi";
 import { VscHome } from "react-icons/vsc";
 import { BiWallet } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
-import { useTheme } from "../hook/useTheme";
+import { useTheme } from "../../hook/useTheme";
 import { GrGroup } from "react-icons/gr";
 import { FaFileAlt } from "react-icons/fa";
 import { FaChartBar } from "react-icons/fa6";
 
-const AdminSidebar: React.FC = () => {
+const FinanceSidebar: React.FC = () => {
     const { theme } = useTheme();
     const location = useLocation();
 
@@ -18,16 +18,17 @@ const AdminSidebar: React.FC = () => {
 
     // Sidebar navigation
     const navItems = [
-        { icon: VscHome, label: "Dashboard", path: "/dashboard" },
-        { icon: CiBellOn, label: "Notifications", path: "/notifications" },
-        { icon: FiUser, label: "Profile", path: "/profile" },
+        { icon: VscHome, label: "Dashboard", path: "/admin" },
+        { icon: CiBellOn, label: "Notifications", path: "/notificationsA" },
+        { icon: FiUser, label: "Profile", path: "/profileA" },
     ];
 
     // Quick actions (fixed icons)
     const quickActions = [
-        { icon: GrGroup, label: "All Companies", path: "/" },
-        { icon: FaFileAlt, label: "Billing/Subscription", path: "" },
-        { icon: FaChartBar, label: "Analytics", path: "" },
+        { icon: GrGroup, label: "Approved Missions", path: "/" },
+        { icon: FaFileAlt, label: "Funding assignments", path: "/subscriptions" },
+        { icon: FaChartBar, label: "Ongoing Missions", path: "" },
+        { icon: FaChartBar, label: "Reports&Trends", path: "" },
 
     ];
 
@@ -91,4 +92,4 @@ const AdminSidebar: React.FC = () => {
     );
 };
 
-export default AdminSidebar;
+export default FinanceSidebar;

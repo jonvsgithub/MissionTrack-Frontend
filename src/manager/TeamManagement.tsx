@@ -4,6 +4,7 @@ import ManagerSideBar from "./ManagerSideBar";
 import { VscEye } from "react-icons/vsc";
 import AddEmployeeModal from "./AddEmployeeModal";
 import EditEmployeeModal from "./EditEmployeeModal"; // new modal
+import { FiSearch } from "react-icons/fi";
 
 interface Employee {
   id: string;
@@ -19,6 +20,8 @@ const TeamManagement: React.FC = () => {
   const [editModal, setEditModal] = useState<null | Employee>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [search, setSearch] = useState("");
+
+  const [statusFilter, setStatusFilter] = useState("All Members");
 
   // pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,13 +102,20 @@ const TeamManagement: React.FC = () => {
     );
   };
 
-  // Filter employees
-  const filteredEmployees = employees.filter(
-    (emp) =>
-      emp.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      emp.role.toLowerCase().includes(search.toLowerCase()) ||
-      (emp.department && emp.department.toLowerCase().includes(search.toLowerCase()))
-  );
+// Filter employees
+const filteredEmployees = employees.filter((emp) => {
+  const matchesSearch =
+    emp.fullName.toLowerCase().includes(search.toLowerCase()) ||
+    emp.role.toLowerCase().includes(search.toLowerCase()) ||
+    (emp.department &&
+      emp.department.toLowerCase().includes(search.toLowerCase()));
+
+  const matchesStatus =
+    statusFilter === "All Members" || emp.status === statusFilter;
+
+  return matchesSearch && matchesStatus;
+});
+
 
   // Pagination logic
   const indexOfLast = currentPage * itemsPerPage;
@@ -123,22 +133,45 @@ const TeamManagement: React.FC = () => {
             Employee Management
           </h1>
 
-          <div className="flex gap-20 mt-10 mb-10">
-            <input
-              type="text"
-              placeholder="Search employees..."
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setCurrentPage(1); // reset to page 1 when searching
-              }}
-              className="border border-gray-300 rounded-xl px-4 py-2 w-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <span>
-              <span className="text-green-600 font-black">All Members:</span>{" "}
-              {employees.length}
-            </span>
+          <div className="bg-white p-1 rounded-xl mt-6 mb-6">
+            <div className="flex items-center justify-between mr-3 ml-3 mt-6 mb-6 gap-4">
+  {/* Search input */}
+  <div className="flex-1 border  bg-blue-50 rounded-sm ">
+   
+
+<div className="relative max-w-md w-full">
+  <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+  <input
+    type="text"
+    placeholder="Search"
+    value={search}
+    onChange={(e) => {
+      setSearch(e.target.value);
+      setCurrentPage(1);
+    }}
+    className="w-full rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+  </div>
+    <select
+  value={statusFilter}
+  onChange={(e) => {
+    setStatusFilter(e.target.value);
+    setCurrentPage(1); // reset to first page when filter changes
+  }}
+  className="border rounded-lg bg-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+>
+  <option>All Members</option>
+  <option>Active</option>
+  <option>On Mission</option>
+  <option>Inactive</option>
+</select>
+
+ 
+</div>
           </div>
+
 
           <div className="flex justify-between items-center mb-5">
             <button

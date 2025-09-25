@@ -1,7 +1,20 @@
-import React from 'react';
+import React from "react";
 
-// A reusable component for the individual plan cards
-const PlanCard = ({ planName, subscribers, price, features }) => {
+// ------------------- Types -------------------
+interface PlanCardProps {
+  planName: string;
+  subscribers: number | string; // can be number or string since your data has both
+  price: number | string;
+  features: string[];
+}
+
+// ------------------- Plan Card -------------------
+const PlanCard: React.FC<PlanCardProps> = ({
+  planName,
+  subscribers,
+  price,
+  features,
+}) => {
   return (
     <div className="flex-1 p-6 bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
       <div>
@@ -12,7 +25,8 @@ const PlanCard = ({ planName, subscribers, price, features }) => {
           </span>
         </div>
         <div className="text-4xl font-bold text-gray-800 mb-6">
-          ${price}<span className="text-xl font-normal text-gray-500">/month</span>
+          ${price}
+          <span className="text-xl font-normal text-gray-500">/month</span>
         </div>
         <ul className="space-y-4 mb-8">
           {features.map((feature, index) => (
@@ -43,41 +57,47 @@ const PlanCard = ({ planName, subscribers, price, features }) => {
   );
 };
 
-// The main component containing all the plan cards
-const Plans = () => {
-  const plans = [
+// ------------------- Main Plans Component -------------------
+const Plans: React.FC = () => {
+  const plans: PlanCardProps[] = [
     {
-      planName: 'Basic',
-      subscribers: '324',
-      price: '29',
-      features: ['Up to 10 users', 'Basic support', '5GB Storage'],
+      planName: "Basic",
+      subscribers: 324,
+      price: 29,
+      features: ["Up to 10 users", "Basic support", "5GB Storage"],
     },
     {
-      planName: 'Pro',
-      subscribers: '521',
-      price: '99',
-      features: ['Up to 50 users', 'Priority support', '50 GB storage', 'Advanced analytics'],
+      planName: "Pro",
+      subscribers: 521,
+      price: 99,
+      features: [
+        "Up to 50 users",
+        "Priority support",
+        "50 GB storage",
+        "Advanced analytics",
+      ],
     },
     {
-      planName: 'Enterprise',
-      subscribers: '141',
-      price: '299',
-      features: ['Unlimited users', '24/7 support', 'Unlimited storage', 'Custom integrations'],
+      planName: "Enterprise",
+      subscribers: 141,
+      price: 299,
+      features: [
+        "Unlimited users",
+        "24/7 support",
+        "Unlimited storage",
+        "Custom integrations",
+      ],
     },
   ];
 
   return (
-    <div className="p-8">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Subscription plans</h2>
+    <div className="p-8 bg-white rounded-2xl">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+        Subscription plans
+      </h2>
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
         {plans.map((plan, index) => (
-          <PlanCard
-            key={index}
-            planName={plan.planName}
-            subscribers={plan.subscribers}
-            price={plan.price}
-            features={plan.features}
-          />
+          <PlanCard key={index} {...plan} />
         ))}
       </div>
     </div>

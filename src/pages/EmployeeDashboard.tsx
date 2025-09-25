@@ -59,14 +59,14 @@ const Dashboard: React.FC = () => {
           </div>
 
           {/* Charts Section */}
-          <div className="flex mt-10 gap-6 flex-1">
-            <div className="w-full  p-4">
+          <div className="flex mt-10 gap-4 flex-1">
+            <div className="">
               <AnnualMissionStatuses />
             </div>
-            <div className="w-full p-4">
+            <div className="">
               <ThisMonthChart />
             </div>
-            <div className="w-full p-4">
+            <div className="w-100">
               <ExpensesChart />
             </div>
 

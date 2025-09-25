@@ -1,11 +1,11 @@
-import { Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 // import NavBar from "../Components/NavBar";
 import LoginForm from "../pages/LoginForm"; // ✅ corrected import
 import Dashboard from "../pages/EmployeeDashboard";
 import LandingPage from "../pages/LandingPage";
 import Profile from "../Components/Settings/Profile";
 import Password from "../Components/Settings/Password";
- import Notification from "../Components/Settings/Notification";
+import Notification from "../Components/Settings/Notification";
 import Details from "../Components/Request/Details";
 
 import RecoverPassword from "../Components/forgetPassword/RecoverPassword";
@@ -22,9 +22,11 @@ import RequestManager from "../manager/RequestManager";
 import ReportManager from "../manager/ReportManager";
 import ReportDetails from "../manager/ReportDetails";
 import Pending from "../Components/Pending";
+import AllCompanies from "../pages/AllCompanies";
 import AdminDashboard from "../pages/AdminDashboard";
 import Rejected from "../Components/Rejected";
 import Subscriptions from "../Components/Subscriptions";
+import AllMission from "../pages/AllMission";
 
 
 
@@ -43,29 +45,32 @@ const AppRoute = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile/>} />
-        <Route path="/details" element={<Profile/>} />
-        <Route path="/password" element={<Password/>} />
-        <Route path="/notifications" element={<NotificationPage/>} />
-        <Route path="/preferences" element={<Notification/>} />
-        <Route path="/request" element={<Details/>} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/details" element={<Profile />} />
+        <Route path="/password" element={<Password />} />
+        <Route path="/notifications" element={<NotificationPage />} />
+        <Route path="/preferences" element={<Notification />} />
+        <Route path="/request" element={<Details />} />
 
-        <Route path="/forgot-password" element={<RecoverPassword/>}/>
+        <Route path="/forgot-password" element={<RecoverPassword />} />
         <Route path="/reset-password/:token" element={<UpdatePassword />} />
-        <Route path="/requestList" element={<MissionList/>} />
-        <Route path="/report" element={<Report/>} />
-        <Route path="/missions/history" element={<MissionExpenses/>}/>
-        <Route path="/manager" element={<ManagerDashboard/>}/>
-        <Route path="/apply" element={<ApplicationForm/>}/>
-        <Route path="/team" element={<TeamManagement/>}/>
-         <Route path="/requested" element={<RequestManager/>}/>
-         <Route path="/reported" element={<ReportManager/>}/>
-         <Route path="/missions/:id" element={<ReportDetails />} />
-         <Route path="/pending" element={<Pending />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/pending" element={<Pending />} />
-              <Route path="/rejected" element={<Rejected/>} />
-              <Route path="/subscriptions" element={<Subscriptions/>} />
+        <Route path="/requestList" element={<MissionList />} />
+        <Route path="/report" element={<Report />} />
+        <Route path="/missions/history" element={<MissionExpenses />} />
+        <Route path="/manager" element={<ManagerDashboard />} />
+        <Route path="/apply" element={<ApplicationForm />} />
+        <Route path="/team" element={<TeamManagement />} />
+        <Route path="/requested" element={<RequestManager />} />
+        <Route path="/reported" element={<ReportManager />} />
+        <Route path="/missions/:id" element={<ReportDetails />} />
+        <Route path="/pending" element={<Pending />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/pending" element={<Pending />} />
+        <Route path="/rejected" element={<Rejected />} />
+        <Route path="/companies" element={<AllCompanies/>} />
+        <Route path="/subscriptions" element={<Subscriptions />} />
+        <Route path="/all" element={<AllMission/>}/>
+
 
       </Routes>
     </>
