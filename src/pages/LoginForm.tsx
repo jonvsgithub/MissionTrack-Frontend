@@ -44,6 +44,9 @@ const LoginForm: React.FC = () => {
  
  const res = await login(email, password);
 
+console.log("Logged in user:", res.user);
+console.log("Token:", res.user.token);
+  setLoading(false);
 if (res?.user?.role === "manager") {
   try {
     // 🔹 Decode JWT token to extract companyStatus
@@ -71,7 +74,6 @@ if (res?.user?.role === "manager") {
 } else {
   navigate("/login"); // fallback
 }
-
 
 };
 

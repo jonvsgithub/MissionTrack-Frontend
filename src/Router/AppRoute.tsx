@@ -30,6 +30,8 @@ import FinanceDashboard from "../pages/FinanceDashboard";
 import AdminHome from "../pages/AdminHome";
 import ManagerHome from "../pages/ManagerHome";
 import EmployeeHome from "../pages/EmployeeHome";
+import AdminActions from "../pages/AdminActions";
+
 
 
 
@@ -92,6 +94,7 @@ const AppRoute = () => {
           <Route path="home" element={<AdminHome />} />
           <Route path="companies" element={<AllCompanies />} />
           <Route path="subscriptions" element={<Subscriptions />} />
+          <Route path="adminactions" element={<AdminActions />} />
         </Route>
 
 

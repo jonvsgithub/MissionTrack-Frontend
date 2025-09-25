@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import type { RootState, AppDispatch } from "../redux/store";
-import { registerCompany } from "../redux/companySlice";
+import { getAllCompanies, registerCompany } from "../redux/companySlice";
+import { useNavigate } from "react-router-dom";
 
 import Input from "./Input";
 import Select from "./Select";
 import Stepper from "./Stepper";
 import DragDrop from "./DragDrop";
-import Checkbox from "./Checkbox";
 
 // ------------------- Constants -------------------
 const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
@@ -29,25 +28,29 @@ const sectors: Record<string, string[]> = {
 };
 
 const ApplicationFormRight: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
 
   const { loading, success, error, message } = useSelector(
     (state: RootState) => state.company
   );
-
+ useEffect(() => {
+    if (success) {
+      dispatch(getAllCompanies());  
+      navigate("/admin/companies");   
+    }
+  });
   const [formData, setFormData] = useState<any>({
-    organizationName: "",
+    companyName: "",
     companyEmail: "",
-    companyPhoneNumber: "",
+    companyContact: "",
     province: "",
     district: "",
     sector: "",
-    person: "",
-    phone: "",
+    fullName: "",
+    phoneNumber: "",
     email: "",
     password: "",
-    agree: false,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -73,25 +76,24 @@ const ApplicationFormRight: React.FC = () => {
     const newErrors: { [key: string]: string } = {};
 
     if (step === 0) {
-      if (!formData.organizationName)
-        newErrors.organizationName = "Organization name is required";
+      if (!formData.companyName)
+        newErrors.companyName = "Organization name is required";
       if (!formData.province) newErrors.province = "Province is required";
       if (!formData.district) newErrors.district = "District is required";
       if (!formData.sector) newErrors.sector = "Sector is required";
       if (!formData.companyEmail)
         newErrors.companyEmail = "Company email is required";
-      if (!formData.companyPhoneNumber)
-        newErrors.companyPhoneNumber = "Company phone number is required";
+      if (!formData.companyContact)
+        newErrors.companyContact = "Company phoneNumber  is required";
     }
 
     if (step === 1) {
-      if (!formData.person) newErrors.person = "Contact Person is required";
-      if (!formData.phone) newErrors.phone = "Phone is required";
+      if (!formData.fullName) newErrors.fullName = "Contact fullName is required";
+      if (!formData.phoneNumber) newErrors.phoneNumber = "phoneNumber is required";
       if (!formData.email) newErrors.email = "Email is required";
       if (!formData.password) newErrors.password = "Password is required";
       if (uploadedFiles.length === 0)
         newErrors.files = "Please upload at least one file";
-      if (!formData.agree) newErrors.agree = "You must agree to continue";
     }
 
     return newErrors;
@@ -114,13 +116,15 @@ const ApplicationFormRight: React.FC = () => {
     const newErrors = validateStep();
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
+   const data = new FormData();
+    Object.keys(formData).forEach((key) => {
+    data.append(key, formData[key]);
+  });
+   uploadedFiles.forEach((file) => {
+    data.append("proofDocument", file); 
+  });
 
-    const payload = {
-      ...formData,
-      files: uploadedFiles,
-    };
-
-    dispatch(registerCompany(payload));
+    dispatch(registerCompany(data));
   };
 
   return (
@@ -158,11 +162,11 @@ const ApplicationFormRight: React.FC = () => {
                 <div className="rounded-2xl border p-6 space-y-4">
                   <Input
                     label="Organization Name"
-                    name="organizationName"
-                    value={formData.organizationName}
+                    name="companyName"
+                    value={formData.companyName}
                     onChange={handleChange}
                     placeholder="Enter organization name"
-                    error={errors.organizationName}
+                    error={errors.companyName}
                   />
 
                   {/* Location */}
@@ -212,12 +216,12 @@ const ApplicationFormRight: React.FC = () => {
                       error={errors.companyEmail}
                     />
                     <Input
-                      label="Phone Number"
-                      name="companyPhoneNumber"
-                      value={formData.companyPhoneNumber}
+                      label="phoneNumber "
+                      name="companyContact"
+                      value={formData.companyContact}
                       onChange={handleChange}
-                      placeholder="Enter company phone number"
-                      error={errors.companyPhoneNumber}
+                      placeholder="Enter company phoneNumber "
+                      error={errors.companyContact}
                     />
                   </div>
                 </div>
@@ -268,22 +272,22 @@ const ApplicationFormRight: React.FC = () => {
            {step === 1 && (
               <>
                 <Input
-                  label="Contact Person"
-                  name="person"
-                  value={formData.person}
+                  label="Contact fullName"
+                  name="fullName"
+                  value={formData.fullName}
                   onChange={handleChange}
-                  placeholder="Enter contact person name"
-                  error={errors.person}
+                  placeholder="Enter contact fullName name"
+                  error={errors.fullName}
                 />
 
                 <Input
-                  label="Phone"
-                  name="phone"
-                  value={formData.phone}
+                  label="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
                   onChange={handleChange}
-                  placeholder="Enter phone number"
+                  placeholder="Enter phoneNumber "
                   type="tel"
-                  error={errors.phone}
+                  error={errors.phoneNumber}
                 />
 
                 <Input
@@ -305,17 +309,6 @@ const ApplicationFormRight: React.FC = () => {
                   type="password"
                   error={errors.password}
                 />
-
-                <Checkbox
-                  label="I agree to the Terms & Conditions"
-                  checked={formData.agree}
-                  onChange={(e) =>
-                    setFormData({ ...formData, agree: e.target.checked })
-                  }
-                />
-                {errors.agree && (
-                  <p className="text-red-500 text-sm">{errors.agree}</p>
-                )}
               </>
             )}
 
@@ -324,14 +317,14 @@ const ApplicationFormRight: React.FC = () => {
             <>
               <h2 className="text-xl mb-4">Confirm Your Details</h2>
               <div className="bg-gray-50 p-4 rounded-lg">
-                <p><strong>Organization Name:</strong> {formData.organizationName}</p>
+                <p><strong>Company Name:</strong> {formData.companyName}</p>
                 <p><strong>Company Email:</strong> {formData.companyEmail}</p>
-                <p><strong>Company Phone:</strong> {formData.companyPhoneNumber}</p>
+                <p><strong>Company Contact:</strong> {formData.companyContact}</p>
                 <p><strong>Province:</strong> {formData.province}</p>
                 <p><strong>District:</strong> {formData.district}</p>
                 <p><strong>Sector:</strong> {formData.sector}</p>
-                <p><strong>Contact Person:</strong> {formData.person}</p>
-                <p><strong>Phone:</strong> {formData.phone}</p>
+                <p><strong>Contact fullName:</strong> {formData.fullName}</p>
+                <p><strong>phoneNumber:</strong> {formData.phoneNumber}</p>
                 <p><strong>Email:</strong> {formData.email}</p>
                 <p><strong>Files Uploaded:</strong> {uploadedFiles.length}</p>
               </div>

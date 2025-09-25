@@ -1,78 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch,useSelector } from "react-redux";
 import Header from "../Components/HeaderDash";
 import AdminSidebar from "../Components/Admin/AdminSidebar";
 import AdminStats from "../Components/Admin/AdminStats";
 import CompaniesTable from "../Components/Admin/CompaniesTable";
 import { FiSearch } from "react-icons/fi";
+import { getAllCompanies } from "../redux/companySlice";
+import type{ RootState,AppDispatch } from "../redux/store";
+import { Spin } from "antd";
 import ApplicationFormRight from "../Components/ApplicationFormRight";
+import AdminActions from "./AdminActions";
 
 const twTheme = (light: string, dark: string) => `${light} dark:${dark}`;
 
 const AllCompanies: React.FC = () => {
-  const companies = [
-    {
-      companyName: "Tech Innovations Ltd",
-      email: "info@techinnovations.com",
-      status: "Active",
-      plan: "Premium",
-      contactPerson: "John Doe",
-      payment: "Paid",
-      lastActivity: "2h ago",
-    },
-    {
-      companyName: "Global Solutions Inc",
-      email: "contact@globalsolutions.com",
-      status: "Pending",
-      plan: "Basic",
-      contactPerson: "Jane Smith",
-      payment: "Unpaid",
-      lastActivity: "1d ago",
-    },
-    {
-      companyName: "Creative Minds LLC",
-      email: "hello@creativeminds.com",
-      status: "Rejected",
-      plan: "Standard",
-      contactPerson: "Mike Johnson",
-      payment: "Refunded",
-      lastActivity: "3d ago",
-    },
-  ];
+  const dispatch=useDispatch<AppDispatch>();
+  const {companies=[],loading,error}=useSelector((state:RootState)=>state.company);
+   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const totalCompanies = companies.length;
+  const activeCompanies = companies.filter(c => c.status === "approved" && c.state!=="blocked").length;
+  const underReview = companies.filter(c => c.status === "pending").length;
+  const upcomingPayments = companies.filter(c => c.state === "trial" && c.status === "approved").length;
+  const blockedCompanies = companies.filter(c => c.state === "blocked").length;
+  const rejectedCompanies = companies.filter(c => c.status === "rejected").length;
 
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [paymentFilter, setPaymentFilter] = useState("All Payments");
 
-  // Modal state
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(()=>{
+    dispatch(getAllCompanies());
+  },[dispatch]);
 
-  // Filter companies
-  const filteredCompany = companies.filter((c) => {
-    const matchesSearch =
-      c.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.contactPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.status.toLowerCase().includes(searchQuery.toLowerCase());
+  // Filter companies by search and selected filters
+const filteredCompany = (companies || []).filter((c) => {
+  const matchesSearch =
+    c.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.manager?.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.status.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === "All Status" || c.status === statusFilter;
+  const matchesStatus =
+    statusFilter === "All Status" || c.status === statusFilter;
 
-    const matchesPayment =
-      paymentFilter === "All Payments" || c.payment === paymentFilter;
+  const matchesPayment =
+    paymentFilter === "All Payments" || c.state === paymentFilter;
 
-    return matchesSearch && matchesStatus && matchesPayment;
-  });
+  return matchesSearch && matchesStatus && matchesPayment;
+});
 
-  const statusOptions = ["All Status", "Active", "Pending", "Rejected"];
-  const paymentOptions = ["All Payments", "Paid", "Unpaid", "Refunded"];
+  const statusOptions = ["All Status", "active", "pending", "rejected"];
+  const paymentOptions = ["All Payments", "active", "trial", "blocked"];
 
   return (
     <>
       
 
-        <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
-          <div>
-            <AdminStats />
+        <main className={`min-h-screen m ${twTheme("", "bg-gray-900")}`}>
+          <div className="">
+          <AdminStats
+            totalCompanies={totalCompanies}
+            activeCompanies={activeCompanies}
+            underReview={underReview}
+            upcomingPayments={upcomingPayments}
+            blockedCompanies={blockedCompanies}
+            rejectedCompanies={rejectedCompanies}
+          />
           </div>
 
           {/* Add Company Button */}
@@ -130,9 +124,20 @@ const AllCompanies: React.FC = () => {
             </div>
 
             {/* Companies Table */}
-            <div className=" ">
+            <div className="w-[900px] ml-5 flex justify-center">
+              {loading ?(
+                <div className="flex items-center">
+                  <Spin className="mr-2 font-semibold" size="large"/>
+                  <div className="ml-2 ">Loading companies .....</div>
+                </div>
+              ):(
+                error?(
+                  <div className="text-red-500">{error}</div>
+                ):(
               <CompaniesTable data={filteredCompany} />
-            </div>
+                )
+              )}
+            </div> 
           </div>
         </main>
      
