@@ -104,13 +104,63 @@ const Details: React.FC = () => {
     });
   };
 
-  const handleSubmit = () => {
-    if (validateStep()) {
-      console.log("Form submitted:", formData);
-      console.log("Uploaded Files:", uploadedFiles);
-      setIsSubmitted(true); // ✅ open success modal
+const handleSubmit = async () => {
+  if (!validateStep()) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("No token found. Please log in.");
+      return;
     }
-  };
+
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("No userId found. Please log in.");
+      return;
+    }
+
+    const form = new FormData();
+    form.append("userId", userId);
+    form.append("missionTitle", formData.missionTitle);
+    form.append("fullName", formData.names);
+    form.append("jobPosition", formData.position);
+    form.append("location", formData.destination);
+    form.append("startDate", formData.startDate);
+    form.append("endDate", formData.endDate);
+    form.append("missionDescription", formData.description);
+    form.append("missionDocument", "Primary mission");
+
+    uploadedFiles.forEach((file) => {
+      form.append("documents", file);
+    });
+
+    const response = await fetch(
+      "https://missiontrack-backend.onrender.com/api/missions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: form,
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to submit mission");
+    }
+
+    console.log("✅ Backend response:", data);
+    setIsSubmitted(true);
+  } catch (error: any) {
+    console.error("❌ Submission error:", error.message);
+    alert(error.message);
+  }
+};
+
 
   return (
     <>

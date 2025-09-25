@@ -46,38 +46,57 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose, onEmployee
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!validate()) return;
 
-    try {
-      const payload = {
-        ...formData,
-        companyId: user?.companyId, // 👈 auto attach from logged-in user
-      };
+  try {
+     const payload = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      department: formData.department,
+      role: formData.role,
+      password: formData.password,
+    };
 
-      const response = await fetch("https://missiontrack-backend.onrender.com/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`, // 👈 use admin token
-        },
-        body: JSON.stringify(payload),
-      });
+    const response = await fetch("https://missiontrack-backend.onrender.com/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user?.token}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || "Failed to create user");
-      }
-
-      const newEmployee = await response.json(); // 👈 get created employee data
-      onEmployeeAdded(newEmployee); // 👈 notify parent to update dashboard
-      setSuccess(true);
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message || "Something went wrong");
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || "Failed to create user");
     }
-  };
+
+    const resData = await response.json();
+
+    // ✅ map API data to your Employee object
+    const emp = resData.data;
+    const mappedEmployee = {
+      id: emp.id,
+      fullName: emp.fullName,
+      role: emp.role,
+      department: emp.department || "N/A",
+      status: emp.is_active ? "Active" : "Inactive",
+      initials: emp.fullName
+        ? emp.fullName.split(" ").map((n: string) => n[0]).join("")
+        : "NA",
+    };
+
+    onEmployeeAdded(mappedEmployee); // 👈 parent gets consistent shape
+    setSuccess(true);
+  } catch (error: any) {
+    console.error(error);
+    alert(error.message || "Something went wrong");
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-gray-600/70 z-1000 w-full flex items-center justify-center">

@@ -31,6 +31,7 @@ import AdminHome from "../pages/AdminHome";
 import ManagerHome from "../pages/ManagerHome";
 import EmployeeHome from "../pages/EmployeeHome";
 import AdminActions from "../pages/AdminActions";
+import AllMission from "../pages/AllMission";
 
 
 
@@ -77,6 +78,7 @@ const AppRoute = () => {
         <Route path="/manager" element={<ManagerDashboard />} >
           <Route index element={<ManagerHome />} />
           <Route path="team" element={<TeamManagement />} />
+          <Route path="all" element={<AllMission />} />
           <Route path="requested" element={<RequestManager />} />
           <Route path="reported" element={<ReportManager />} />
         </Route>

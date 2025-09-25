@@ -40,42 +40,56 @@ const LoginForm: React.FC = () => {
   setErrors(newErrors);
   if (Object.keys(newErrors).length > 0) return;
 
- setLoading(true);
- 
- const res = await login(email, password);
+  setLoading(true);
 
-console.log("Logged in user:", res.user);
-console.log("Token:", res.user.token);
-  setLoading(false);
-if (res?.user?.role === "manager") {
   try {
-    // 🔹 Decode JWT token to extract companyStatus
-    const base64Url = res.user.token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const payload = JSON.parse(atob(base64));
+    const res = await login(email, password);
 
-    const companyStatus = payload.companyStatus; // 👈 comes from token
+    // ✅ Save token + userId to localStorage for later requests
+    if (res?.token) {
+      localStorage.setItem("token", res.token);
+    }
+    if (res?.user?.id) {
+      localStorage.setItem("userId", res.user.id);
+    }
 
-    if (companyStatus === "pending") {
-      navigate("/pending");
-    } else if (companyStatus === "rejected") {
-      navigate("/rejected");
-    } else if (companyStatus === "approved") {
-      navigate("/manager");
-    } 
-  } catch (err) {
-    console.error("Failed to decode token", err);
-    navigate("/manager"); // fallback
+    if (res?.user?.role === "manager") {
+      try {
+        // ✅ token comes from res.token (not res.user.token)
+        const base64Url = res.token.split(".")[1];
+        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        const payload = JSON.parse(atob(base64));
+
+        const companyStatus = payload.companyStatus; // 👈 comes from token
+
+        if (companyStatus === "pending") {
+          navigate("/pending");
+        } else if (companyStatus === "rejected") {
+          navigate("/rejected", { state: { formData: res.user } });
+          // 👆 pass old company data for resubmission
+        } else if (companyStatus === "approved") {
+          navigate("/manager");
+        } else {
+          navigate("/manager"); // fallback
+        }
+      } catch (err) {
+        console.error("Failed to decode token", err);
+        navigate("/manager"); // fallback
+      }
+    } else if (res?.user?.role === "employee") {
+      navigate("/dashboard");
+    } else if (res?.user?.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/login"); // fallback
+    }
+  } catch (err: any) {
+    setErrors({ password: err.message });
+  } finally {
+    setLoading(false);
   }
-} else if (res?.user?.role === "employee") {
-  navigate("/dashboard");
-} else if (res?.user?.role === "admin") {
-  navigate("/admin");
-} else {
-  navigate("/login"); // fallback
-}
-
 };
+
 
 
   return (
