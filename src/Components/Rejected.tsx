@@ -180,55 +180,25 @@ const Rejected: React.FC = () => {
               </div>
             </div>
 
-            {/* DragDrop */}
-            <div className="border mt-5 rounded-2xl p-6">
-              <div className="resize-y overflow-auto min-h-[150px] border-2 border-dashed border-gray-400 rounded-md">
-                <DragDrop
-                  onFileSelect={(files) =>
-                    setUploadedFiles([...uploadedFiles, ...files])
-                  }
-                />
-              </div>
-
-              {uploadedFiles.length > 0 && (
-                <div className="mt-3 space-y-2">
-                  <ul className="space-y-1 text-sm text-gray-600">
-                    {uploadedFiles.map((file, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center justify-between bg-gray-50 p-2 rounded"
-                      >
-                        <span>{file.name}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleFileRemove(idx)}
-                          className="text-red-500 text-xs hover:underline"
-                        >
-                          Remove
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {errors.files && (
-                <p className="text-red-500 text-sm">{errors.files}</p>
-              )}
-            </div>
-
-            {/* Go to Registration button */}
-            <div className="flex justify-center mt-4">
-              <button
-                type="button"
-                onClick={goToRegister}
-                className="px-6 py-2 bg-primaryColor-700 text-white rounded-lg hover:bg-primaryColor-800"
-              >
-                Update
-              </button>
-            </div>
-          </form>
-        </div>
+          {/* Go to Registration button */}
+          <div className="flex justify-center gap-10 mt-4">
+            <button
+              type="button"
+              onClick={goToRegister}
+              className="px-15 py-2 bg-white border-2 text-red-600 border-red-600 rounded-lg hover:bg-primaryColor-800"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={goToRegister}
+              className="px-15 py-2 bg-accent-600 text-white rounded-lg hover:bg-primaryColor-800"
+            >
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
       </div>
     </div>
   );

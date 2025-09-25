@@ -13,29 +13,35 @@ import DragDrop from "./DragDrop";
 import Checkbox from "./Checkbox";
 import { useAuth } from "../context/AuthContext"; // ✅ added
 
-
-// ✅ Define missing location data (you can replace with API or full list later)
+// ------------------- Constants -------------------
 const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
+
 const districts: Record<string, string[]> = {
   Kigali: ["Gasabo", "Kicukiro", "Nyarugenge"],
-  Northern: ["Musanze", "Burera", "Gicumbi"],
-  Southern: ["Huye", "Nyanza", "Gisagara"],
-  Eastern: ["Rwamagana", "Ngoma", "Kayonza"],
-  Western: ["Rubavu", "Rusizi", "Karongi"],
-};
-const sectors: Record<string, string[]> = {
-  Gasabo: ["Kimironko", "Remera"],
-  Kicukiro: ["Kanombe", "Kagarama"],
-  Nyarugenge: ["Kigali", "Nyamirambo"],
+  Northern: ["Musanze", "Gicumbi", "Burera"],
+  Southern: ["Huye", "Nyanza", "Muhanga"],
+  Eastern: ["Rwamagana", "Nyagatare", "Kayonza"],
+  Western: ["Rusizi", "Rubavu", "Nyamasheke"],
 };
 
+const sectors: Record<string, string[]> = {
+  Gasabo: ["Gikomero", "Kacyiru", "Kimironko"],
+  Kicukiro: ["Nyarutarama", "Kanombe", "Gahanga"],
+  Nyarugenge: ["Nyamirambo", "Kimisagara", "Muhima"],
+  Musanze: ["Musanze", "Muhoza", "Kinigi"],
+};
+
+// ------------------- Component -------------------
 const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user } = useAuth(); // ✅ now we have user with token & companyId
 
-  // ✅ use only company slice instead of full root
+  // ✅ log entire Redux state for debugging
+  const companyState = useSelector((state: RootState) => state);
+  console.log("Redux Root State:", companyState);
+
   const { loading, success, error, message } = useSelector(
     (state: RootState) => state.company
   );
@@ -56,7 +62,7 @@ const ApplicationForm: React.FC = () => {
     fullName: previousData.fullName || "",
     phone: previousData.phoneNumber || "",
     email: previousData.email || "",
-    password: "",
+    password: "", // password should not be prefilled
     agree: false,
   });
 
@@ -64,43 +70,43 @@ const ApplicationForm: React.FC = () => {
   const [step, setStep] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
 
-  useEffect(() => {
-    if (user?.companyId && user?.token) {
-      fetch(
-        `https://missiontrack-backend.onrender.com/api/companies/${user.companyId}`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setFormData({
-            organizationName: data.companyName || "",
-            province: data.province || "",
-            district: data.district || "",
-            sector: data.sector || "",
-            companyEmail: data.companyEmail || user?.email || "",
-            companyPhoneNumber: data.companyContact || "",
-            person: data.manager?.fullName || "",
-            phone: data.manager?.phoneNumber || data.manager?.phone || "",
-            email: data.manager?.email || "",
-            password: "",
-            agree: false,
-          });
+ useEffect(() => {
+  if (user?.companyId && user?.token) {
+    fetch(`https://missiontrack-backend.onrender.com/api/companies/${user.companyId}`, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // Map backend fields to your form state
+        setFormData({
+          organizationName: data.companyName || "",
+          province: data.province || "",
+          district: data.district || "",
+          sector: data.sector || "",
+          companyEmail: data.companyEmail || user?.email || "",
+          companyPhoneNumber: data.companyContact || "",
+          person: data.manager?.fullName || "",
+          phone: data.manager?.phoneNumber || data.manager?.phone || "",
+          email: data.manager?.email || "",
+          password: "", // never prefill password
+          agree: false,
+        });
 
-          if (data.proofDocument) {
-            setUploadedFiles([
-              {
-                name: data.proofDocument.split("/").pop(),
-                url: `https://missiontrack-backend.onrender.com/${data.proofDocument}`,
-                fromServer: true,
-              } as any,
-            ]);
-          }
-        })
-        .catch((err) => console.error("Failed to fetch company:", err));
-    }
-  }, [user]);
+        // Prefill uploaded file if exists
+        if (data.proofDocument) {
+          setUploadedFiles([
+            {
+              name: data.proofDocument.split("/").pop(),
+              url: `https://missiontrack-backend.onrender.com/${data.proofDocument}`,
+              fromServer: true,
+            } as any,
+          ]);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch company:", err));
+  }
+}, [user]);
+
 
   // ------------------- Handlers -------------------
   const handleChange = (

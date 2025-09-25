@@ -54,11 +54,11 @@ const TotalSpend: React.FC<TotalSpendProps> = ({
       aria-label="Total spend"
     >
       <div>
-        <div className="flex gap-35">
-          <p className="text-lg font-bold">{subtitle}</p>
-          <div className="text-red-600">
-            <CiDollar size={20} aria-hidden />
-          </div>
+        <div className="flex gap-30">
+            <p className="text-lg font-bold">{subtitle}</p>
+             <div className="text-red-600">
+        <CiDollar size={20} aria-hidden />
+      </div>
         </div>
 
         <h2 className="text-2xl font-bold text-red-600 mt-5">{formattedAmount}</h2>
