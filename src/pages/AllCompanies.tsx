@@ -153,13 +153,16 @@ const filteredCompany = (companies || []).filter((c) => {
             {/* Close Button */}
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-600 hover:text-red-500"
+              className="absolute top-3 right-3 text-white hover:text-red-500 text-2xl font-bold"
             >
               ✕
             </button>
 
             {/* Application Form */}
-            <ApplicationFormRight />
+            <ApplicationFormRight
+              onSuccess={() => setIsModalOpen(false)}
+              onCancel={() => setIsModalOpen(false)}
+            />
           </div>
         </div>
       )}

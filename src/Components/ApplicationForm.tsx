@@ -15,7 +15,7 @@ const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
-  const { user } = useAuth(); // ✅ now we have user with token & companyId
+  const { user } = useAuth(); 
 
   // ✅ log entire Redux state for debugging
   const companyState = useSelector((state: RootState) => state);

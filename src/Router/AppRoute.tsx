@@ -30,7 +30,6 @@ import FinanceDashboard from "../pages/FinanceDashboard";
 import AdminHome from "../pages/AdminHome";
 import ManagerHome from "../pages/ManagerHome";
 import EmployeeHome from "../pages/EmployeeHome";
-import AdminActions from "../pages/AdminActions";
 import AllMission from "../pages/AllMission";
 import CompanyInformationPage from "../Components/Admin/companyInformationPage";
 

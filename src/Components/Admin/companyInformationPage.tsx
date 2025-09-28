@@ -73,7 +73,9 @@ const CompanyInformationPage: React.FC = () => {
     }
 };
 
-    if (companyLoading) return <p className="flex text-center"><Spin /> Loading company info...</p>;
+    if (companyLoading) return <div className="flex justify-center items-center ">
+        <div className="flex justify-center p-5"><Spin size="large" className="item-center"/> <p>Loading company info...</p></div>
+    </div>;
     if (companyError) return <p className="text-red-500">{companyError}</p>;
     if (!company) return <p>No company found.</p>;
 

@@ -27,7 +27,15 @@ const sectors: Record<string, string[]> = {
   Musanze: ["Musanze", "Muhoza", "Kinigi"],
 };
 
-const ApplicationFormRight: React.FC = () => {
+interface ApplicationFormRightProps {
+  onSuccess: () => void;
+  onCancel: () => void;
+}
+
+const ApplicationFormRight: React.FC<ApplicationFormRightProps> = ({
+  onSuccess,
+  onCancel,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
@@ -36,6 +44,7 @@ const ApplicationFormRight: React.FC = () => {
   );
  useEffect(() => {
     if (success) {
+      onSuccess();
       navigate("/admin/companies"); 
       dispatch(resetCompanyState()); 
     }

@@ -12,7 +12,14 @@ interface DashboardCardProps {
   iconBgColor: string;
   iconColor: string;
 }
-
+interface AdminStatsProps {
+  totalCompanies: number;
+  activeCompanies: number;
+  underReview: number;
+  upcomingPayments: number;
+  blockedCompanies: number;
+   rejectedCompanies: number;
+}
 // ✅ Reusable card component
 const DashboardCard: React.FC<DashboardCardProps> = ({
   title,
@@ -47,7 +54,14 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 };
 
 // ✅ Main dashboard component
-const TopCard: React.FC = () => {
+const TopCard: React.FC <AdminStatsProps>= ({
+  totalCompanies,
+  activeCompanies,
+  underReview,
+  upcomingPayments,
+  blockedCompanies,
+  rejectedCompanies,
+}) => {
   // Inline SVG icons
   const documentIcon = <FaBuilding />
 
@@ -61,7 +75,7 @@ const TopCard: React.FC = () => {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-2">
       <DashboardCard
         title="Total Registered Companies"
-        value="54"
+        value={totalCompanies}
         change="+12% from last month"
         valueColor="text-blue-600"
         icon={documentIcon}
@@ -70,7 +84,7 @@ const TopCard: React.FC = () => {
       />
       <DashboardCard
         title="Active Companies"
-        value="36"
+        value={activeCompanies}
         change="+20% from last month"
         valueColor="text-green-600"
         icon={documentIcon}
@@ -79,7 +93,7 @@ const TopCard: React.FC = () => {
       />
       <DashboardCard
         title="Companies Under Review"
-        value="12"
+        value={underReview}
         change="+19 from last month"
         valueColor="text-orange-600"
         icon={clockIcon}
@@ -88,7 +102,7 @@ const TopCard: React.FC = () => {
       />
       <DashboardCard
         title="Rejected Companies "
-        value="3"
+        value={rejectedCompanies}
         change="+12% from last month"
         valueColor="text-red-600"
         icon={crossIcon}
@@ -97,7 +111,7 @@ const TopCard: React.FC = () => {
       />
       <DashboardCard
         title="Unpaid Subscription and Blocked"
-        value="5"
+        value={blockedCompanies}
         change="+18 from last month"
         valueColor="text-red-600"
         icon={calendarIcon}
@@ -106,7 +120,7 @@ const TopCard: React.FC = () => {
       />
        <DashboardCard
         title="Upcoming Payments"
-        value="2"
+        value={upcomingPayments}
         change="+18 from last month"
         valueColor="text-green-600"
         icon={calendarIcon}
