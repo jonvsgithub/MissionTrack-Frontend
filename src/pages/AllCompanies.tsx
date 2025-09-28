@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
-import Header from "../Components/HeaderDash";
-import AdminSidebar from "../Components/Admin/AdminSidebar";
 import AdminStats from "../Components/Admin/AdminStats";
 import CompaniesTable from "../Components/Admin/CompaniesTable";
 import { FiSearch } from "react-icons/fi";
@@ -123,7 +121,7 @@ const filteredCompany = (companies || []).filter((c) => {
             </div>
 
             {/* Companies Table */}
-            <div className="w-[970px] ml-5 flex justify-center">
+            <div className="w-[900px] ml-5 flex justify-center">
               {loading ?(
                 <div className="flex items-center">
                   <Spin className="mr-2 font-semibold" size="large"/>

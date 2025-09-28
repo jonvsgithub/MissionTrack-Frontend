@@ -19,7 +19,10 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
-  login: (email: string, password: string) => Promise<{ user: User }>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ token: string; user: User }>;
   logout: () => Promise<void>;
 };
 
@@ -66,8 +69,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     setUser(newUser);
     localStorage.setItem("user", JSON.stringify(newUser));
-    localStorage.setItem("token", newUser.token); 
-    return { user: newUser };
+    return { token: newUser.token, user: newUser };
   };
 
   const logout = async () => {

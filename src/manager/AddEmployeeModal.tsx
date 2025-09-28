@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Input from "../Components/Input";
 import SuccessCard from "../Components/SuccessCard";
 import { useAuth } from "../context/AuthContext"; // 👈 import auth
+import Select from "../Components/Select";
 
 interface AddEmployeeModalProps {
   onClose: () => void;
@@ -16,13 +17,14 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose, onEmployee
     phoneNumber: "",
     department: "",
     role: "",
+    position: "",   // ✅ added position
     password: "",
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [success, setSuccess] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -37,55 +39,72 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose, onEmployee
     if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required";
     if (!formData.department.trim()) newErrors.department = "Department is required";
     if (!formData.role.trim()) newErrors.role = "Role is required";
+    if (!formData.position.trim()) newErrors.position = "Position is required"; // ✅ new validation
     if (!formData.password.trim() || formData.password.length < 6)
       newErrors.password = "Password must be at least 6 characters";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!validate()) return;
 
-    try {
-      const payload = {
-        ...formData,
-        companyId: user?.companyId, // 👈 auto attach from logged-in user
-      };
+  try {
+     const payload = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      department: formData.department,
+      role: formData.role,
+      password: formData.password,
+    };
 
-      const response = await fetch("https://missiontrack-backend.onrender.com/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`, // 👈 use admin token
-        },
-        body: JSON.stringify(payload),
-      });
+    const response = await fetch("https://missiontrack-backend.onrender.com/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user?.token}`,
+      },
+      body: JSON.stringify(payload),
+    });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || "Failed to create user");
-      }
-
-      const newEmployee = await response.json(); // 👈 get created employee data
-      onEmployeeAdded(newEmployee); // 👈 notify parent to update dashboard
-      setSuccess(true);
-    } catch (error: any) {
-      console.error(error);
-      alert(error.message || "Something went wrong");
+    if (!response.ok) {
+      const errData = await response.json();
+      throw new Error(errData.message || "Failed to create user");
     }
-  };
+
+    const resData = await response.json();
+
+    // ✅ map API data to your Employee object
+    const emp = resData.data;
+    const mappedEmployee = {
+      id: emp.id,
+      fullName: emp.fullName,
+      role: emp.role,
+      department: emp.department || "N/A",
+      status: emp.is_active ? "Active" : "Inactive",
+      initials: emp.fullName
+        ? emp.fullName.split(" ").map((n: string) => n[0]).join("")
+        : "NA",
+    };
+
+    onEmployeeAdded(mappedEmployee); // 👈 parent gets consistent shape
+    setSuccess(true);
+  } catch (error: any) {
+    console.error(error);
+    alert(error.message || "Something went wrong");
+  }
+};
+
 
   return (
-    <div className="fixed  inset-0 bg-gray-600/70  z-1000  w-full flex items-center justify-center">
-      
-      <div className="relative p-8 bg-white  overflow-y-auto h-[500px] w-96 md:w-[600px] mx-auto rounded-2xl  shadow-lg">
+    <div className="fixed inset-0 bg-gray-600/70 z-1000 w-full flex items-center justify-center">
+      <div className="relative p-8 bg-white overflow-y-auto h-[500px] w-96 md:w-[600px] mx-auto rounded-2xl shadow-lg">
         {/* Header */}
-        
         <div className="flex justify-between items-center pb-3">
           <h3 className="text-2xl font-semibold text-[#0C326E]">Add a new employee</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
-          
         </div>
 
         {success ? (
@@ -100,8 +119,15 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({ onClose, onEmployee
             <Input label="Full Name" type="text" name="fullName" value={formData.fullName} onChange={handleChange} error={errors.fullName} />
             <Input label="Email" type="email" name="email" value={formData.email} onChange={handleChange} error={errors.email} />
             <Input label="Phone Number" type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} error={errors.phoneNumber} />
+            
+            <Select label="Role" name="role" value={formData.role} placeholder="Select role" options={["Employee", "Manager", "Finance"]} onChange={handleChange}
+              className="border text-gray-700 border-gray-300 " labelClassName="text-gray-700 font-semibold"
+              error={errors.role}
+            />
+            
             <Input label="Department" type="text" name="department" value={formData.department} onChange={handleChange} error={errors.department} />
-            <Input label="Role" type="text" name="role" value={formData.role} onChange={handleChange} error={errors.role} />
+            <Input label="Position" type="text" name="position" value={formData.position} onChange={handleChange} error={errors.position} /> {/* ✅ validated */}
+
             <Input label="Password" type="password" name="password" value={formData.password} onChange={handleChange} error={errors.password} />
 
             <div className="pt-4 flex justify-center space-x-4">

@@ -26,12 +26,13 @@ const ManagerSidebar: React.FC = () => {
   // Sidebar navigation
   const navItems = [
     { icon: VscHome, label: "Dashboard", path: "/manager" },
-    { icon: CiBellOn, label: "Notifications", path: "/notificationsM" },
+    // { icon: CiBellOn, label: "Notifications", path: "/notificationsM" },
     { icon: FiUser, label: "Profile", path: "/profileM" },
   ];
 
   // Quick actions (fixed icons)
   const quickActions = [
+    { icon: RiTeamLine, label: "All Missions", path: "all" },
     { icon: RiTeamLine, label: "Team Management", path: "team" },
     { icon: FiList, label: "Requests", path: "requested" },
     { icon: FiFileText, label: "Reports", path: "reported" },

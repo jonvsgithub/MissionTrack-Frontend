@@ -1,4 +1,10 @@
 import React from "react";
+import { FaEdit } from "react-icons/fa";
+import { FaEye, FaTrash } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { deleteCompany } from "../../redux/companySlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
 
 // Reusable component for the status/plan/payment badges
 const Badge = ({ text, type }) => {
@@ -33,7 +39,21 @@ const Badge = ({ text, type }) => {
 };
 
 // ✅ Styled Companies Table
-const CompaniesTable = ({ data }) => {
+type CompaniesTableProps = {
+  data: Array<{
+    id: string;
+    companyName: string;
+    companyEmail: string;
+    status: string;
+    manager: { fullName: string } | null | undefined;
+    state: string;
+    createdAt: string | number | Date;
+  }>;
+};
+
+const CompaniesTable: React.FC<CompaniesTableProps> = ({ data }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
       {/* Table Header */}
@@ -48,65 +68,81 @@ const CompaniesTable = ({ data }) => {
 
       {/* Table Rows */}
       {data.length > 0 ? (
-        data.map((company: { companyName: string; companyEmail: string; status: unknown; manager: { fullName: string | number  } | null | undefined; state: unknown|string; createdAt: string | number | Date }, index: string ) => (
-          <div
-            key={index}
-            className="grid grid-cols-6 gap-6 items-center text-sm px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition"
-          >
-            {/* Company Info */}
-            <div className="flex flex-col">
-              <span className="font-semibold text-gray-800">
-                {company.companyName}
-              </span>
-              <span className="text-xs text-gray-500">
-                {company.companyEmail}
-              </span>
-            </div>
+        data.map(
+          (
+            company: {
+              id: string;
+              companyName: string;
+              companyEmail: string;
+              status: string;
+              manager: { fullName: string } | null | undefined;
+              state: string;
+              createdAt: string | number | Date;
+            },
+            index: number
+          ) => (
+            <div
+              key={index}
+              className="grid grid-cols-6 gap-6 items-center text-sm px-6 py-4 border-b border-gray-100 hover:bg-gray-50 transition"
+            >
+              {/* Company Info */}
+              <div className="flex flex-col">
+                <span className="font-semibold text-gray-800">
+                  {company.companyName}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {company.companyEmail}
+                </span>
+              </div>
 
-            {/* Status */}
-            <div>
-              <Badge text={company.status} type={company.status} />
-            </div>
+              {/* Status */}
+              <div>
+                <Badge text={company.status} type={company.status} />
+              </div>
 
-            {/* Manager */}
-            <div className="text-gray-700">{company.manager?.fullName}</div>
+              {/* Manager */}
+              <div className="text-gray-700">{company.manager?.fullName}</div>
 
-            {/* Plan/State */}
-            <div>
-              <Badge text={company.state || "N/A"} type={company.state} />
-            </div>
+              {/* Plan/State */}
+              <div>
+                <Badge text={company.state || "N/A"} type={company.state} />
+              </div>
 
-            {/* Date */}
-            <div className="text-gray-500 text-sm">
-              {new Date(company.createdAt).toLocaleDateString()}
-            </div>
+              {/* Date */}
+              <div className="text-gray-500 text-sm">
+                {new Date(company.createdAt).toLocaleDateString()}
+              </div>
 
-            {/* Actions */}
-            <div className="flex justify-center">
-              <button className="p-2 rounded-full hover:bg-gray-200 transition">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              {/* Actions */}
+              <div className="flex justify-center gap-2">
+                <button
+                  className="p-2 text-primaryColor-500 rounded-full hover:bg-gray-200 transition"
+                  onClick={() => navigate((`/admin/company/${company.id}`))}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 12h.01M12 12h.01M19 12h.01"
-                  />
-                </svg>
-              </button>
+                  <FaEye />
+                </button>
+                <button className="p-2 text-accent-500 rounded-full hover:bg-gray-200 transition">
+                  <FaEdit />
+                </button>
+                <button
+                  className="p-2 text-red-500 rounded-full hover:bg-gray-200 transition"
+                  onClick={() => {
+                    if (window.confirm("Are you sure you want to delete this company?")) {
+                      dispatch(deleteCompany(company.id));
+                    }
+                  }}
+                >
+                  <FaTrash />
+                </button>
+
+              </div>
             </div>
-          </div>
-        ))
+          )
+        )
       ) : (
         <div className="text-center text-gray-500 italic py-6">
           No companies found
         </div>
-
       )}
     </div>
   );
