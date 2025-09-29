@@ -56,22 +56,34 @@ const CompanyInformationPage: React.FC = () => {
         }
     };
 
- const handleConfirm = () => {
-    if (!selectedAction || !companyId) return;
-    
-    if (selectedAction === "Approve" || selectedAction === "Reject") {
-        // Handle approve/reject
-    } else if (selectedAction === "Block" || selectedAction === "Activate") {
-        let actionType: "block" | "active";
-        actionType = selectedAction === "Block" ? "block" : "active";
-        
-        dispatch(blockOrUnblockCompany({ 
-            companyId, 
-            action: actionType, 
-            comment: comment || undefined
-        }));
-    }
+const handleConfirm = () => {
+  if (!selectedAction || !companyId) return;
+
+  if (selectedAction === "Approve" || selectedAction === "Reject") {
+    const actionType: "approve" | "reject" =
+      selectedAction === "Approve" ? "approve" : "reject";
+
+    dispatch(
+      approveOrRejectCompany({
+        companyId,
+        action: actionType,
+        comment: comment || undefined,
+      })
+    );
+  } else if (selectedAction === "Block" || selectedAction === "Activate") {
+    const actionType: "block" | "active" =
+      selectedAction === "Block" ? "block" : "active";
+
+    dispatch(
+      blockOrUnblockCompany({
+        companyId,
+        action: actionType,
+        comment: comment || undefined,
+      })
+    );
+  }
 };
+
 
     if (companyLoading) return <div className="flex justify-center items-center ">
         <div className="flex justify-center p-5"><Spin size="large" className="item-center"/> <p>Loading company info...</p></div>

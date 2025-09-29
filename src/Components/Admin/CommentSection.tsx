@@ -19,7 +19,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
   const getConfirmButtonStyle = (action: string) => {
     switch (action.toLowerCase()) {
       case 'approve':
-        return "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50";
+        return "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-900 transition disabled:opacity-50";
       case 'reject':
         return "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50";
       case 'block':
@@ -75,6 +75,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
         >
           {loading ? getLoadingText(selectedAction) : `Confirm ${selectedAction}`}
         </button>
+
       </div>
     </div>
   );

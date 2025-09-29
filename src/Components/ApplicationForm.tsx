@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Stepper from "./Stepper";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { AppDispatch, RootState } from "../redux/store";
 import { registerCompany } from "../redux/companySlice";
@@ -11,6 +11,24 @@ import Select from "./Select";
 import DragDrop from "./DragDrop";
 import Checkbox from "./Checkbox";
 
+
+
+const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
+
+const districts: Record<string, string[]> = {
+  Kigali: ["Gasabo", "Kicukiro", "Nyarugenge"],
+  Northern: ["Musanze", "Gicumbi", "Burera"],
+  Southern: ["Huye", "Nyanza", "Muhanga"],
+  Eastern: ["Rwamagana", "Nyagatare", "Kayonza"],
+  Western: ["Rusizi", "Rubavu", "Nyamasheke"],
+};
+
+const sectors: Record<string, string[]> = {
+  Gasabo: ["Gikomero", "Kacyiru", "Kimironko"],
+  Kicukiro: ["Nyarutarama", "Kanombe", "Gahanga"],
+  Nyarugenge: ["Nyamirambo", "Kimisagara", "Muhima"],
+  Musanze: ["Musanze", "Muhoza", "Kinigi"],
+};
 const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -47,7 +65,7 @@ const ApplicationForm: React.FC = () => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [step, setStep] = useState(0);
-  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<any[] | string[]>([]);
 
  useEffect(() => {
   if (user?.companyId && user?.token) {
@@ -85,6 +103,12 @@ const ApplicationForm: React.FC = () => {
       .catch((err) => console.error("Failed to fetch company:", err));
   }
 }, [user]);
+
+useEffect(()=>{
+  if(success){
+     navigate("/login");
+  }
+},[success,navigate]);
 
 
   // ------------------- Handlers -------------------
@@ -150,28 +174,34 @@ const ApplicationForm: React.FC = () => {
   };
 
   // ------------------- Submit -------------------
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newErrors = validateStep();
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  const newErrors = validateStep();
+  setErrors(newErrors);
+  if (Object.keys(newErrors).length > 0) return;
 
-    const payload = {
-      companyName: formData.organizationName,
-      companyEmail: formData.companyEmail,
-      companyContact: formData.companyPhoneNumber,
-      district: formData.district,
-      province: formData.province,
-      sector: formData.sector,
-      fullName: formData.person,
-      phoneNumber: formData.phone,
-      email: formData.email,
-      password: formData.password,
-      proofDocument: uploadedFiles[0],
-    };
+  // Use FormData instead of plain object
+  const data = new FormData();
+  data.append("companyName", formData.organizationName);
+  data.append("companyEmail", formData.companyEmail);
+  data.append("companyContact", formData.companyPhoneNumber);
+  data.append("district", formData.district);
+  data.append("province", formData.province);
+  data.append("sector", formData.sector);
+  data.append("fullName", formData.person);
+  data.append("phoneNumber", formData.phone);
+  data.append("email", formData.email);
+  data.append("password", formData.password);
 
-    dispatch(registerCompany(payload));
-  };
+  // Append file(s)
+  uploadedFiles.forEach((file: any) => {
+    if (!file.fromServer) {
+      data.append("proofDocument", file); 
+    }
+  });
+
+  dispatch(registerCompany(data));
+};
 
   // ------------------- Render -------------------
   return (
@@ -439,13 +469,16 @@ const ApplicationForm: React.FC = () => {
               )}
 
               {step < 2 ? (
+                <>
+                <div className="my-4"><p>Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Log in</Link></p></div> <br />
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="px-4 py-2 bg-primaryColor-700 text-white rounded-lg hover:bg-primaryColor-800"
+                  className="px-4 py-1 bg-primaryColor-700 text-white rounded-lg hover:bg-primaryColor-800"
                 >
                   Next
                 </button>
+                </>
               ) : (
                 <button
                   type="submit"

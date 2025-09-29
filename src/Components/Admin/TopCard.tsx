@@ -85,7 +85,7 @@ const TopCard: React.FC <AdminStatsProps>= ({
       <DashboardCard
         title="Active Companies"
         value={activeCompanies}
-        change="+20% from last month"
+        change="+11% from last month"
         valueColor="text-green-600"
         icon={documentIcon}
         iconBgColor="bg-green-100"
@@ -94,7 +94,7 @@ const TopCard: React.FC <AdminStatsProps>= ({
       <DashboardCard
         title="Companies Under Review"
         value={underReview}
-        change="+19 from last month"
+        change="+10% from last month"
         valueColor="text-orange-600"
         icon={clockIcon}
         iconBgColor="bg-orange-100"
@@ -112,7 +112,7 @@ const TopCard: React.FC <AdminStatsProps>= ({
       <DashboardCard
         title="Unpaid Subscription and Blocked"
         value={blockedCompanies}
-        change="+18 from last month"
+        change="+5% from last month"
         valueColor="text-red-600"
         icon={calendarIcon}
         iconBgColor="bg-red-100"
@@ -121,7 +121,7 @@ const TopCard: React.FC <AdminStatsProps>= ({
        <DashboardCard
         title="Upcoming Payments"
         value={upcomingPayments}
-        change="+18 from last month"
+        change="+8% from last month"
         valueColor="text-green-600"
         icon={calendarIcon}
         iconBgColor="bg-green-100"

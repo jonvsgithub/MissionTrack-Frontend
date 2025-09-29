@@ -62,7 +62,7 @@ const AppRoute = () => {
           <Route path="report" element={<Report />} />
         </Route>
 
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profileA" element={<Profile />} />
         <Route path="/details" element={<Profile />} />
         <Route path="/password" element={<Password />} />
         <Route path="/preferences" element={<Notification />} />
