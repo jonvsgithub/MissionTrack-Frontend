@@ -40,6 +40,15 @@ const ApplicationForm: React.FC = () => {
     (state: RootState) => state.company
   );
 
+  // ✅ Redirect when success
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500); // 1.5s delay so user sees "success" message
+    }
+  }, [success, navigate]);
+
   // ✅ Get previousData from navigation state (if any)
   const previousData = location.state?.formData || {};
 
@@ -165,28 +174,32 @@ const ApplicationForm: React.FC = () => {
   };
 
   // ------------------- Submit -------------------
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newErrors = validateStep();
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  const newErrors = validateStep();
+  setErrors(newErrors);
+  if (Object.keys(newErrors).length > 0) return;
 
-    const payload = {
-      companyName: formData.organizationName,
-      companyEmail: formData.companyEmail,
-      companyContact: formData.companyPhoneNumber,
-      district: formData.district,
-      province: formData.province,
-      sector: formData.sector,
-      fullName: formData.person,
-      phoneNumber: formData.phone,
-      email: formData.email,
-      password: formData.password,
-      proofDocument: uploadedFiles[0],
-    };
+  const formDataToSend = new FormData();
+  formDataToSend.append("companyName", formData.organizationName);
+  formDataToSend.append("companyEmail", formData.companyEmail);
+  formDataToSend.append("companyContact", formData.companyPhoneNumber);
+  formDataToSend.append("district", formData.district);
+  formDataToSend.append("province", formData.province);
+  formDataToSend.append("sector", formData.sector);
+  formDataToSend.append("fullName", formData.person);
+  formDataToSend.append("phoneNumber", formData.phone);
+  formDataToSend.append("email", formData.email);
+  formDataToSend.append("password", formData.password);
 
-    dispatch(registerCompany(payload));
-  };
+  // ✅ attach file
+  if (uploadedFiles[0] && uploadedFiles[0] instanceof File) {
+    formDataToSend.append("proofDocument", uploadedFiles[0]);
+  }
+
+  dispatch(registerCompany(formDataToSend));
+};
+
 
   // ------------------- Render -------------------
   return (
