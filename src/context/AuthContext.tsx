@@ -14,6 +14,7 @@ type User = {
   companyId?: string;
   department?: string;
   phone?: string;
+  profilePhoto?: string;
   token: string;
 };
 

@@ -21,7 +21,7 @@ const HeaderAdmin: React.FC = () => {
 
       {/* Logo + Title */}
       <div className="flex items-center gap-2">
-        <img src="/logo.svg" alt="logo" className="h-8" />
+        <img src={user?.profilePhoto || "/src/assets/profile.jpg"} alt="logo" className="h-8" />
         <h1 className="font-bold text-xl text-primaryColor-700">
           Mission<span className="text-accent-700">Track</span>
         </h1>
@@ -49,12 +49,7 @@ const HeaderAdmin: React.FC = () => {
 
         {/* Profile */}
         <div className="flex items-center mr-15 gap-2 cursor-pointer">
-          <div className="bg-blue-700 rounded-full p-3">
-            <FiUser
-              size={22}
-              className={twTheme("text-white", "text-gray-200")}
-            />
-          </div>
+          <img src={user?.profilePhoto || "/src/assets/profile.jpg"}alt="Profile" className="w-12 h-12 rounded-full object-cover" />
           <span className="text-sm font-medium">{user?.fullName || "Admin"}</span>
         </div>
       </div>
