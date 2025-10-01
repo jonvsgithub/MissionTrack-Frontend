@@ -14,6 +14,14 @@ const AllMission: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [loading, setLoading] = useState(true);
 
+  const statusOptions = [
+    "All Status",
+    "pending",
+    "manager_approved",
+    "inProgress",
+    "rejected",
+  ];
+
   // Fetch missions from backend
   const fetchMissions = async () => {
     try {
@@ -22,7 +30,7 @@ const AllMission: React.FC = () => {
         "https://missiontrack-backend.onrender.com/api/missions/manager",
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMissions(res.data.data);
+      setMissions(res.data.data || []);
     } catch (err) {
       console.error("Error fetching missions:", err);
     } finally {
@@ -34,48 +42,38 @@ const AllMission: React.FC = () => {
     fetchMissions();
   }, []);
 
-  const statusOptions = [
-    "All Status",
-    "pending",
-    "manager_approved",
-    "inProgress",
-    "rejected",
-  ];
-
-  // ✅ Filter missions based on search + status
-  const filteredMissions = missions.filter((m) => {
-    const missionName = (m.missionTitle || "").toLowerCase();
-    const managerName = (m.fullName || "").toLowerCase();
-    const jobPosition = (m.jobPosition || "").toLowerCase();
-    const query = searchQuery.toLowerCase();
-
-    const matchesSearch =
-      missionName.includes(query) ||
-      managerName.includes(query) ||
-      jobPosition.includes(query);
-
-    const matchesStatus =
-      statusFilter === "All Status" ||
-      (m.status || "").toLowerCase() === statusFilter.toLowerCase();
-
-    return matchesSearch && matchesStatus;
-  });
-
-  // Map filtered missions for table
-  const tableData = filteredMissions.map((m) => ({
+  // Map API missions into consistent structure
+  const mappedMissions = missions.map((m) => ({
     id: m.id,
-    missionName: m.missionTitle,
+    missionName: m.missionTitle || "N/A",
     email: m.email || "N/A",
-    status: m.status,
+    status: m.status || "N/A",
     plan: m.jobPosition || "N/A",
     manager: m.fullName || "N/A",
     payment: m.paymentStatus || "N/A",
-    lastActivity: new Date(m.updatedAt).toLocaleDateString(),
-    // 🔹 Extra fields for manager to review
+    lastActivity: m.updatedAt
+      ? new Date(m.updatedAt).toLocaleDateString()
+      : "N/A",
     description: m.description || "No description provided",
     startDate: m.startDate ? new Date(m.startDate).toLocaleDateString() : "N/A",
     endDate: m.endDate ? new Date(m.endDate).toLocaleDateString() : "N/A",
   }));
+
+  // Filter and search after mapping
+  const filteredMissions = mappedMissions.filter((m) => {
+    const query = searchQuery.toLowerCase();
+
+    const matchesSearch =
+      m.missionName.toLowerCase().includes(query) ||
+      m.manager.toLowerCase().includes(query) ||
+      m.plan.toLowerCase().includes(query);
+
+    const matchesStatus =
+      statusFilter === "All Status" ||
+      m.status.toLowerCase() === statusFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <>
@@ -83,12 +81,12 @@ const AllMission: React.FC = () => {
 
         <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
           {/* Add Mission Button */}
-          <button className="bg-primaryColor-700 w-60 mb-5 text-lg text-center rounded-2xl text-white">
+          {/* <button className="bg-primaryColor-700 w-60 mb-5 text-lg text-center rounded-2xl text-white">
             <div className="flex items-center justify-center">
               <span className="text-4xl mr-2">+</span>
               <span>Add Mission</span>
             </div>
-          </button>
+          </button> */}
 
           <div className="w-[900px] bg-white rounded-2xl overflow-x-auto">
             {/* Search + Filter */}
@@ -125,7 +123,7 @@ const AllMission: React.FC = () => {
             {loading ? (
               <p className="text-gray-500 p-4">Loading missions...</p>
             ) : (
-              <MissionTable data={tableData} />
+              <MissionTable data={filteredMissions} />
             )}
           </div>
         </main>

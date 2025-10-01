@@ -74,7 +74,7 @@ const Profile: React.FC = () => {
     <div className="flex flex-col w-full">
       <div className="p-4 flex justify-between">
         <h1 className="text-xl font-semibold">Personal Information</h1>
-       
+        <img src="/profile.jpg" alt="Profile" className="w-12 h-12 rounded-full" />
       </div>
 
       <div className="p-5 grid grid-cols-2 gap-6">
@@ -111,12 +111,14 @@ const Profile: React.FC = () => {
           icon={<FaPhoneAlt />}
         />
       </div>
+      <div className="p-5 flex justify-center">
        <button
           onClick={handleSubmit}
           className="px-4 py-2 flex justify-center rounded w-[200px] bg-blue-600 text-white hover:bg-blue-700 transition"
         >
           Save Changes
         </button>
+        </div>
     </div>
   );
 };

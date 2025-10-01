@@ -26,11 +26,12 @@ import AllCompanies from "../pages/AllCompanies";
 import AdminDashboard from "../pages/AdminDashboard";
 import Rejected from "../Components/Rejected";
 import Subscriptions from "../Components/Subscriptions";
+import AllMission from "../pages/AllMission";
 import FinanceDashboard from "../pages/FinanceDashboard";
 import AdminHome from "../pages/AdminHome";
 import ManagerHome from "../pages/ManagerHome";
 import EmployeeHome from "../pages/EmployeeHome";
-import AllMission from "../pages/AllMission";
+// import AllMission from "../pages/AllMission";
 import CompanyInformationPage from "../Components/Admin/companyInformationPage";
 import ProfileHome from "../Components/Settings/ProfileHome";
 
@@ -76,6 +77,7 @@ const AppRoute = () => {
         {/* <Route path="/missions/history" element={<MissionExpenses />} /> */}
         <Route path="/manager" element={<ManagerDashboard />} >
           <Route index element={<ManagerHome />} />
+          <Route path="all" element={<AllMission/>} />
           <Route path="team" element={<TeamManagement />} />
           <Route path="all" element={<AllMission />} />
           <Route path="requested" element={<RequestManager />} />
@@ -109,9 +111,11 @@ const AppRoute = () => {
 
         <Route path="/pending" element={<Pending />} />
         <Route path="/rejected" element={<Rejected />} />
+        <Route path="/companies" element={<AllCompanies/>} />
+        <Route path="/subscriptions" element={<Subscriptions />} />
+        <Route path="/all" element={<AllMission/>}/>
 
         <Route path="/finance" element={<FinanceDashboard />} />
-        
 
 
       </Routes>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// components/MissionTable.tsx
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 // Badge component
@@ -37,7 +38,7 @@ type Mission = {
   plan: string;
   manager: string;
   lastActivity: string;
-  description?: string; // extra field for details
+  description?: string;
   startDate?: string;
   endDate?: string;
 };
@@ -47,8 +48,13 @@ type MissionTableProps = {
 };
 
 const MissionTable: React.FC<MissionTableProps> = ({ data }) => {
-  const [missions, setMissions] = useState(data);
+  // Local state for status updates
+  const [missions, setMissions] = useState<Mission[]>([]);
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
+
+  useEffect(() => {
+    setMissions(data);
+  }, [data]);
 
   const updateStatus = async (missionId: string, newStatus: string) => {
     try {
@@ -59,12 +65,13 @@ const MissionTable: React.FC<MissionTableProps> = ({ data }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // Update local missions state
       setMissions((prev) =>
         prev.map((m) =>
           m.id === missionId ? { ...m, status: newStatus } : m
         )
       );
-      setSelectedMission(null); // close modal after action
+      setSelectedMission(null); // close modal
     } catch (err) {
       console.error("Error updating mission status:", err);
       alert("Failed to update mission status");

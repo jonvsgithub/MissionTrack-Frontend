@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Stepper from "./Stepper";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +9,6 @@ import Input from "./Input";
 import Select from "./Select";
 import DragDrop from "./DragDrop";
 import Checkbox from "./Checkbox";
-
 
 
 const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
@@ -39,6 +37,7 @@ const ApplicationForm: React.FC = () => {
   const companyState = useSelector((state: RootState) => state);
   console.log("Redux Root State:", companyState);
 
+  // ✅ use only company slice instead of full root
   const { loading, success, error, message } = useSelector(
     (state: RootState) => state.company
   );
@@ -59,7 +58,7 @@ const ApplicationForm: React.FC = () => {
     fullName: previousData.fullName || "",
     phone: previousData.phoneNumber || "",
     email: previousData.email || "",
-    password: "", // password should not be prefilled
+    password: "",
     agree: false,
   });
 
@@ -67,42 +66,32 @@ const ApplicationForm: React.FC = () => {
   const [step, setStep] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState<any[] | string[]>([]);
 
- useEffect(() => {
-  if (user?.companyId && user?.token) {
-    fetch(`https://missiontrack-backend.onrender.com/api/companies/${user.companyId}`, {
-      headers: { Authorization: `Bearer ${user.token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // Map backend fields to your form state
-        setFormData({
-          organizationName: data.companyName || "",
-          province: data.province || "",
-          district: data.district || "",
-          sector: data.sector || "",
-          companyEmail: data.companyEmail || user?.email || "",
-          companyPhoneNumber: data.companyContact || "",
-          person: data.manager?.fullName || "",
-          phone: data.manager?.phoneNumber || data.manager?.phone || "",
-          email: data.manager?.email || "",
-          password: "", // never prefill password
-          agree: false,
-        });
-
-        // Prefill uploaded file if exists
-        if (data.proofDocument) {
-          setUploadedFiles([
-            {
-              name: data.proofDocument.split("/").pop(),
-              url: `https://missiontrack-backend.onrender.com/${data.proofDocument}`,
-              fromServer: true,
-            } as any,
-          ]);
+  useEffect(() => {
+    if (user?.companyId && user?.token) {
+      fetch(
+        `https://missiontrack-backend.onrender.com/api/companies/${user.companyId}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
         }
-      })
-      .catch((err) => console.error("Failed to fetch company:", err));
-  }
-}, [user]);
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setFormData({
+            organizationName: data.companyName || "",
+            province: data.province || "",
+            district: data.district || "",
+            sector: data.sector || "",
+            companyEmail: data.companyEmail || user?.email || "",
+            companyPhoneNumber: data.companyContact || "",
+            person: data.manager?.fullName || "",
+            phone: data.manager?.phoneNumber || data.manager?.phone || "",
+            email: data.manager?.email || "",
+            password: "",
+            agree: false,
+          });
+        });
+    }
+  }, [user]);
 
 useEffect(()=>{
   if(success){
@@ -495,5 +484,5 @@ const handleSubmit = (e: React.FormEvent) => {
     </div>
   );
 };
-
+    
 export default ApplicationForm;

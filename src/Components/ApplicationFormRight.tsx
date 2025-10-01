@@ -378,4 +378,3 @@ const ApplicationFormRight: React.FC<ApplicationFormRightProps> = ({
 };
 
 export default ApplicationFormRight;
-

@@ -136,7 +136,6 @@ const companySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // create new company
     builder
       .addCase(registerCompany.pending, (state) => {
         state.loading = true;
