@@ -24,16 +24,16 @@ const Sidebar: React.FC = () => {
   // Sidebar navigation
   const navItems = [
     { icon: VscHome, label: "Dashboard", path: "/employee" },
-    { icon: CiBellOn, label: "Notifications", path: "notifications" },
-    { icon: FiUser, label: "Profile", path: "profile" },
+    { icon: CiBellOn, label: "Notifications", path: "employee/notifications" },
+    { icon: FiUser, label: "Profile", path: "/profileA" },
   ];
 
   // Quick actions
   const quickActions = [
-    { icon: FiPlusCircle, label: "New Mission Request", path: "request" },
-    { icon: FiList, label: "Request List/Tracking", path: "requestList" },
-    { icon: BiWallet, label: "Expense Logging", path: "expenses" },
-    { icon: FiFileText, label: "Mission Reporting", path: "report" },
+    { icon: FiPlusCircle, label: "New Mission Request", path: "employee/request" },
+    { icon: FiList, label: "Request List/Tracking", path: "employee/requestList" },
+    { icon: BiWallet, label: "Expense Logging", path: "employee/expenses" },
+    { icon: FiFileText, label: "Mission Reporting", path: "employee/report" },
   ];
 
   return (
@@ -47,7 +47,7 @@ const Sidebar: React.FC = () => {
         {/* Navigation */}
         <nav className="space-y-2">
           {navItems.map(({ icon: Icon, label, path }) => {
-           const isActive = location.pathname === path;
+            const isActive = location.pathname.startsWith(path);
             return (
               <Link
                 key={label}
@@ -94,7 +94,9 @@ const Sidebar: React.FC = () => {
             })}
           </div>
         </div>
-         {/* ✅ Logout always at bottom */}
+      </div>
+
+      {/* ✅ Logout always at bottom */}
       <div className="p-5">
         <button
           onClick={handleLogout}
@@ -103,9 +105,6 @@ const Sidebar: React.FC = () => {
           Logout
         </button>
       </div>
-      </div>
-
-     
     </aside>
   );
 };

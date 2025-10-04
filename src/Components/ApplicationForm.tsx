@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { AppDispatch, RootState } from "../redux/store";
-import { registerCompany } from "../redux/companySlice";
+import { registerCompany } from "../redux/companyRedux/companySlice";
 import Input from "./Input";
 import Select from "./Select";
 import DragDrop from "./DragDrop";
@@ -178,26 +178,28 @@ const handleSubmit = (e: React.FormEvent) => {
   setErrors(newErrors);
   if (Object.keys(newErrors).length > 0) return;
 
-  const formDataToSend = new FormData();
-  formDataToSend.append("companyName", formData.organizationName);
-  formDataToSend.append("companyEmail", formData.companyEmail);
-  formDataToSend.append("companyContact", formData.companyPhoneNumber);
-  formDataToSend.append("district", formData.district);
-  formDataToSend.append("province", formData.province);
-  formDataToSend.append("sector", formData.sector);
-  formDataToSend.append("fullName", formData.person);
-  formDataToSend.append("phoneNumber", formData.phone);
-  formDataToSend.append("email", formData.email);
-  formDataToSend.append("password", formData.password);
+  // Use FormData instead of plain object
+  const data = new FormData();
+  data.append("companyName", formData.organizationName);
+  data.append("companyEmail", formData.companyEmail);
+  data.append("companyContact", formData.companyPhoneNumber);
+  data.append("district", formData.district);
+  data.append("province", formData.province);
+  data.append("sector", formData.sector);
+  data.append("fullName", formData.person);
+  data.append("phoneNumber", formData.phone);
+  data.append("email", formData.email);
+  data.append("password", formData.password);
 
-  // ✅ attach file
-  if (uploadedFiles[0] && uploadedFiles[0] instanceof File) {
-    formDataToSend.append("proofDocument", uploadedFiles[0]);
-  }
+  // Append file(s)
+  uploadedFiles.forEach((file: any) => {
+    if (!file.fromServer) {
+      data.append("proofDocument", file); 
+    }
+  });
 
-  dispatch(registerCompany(formDataToSend));
+  dispatch(registerCompany(data));
 };
-
 
   // ------------------- Render -------------------
   return (

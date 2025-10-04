@@ -46,7 +46,7 @@ const ReportManager: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#E6EAF5]">
+    <div className="flex-1 flex flex-col min-h-screen bg-[#E6EAF5] pr-5">
       <div className="py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
         <h1 className="font-bold text-2xl text-center">Reports</h1>
       </div>

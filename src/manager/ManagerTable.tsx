@@ -85,7 +85,7 @@ const MissionTable: React.FC<MissionTableProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 w-full">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden  w-full">
       {/* Table Header */}
       <div className="grid grid-cols-7 gap-4 text-sm font-semibold text-gray-600 bg-gray-50 p-4">
         <div>Mission Title</div>
