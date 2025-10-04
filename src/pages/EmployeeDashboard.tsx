@@ -11,12 +11,11 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <Header />
-      <div className={`flex  mt-20  ${twTheme("bg-[#E6EAF5]", "bg-gray-900")}`} >
-        <div className="ml-70">
-          <Sidebar />
-        <Outlet/>
-        </div>
-        
+      <div className={`flex mt-20 ${twTheme("bg-[#E6EAF5]", "bg-gray-900")}`}>
+        <Sidebar />
+        <main className="flex-1 ml-64 p-5">
+          <Outlet />
+        </main>
       </div>
     </>
   );

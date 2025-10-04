@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-// import NavBar from "../Components/NavBar";
-import LoginForm from "../pages/LoginForm"; // ✅ corrected import
+import LoginForm from "../pages/LoginForm";
 import Dashboard from "../pages/EmployeeDashboard";
 import LandingPage from "../pages/LandingPage";
 import Profile from "../Components/Settings/Profile";
@@ -53,18 +52,18 @@ const AppRoute = () => {
           <Route path="requestList" element={<MissionList />} />
           <Route path="expenses" element={<MissionExpenses />} />
           <Route path="report" element={<Report />} />
-           <Route path="profileA" element={<Profile />} >
+          <Route path="profileA" element={<Profile />}>
             <Route index element={<ProfileHome />} />
-            <Route path="profileA" element={<ProfileHome />} />
-            <Route path="preferencea" element={<Notification />} />
-            <Route path="passwordA" element={<Password />} />
+            <Route path="preferences" element={<Notification />} />
+            <Route path="password" element={<Password />} />
           </Route>
         </Route>
+
 
         {/* Manager Routes */}
         <Route path="/manager" element={<ManagerDashboard />} >
           <Route index element={<ManagerHome />} />
-            <Route path="profileA" element={<Profile />} >
+          <Route path="profileA" element={<Profile />} >
             <Route index element={<ProfileHome />} />
             <Route path="profileA" element={<ProfileHome />} />
             <Route path="preferencea" element={<Notification />} />
@@ -74,7 +73,7 @@ const AppRoute = () => {
           <Route path="team" element={<TeamManagement />} />
           <Route path="requested" element={<RequestManager />} />
           <Route path="reported" element={<ReportManager />} />
-          
+
         </Route>
 
         {/* Admin Routes */}

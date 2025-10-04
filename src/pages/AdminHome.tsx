@@ -7,7 +7,7 @@ import RecentActivity from "../Components/RecentActivity";
 import Summary from "../Components/Admin/Summary";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/store";
-import { getAllCompanies } from "../redux/companySlice";
+import { getAllCompanies } from "../redux/companyRedux/companySlice";
 
 
 

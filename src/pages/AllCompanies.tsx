@@ -3,7 +3,7 @@ import { useDispatch,useSelector } from "react-redux";
 import AdminStats from "../Components/Admin/AdminStats";
 import CompaniesTable from "../Components/Admin/CompaniesTable";
 import { FiSearch } from "react-icons/fi";
-import { getAllCompanies } from "../redux/companySlice";
+import { getAllCompanies } from "../redux/companyRedux/companySlice";
 import type{ RootState,AppDispatch } from "../redux/store";
 import { Spin } from "antd";
 import ApplicationFormRight from "../Components/ApplicationFormRight";

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SiTicktick } from "react-icons/si";
 import { FaCheck } from "react-icons/fa";
 import { MdOutlinePendingActions } from "react-icons/md";
 import { RiFileCloseLine } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { fetchEmployeeMissions } from "../../redux/EmployeeRedux/EmpMissions";
 
 type MissionCardProps = {
   title: string;
@@ -47,38 +50,20 @@ const MissionCard: React.FC<MissionCardProps> = ({
 
 const MissionList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+  const { missions, loading, error } = useSelector((state: RootState) => state.EmployeeMissions);
 
-  const missions: MissionCardProps[] = [
-    {
-      title: "Imena Growth Initiative",
-      description: "Your Mission to London was approved. Congratulations",
-      timestamp: "Completed 2 months ago",
-      status: "completed",
-    },
-    {
-      title: "Agaciro Business Drive",
-      description:
-        "Mission to Saturn is waiting for your approval. Please review the details.",
-      timestamp: "Approved 2 days ago",
-      status: "approved",
-    },
-    {
-      title: "Umurava Leadership Summit",
-      description:
-        "Mission to Saturn is waiting for your approval. Please review the details.",
-      timestamp: "Pending since 3 days ago",
-      status: "pending",
-    },
-    {
-      title: "Gukunda Igihugu Corporate Pathway",
-      description:
-        "Mission to Venus has been successfully completed. Well done team!",
-      timestamp: "Mission rejected 1 month ago",
-      status: "rejected",
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchEmployeeMissions());
+  }, [dispatch]);
 
-  const filteredMissions = missions.filter((mission) =>
+  const mappedMissions: MissionCardProps[] = (missions || []).map((m: any) => ({
+    title: m.missionTitle,
+    description: m.missionDescription || "No description provided",
+    timestamp: `From ${m.startDate} to ${m.endDate}`,
+    status: m.status?.toLowerCase() || "pending",
+  }));
+  const filteredMissions = mappedMissions.filter((mission) =>
     mission.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -103,12 +88,17 @@ const MissionList: React.FC = () => {
           </div>
         )}
       </div>
-
+      {loading && <p className="text-center text-gray-500">Loading missions...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
       {/* Missions List */}
-      <ul className="flex flex-col gap-[10px] mt-5 items-center w-full">
-        {filteredMissions.map((mission, index) => (
-          <MissionCard key={index} {...mission} />
-        ))}
+        <ul className="flex flex-col gap-[10px] mt-5 items-center w-full">
+        {filteredMissions.length > 0 ? (
+          filteredMissions.map((mission, index) => (
+            <MissionCard key={index} {...mission} />
+          ))
+        ) : (
+          !loading && <p className="text-center text-gray-500">No missions found.</p>
+        )}
       </ul>
     </div>
   );

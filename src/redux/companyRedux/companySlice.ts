@@ -32,7 +32,7 @@ export const registerCompany = createAsyncThunk(
   async (formData: any, { rejectWithValue }) => {
     try {
       const res = await axios.post(
-        "https://missiontrack-backend.onrender.com/api/company/register",
+        "http://localhost:8080/api/company/register",
         formData
       );
       return res.data;

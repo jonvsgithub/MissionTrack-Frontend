@@ -2,7 +2,7 @@ import React from "react";
 import { FaEdit } from "react-icons/fa";
 import { FaEye, FaTrash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { deleteCompany } from "../../redux/companySlice";
+import { deleteCompany } from "../../redux/companyRedux/companySlice";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../redux/store";
 

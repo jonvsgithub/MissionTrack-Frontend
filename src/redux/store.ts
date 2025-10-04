@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import companyReducer from "./companySlice";
-import actionReducer from "./actionSlice";
+import companyReducer from "./companyRedux/companySlice";
+import actionReducer from "./companyRedux/actionSlice";
 import profileReducer from "./profileSlice";
+import missionsReducer from "./EmployeeRedux/EmpMissions";
 
 export const store = configureStore({
   reducer: {
     company: companyReducer,
     adminAction: actionReducer,
     profile: profileReducer,
+    EmployeeMissions: missionsReducer
   },
 });
 
