@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { AppDispatch, RootState } from "../redux/store";
-import { registerCompany } from "../redux/companySlice";
+import { registerCompany } from "../redux/companyRedux/companySlice";
 import Input from "./Input";
 import Select from "./Select";
 import DragDrop from "./DragDrop";

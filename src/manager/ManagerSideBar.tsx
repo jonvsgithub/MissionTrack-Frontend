@@ -41,12 +41,12 @@ const navItems = [
   return (
     <div className="">
       <aside
-      className={`fixed top-20 h-full left-0 w-64 flex flex-col justify-between shadow-md z-40 overflow-y-auto ${twTheme(
-        "bg-blue-50",
-        "bg-gray-900 text-white"
-      )}`}
+       className={`fixed top-20 bottom-0 left-0 w-64 flex flex-col shadow-md z-40 ${twTheme(
+    "bg-blue-50",
+    "bg-gray-900 text-white"
+  )}`}
     >
-      <div className="p-5">
+      <div className=" flex-1 overflow-y-auto p-5">
         {/* Navigation */}
         <nav className="space-y-2">
           {navItems.map(({ icon: Icon, label, path }) => {
@@ -79,7 +79,7 @@ const navItems = [
               <Link
                 key={label}
                 to={path}
-                className="flex items-center gap-2 px-2 py-1 text-sm text-gray-600 hover:text-blue-600"
+                className="flex items-center gap-2 px-2 py-1 text-lg text-gray-600 hover:text-blue-600"
               >
                 <Icon size={18} className="text-black" />
                 {label}

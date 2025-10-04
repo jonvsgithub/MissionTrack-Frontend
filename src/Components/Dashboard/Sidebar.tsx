@@ -22,32 +22,34 @@ const Sidebar: React.FC = () => {
     theme === "light" ? light : dark;
 
   // Sidebar navigation
-  const navItems = [
-    { icon: VscHome, label: "Dashboard", path: "/employee" },
-    { icon: CiBellOn, label: "Notifications", path: "employee/notifications" },
-    { icon: FiUser, label: "Profile", path: "/profileA" },
-  ];
+const navItems = [
+  { icon: VscHome, label: "Dashboard", path: "/employee" },
+  { icon: CiBellOn, label: "Notifications", path: "/employee/notifications" },
+  { icon: FiUser, label: "Profile", path: "/employee/profileA" },
+];
+
 
   // Quick actions
-  const quickActions = [
-    { icon: FiPlusCircle, label: "New Mission Request", path: "employee/request" },
-    { icon: FiList, label: "Request List/Tracking", path: "employee/requestList" },
-    { icon: BiWallet, label: "Expense Logging", path: "employee/expenses" },
-    { icon: FiFileText, label: "Mission Reporting", path: "employee/report" },
-  ];
+const quickActions = [
+  { icon: FiPlusCircle, label: "New Mission Request", path: "/employee/request" },
+  { icon: FiList, label: "Request List/Tracking", path: "/employee/requestList" },
+  { icon: BiWallet, label: "Expense Logging", path: "/employee/expenses" },
+  { icon: FiFileText, label: "Mission Reporting", path: "/employee/report" },
+];
+
 
   return (
     <aside
-      className={`fixed top-20 h-full left-0  w-64 flex flex-col justify-between shadow-md z-40 overflow-y-auto ${twTheme(
-        "bg-blue-50",
-        "bg-gray-900 text-white"
-      )}`}
+    className={`fixed top-20 bottom-0 left-0 w-64 flex flex-col shadow-md z-40 ${twTheme(
+    "bg-blue-50",
+    "bg-gray-900 text-white"
+  )}`}
     >
-      <div className="p-5">
+      <div className="flex-1 overflow-y-auto p-5">
         {/* Navigation */}
         <nav className="space-y-2">
           {navItems.map(({ icon: Icon, label, path }) => {
-            const isActive = location.pathname.startsWith(path);
+         const isActive = location.pathname.startsWith(path);
             return (
               <Link
                 key={label}
@@ -94,17 +96,17 @@ const Sidebar: React.FC = () => {
             })}
           </div>
         </div>
-      </div>
-
-      {/* ✅ Logout always at bottom */}
-      <div className="p-5">
+           <div className="pt-5">
         <button
           onClick={handleLogout}
-          className="w-full bg-green-600 text-white font-semibold py-2 rounded-2xl transition hover:bg-green-700"
+        className="mt-10 w-32 bg-accent-600 text-white font-semibold py-2 rounded-2xl  transition"
         >
           Logout
         </button>
       </div>
+      </div>
+
+   
     </aside>
   );
 };

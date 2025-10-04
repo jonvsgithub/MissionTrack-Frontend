@@ -1,5 +1,5 @@
 import React from "react";
-import { FiBell, FiUser, FiMenu } from "react-icons/fi"; 
+import { FiBell, FiMenu } from "react-icons/fi"; 
 import { useTheme } from "../hook/useTheme";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";

@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import type { AppDispatch, RootState } from "../../redux/store";
-import { getSingleCompany } from "../../redux/companySlice";
+import { getSingleCompany } from "../../redux/companyRedux/companySlice";
 import CompanyHeader from "./CompanyHeader";
 import CompanyInformationCard from "./CompanyInformationCard";
 import { message, Spin } from "antd";
-import { approveOrRejectCompany, blockOrUnblockCompany, clearActionState } from "../../redux/actionSlice";
+import { approveOrRejectCompany, blockOrUnblockCompany, clearActionState } from "../../redux/companyRedux/actionSlice";
 import { CommentsSection } from "./CommentSection";
 import AdminOperations from "./AdminOperations";
 

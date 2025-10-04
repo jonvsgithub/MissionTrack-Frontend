@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../redux/store";
-import { registerCompany, resetCompanyState } from "../redux/companySlice";
+import { registerCompany, resetCompanyState } from "../redux/companyRedux/companySlice";
 import { useNavigate } from "react-router-dom";
 
 import Input from "./Input";

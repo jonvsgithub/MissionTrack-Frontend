@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import Input from "../Input";
-import Header from "../HeaderDash";
-import Sidebar from "../Dashboard/Sidebar";
 import Stepper from "../Stepper";
 import DragDrop from "../DragDrop";
 import {
@@ -39,6 +37,7 @@ const getFileIcon = (fileName: string) => {
 };
 
 const Details: React.FC = () => {
+  // ✅ Form stat
   const [formData, setFormData] = useState({
     missionTitle: "",
     names: "",
@@ -55,6 +54,7 @@ const Details: React.FC = () => {
 
   const steps = ["Mission Details", "Attachments", "Submission"];
   const [currentStep, setCurrentStep] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   // ✅ Validation logic per step
   const validateStep = () => {
@@ -72,13 +72,6 @@ const Details: React.FC = () => {
         }
       }
     }
-    // if (currentStep === 1) {
-    //   if (!formData.description) newErrors.description = "Please enter a description";
-    //   if (uploadedFiles.length === 0) newErrors.files = "Please upload at least one file";
-    // }
-    // if (currentStep === 2) {
-    //   if (uploadedFiles.length === 0) newErrors.files = "Please attach at least one file before submitting";
-    // }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -104,69 +97,73 @@ const Details: React.FC = () => {
     });
   };
 
-const handleSubmit = async () => {
-  if (!validateStep()) return;
+  const handleSubmit = async () => {
+    if (!validateStep()) return;
+    setIsLoading(true);
 
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!token) {
-      alert("No token found. Please log in.");
-      return;
-    }
-
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-      alert("No userId found. Please log in.");
-      return;
-    }
-
-    const form = new FormData();
-    form.append("userId", userId);
-    form.append("missionTitle", formData.missionTitle);
-    form.append("fullName", formData.names);
-    form.append("jobPosition", formData.position);
-    form.append("location", formData.destination);
-    form.append("startDate", formData.startDate);
-    form.append("endDate", formData.endDate);
-    form.append("missionDescription", formData.description);
-    form.append("missionDocument", "Primary mission");
-
-    uploadedFiles.forEach((file) => {
-      form.append("documents", file);
-    });
-
-    const response = await fetch(
-      "https://missiontrack-backend.onrender.com/api/missions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: form,
+      if (!token) {
+        alert("No token found. Please log in.");
+        return;
       }
-    );
 
-    const data = await response.json();
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("No userId found. Please log in.");
+        return;
+      }
 
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to submit mission");
+      const form = new FormData();
+      form.append("userId", userId);
+      form.append("missionTitle", formData.missionTitle);
+      form.append("fullName", formData.names);
+      form.append("jobPosition", formData.position);
+      form.append("location", formData.destination);
+      form.append("startDate", formData.startDate);
+      form.append("endDate", formData.endDate);
+      form.append("missionDescription", formData.description);
+      form.append("missionDocument", "Primary mission");
+
+      uploadedFiles.forEach((file) => {
+        form.append("documents", file);
+      });
+
+      const response = await fetch(
+        "https://missiontrack-backend.onrender.com/api/missions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: form,
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to submit mission");
+      }
+
+      console.log("✅ Backend response:", data);
+      setIsSubmitted(true);
+    } catch (error: any) {
+      console.error("❌ Submission error:", error.message);
+      alert(error.message);
     }
-
-    console.log("✅ Backend response:", data);
-    setIsSubmitted(true);
-  } catch (error: any) {
-    console.error("❌ Submission error:", error.message);
-    alert(error.message);
-  }
-};
+    finally {
+      setIsLoading(false);
+    }
+  };
 
 
   return (
     <>
 
-      <div className="min-h-[650px] w-full bg-[#E6EAF5] max-w-5xl   flex flex-col">
-        <div className="flex flex-col mt-5 mx-5 p-4">
+      <div className="min-h-[600px] w-full bg-[#E6EAF5] max-w-5xl   flex flex-col">
+        <div className="flex flex-col p-4 bg-white rounded-md shadow-md">
           {/* Title */}
           <div className="w-full py-2  bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
             <h1 className="font-bold text-2xl text-center">Request a Work Mission</h1>
@@ -261,9 +258,17 @@ const handleSubmit = async () => {
                     Next
                   </button>
                 ) : (
-                  <button onClick={handleSubmit} className="px-4 py-2 rounded text-accent-500 border-2 border-accent-500 w-[200px]">
-                    Submit
+                  <button
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    className={`px-4 py-2 rounded w-[200px] border-2 ${isLoading
+                        ? "bg-gray-400 text-white cursor-not-allowed"
+                        : "text-accent-500 border-accent-500"
+                      }`}
+                  >
+                    {isLoading ? "Submitting..." : "Submit"}
                   </button>
+
                 )}
               </div>
             </div>
@@ -271,15 +276,15 @@ const handleSubmit = async () => {
 
           {/* ✅ Success Modal */}
           {isSubmitted && (
-            <div className="fixed inset-0 flex items-center h- justify-center bg-black/60 bg-opacity-50 z-50">
-              <div className="bg-white rounded-lg shadow-lg h-[600px]  p-8 max-w-md text-center relative">
+            <div className="fixed inset-0 flex items-center h-[600px] justify-center bg-black/60 bg-opacity-50 z-50">
+              <div className="bg-white rounded-lg shadow-lg h-[600px]  max-w-md text-center relative">
                 <button
                   onClick={() => setIsSubmitted(false)}
-                  className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                  className="absolute top-2 right-2 text-red-500 hover:text-red-700"
                 >
                   ✕
                 </button>
-                <div className="flex flex-col justify-center mt-30 items-center">
+                <div className="flex flex-col justify-center  items-center">
                   <div className="bg-accent-600 p-3 flex  justify-center  rounded-full">
                     <FaCheck size={50} className="text-white" />
                   </div>

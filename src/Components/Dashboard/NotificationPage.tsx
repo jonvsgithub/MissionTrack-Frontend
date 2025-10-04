@@ -35,7 +35,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 
   return (
     <li
-      className={`rounded-lg ${getBorderColor()} border-l-2 bg-white shadow-sm flex gap-5 p-5 items-start w-[900px] mx-auto`}
+      className={`rounded-lg ${getBorderColor()} border-l-2 bg-white shadow-sm flex gap-5 p-5 items-start w-[1020px] mx-auto`}
     >
       <div className="mt-3 bg-gray-100 p-2">{icon}</div>
       <div>
@@ -49,12 +49,12 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 
 const NotificationPage: React.FC = () => {
   return (
-    <div className="flex flex-col">
-      <div className="py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
+    <div className="flex flex-col px-5 w-full ">
+      <div className="py-1 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
         <h1 className="font-bold text-2xl text-center">Notifications</h1>
       </div>
 
-      <ul className="flex flex-col gap-[10px] mt-10 items-center w-full">
+      <ul className="flex flex-col gap-[10px] mt-2 items-center w-[1020px]">
         <NotificationCard
           title="Imena Growth Initiative"
           message="Your Mission to London was approved. Congratulations"
