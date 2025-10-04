@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import companyReducer from "./companySlice";
+import actionReducer from "./actionSlice";
 
 export const store = configureStore({
   reducer: {
     company: companyReducer,
+    adminAction: actionReducer,
   },
 });
 

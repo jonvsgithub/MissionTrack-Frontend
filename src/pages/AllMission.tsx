@@ -79,14 +79,7 @@ const AllMission: React.FC = () => {
 
   return (
     <>
-      <Header />
-      <div
-        className={`flex gap-80 mt-20 ${twTheme(
-          "bg-[#E6EAF5]",
-          "bg-gray-900"
-        )}`}
-      >
-        <ManagerSideBar />
+     
 
         <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
           {/* Add Mission Button */}
@@ -97,7 +90,7 @@ const AllMission: React.FC = () => {
             </div>
           </button> */}
 
-          <div className="w-[1050px] bg-white rounded-2xl overflow-x-auto">
+          <div className="w-[900px] bg-white rounded-2xl overflow-x-auto">
             {/* Search + Filter */}
             <div className="flex flex-col sm:flex-row gap-2 items-center justify-center p-4">
               {/* Search Input */}
@@ -136,7 +129,7 @@ const AllMission: React.FC = () => {
             )}
           </div>
         </main>
-      </div>
+      
     </>
   );
 };

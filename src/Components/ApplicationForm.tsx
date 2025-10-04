@@ -1,39 +1,41 @@
-// src/components/ApplicationForm.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import Stepper from "./Stepper";
 import { useDispatch, useSelector } from "react-redux";
-
-import type { RootState, AppDispatch } from "../redux/store";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import type { AppDispatch, RootState } from "../redux/store";
 import { registerCompany } from "../redux/companySlice";
-
 import Input from "./Input";
 import Select from "./Select";
-import Stepper from "./Stepper";
 import DragDrop from "./DragDrop";
 import Checkbox from "./Checkbox";
-import { useAuth } from "../context/AuthContext"; // ✅ added
 
 
-// ✅ Define missing location data (you can replace with API or full list later)
 const provinces = ["Kigali", "Northern", "Southern", "Eastern", "Western"];
+
 const districts: Record<string, string[]> = {
   Kigali: ["Gasabo", "Kicukiro", "Nyarugenge"],
-  Northern: ["Musanze", "Burera", "Gicumbi"],
-  Southern: ["Huye", "Nyanza", "Gisagara"],
-  Eastern: ["Rwamagana", "Ngoma", "Kayonza"],
-  Western: ["Rubavu", "Rusizi", "Karongi"],
-};
-const sectors: Record<string, string[]> = {
-  Gasabo: ["Kimironko", "Remera"],
-  Kicukiro: ["Kanombe", "Kagarama"],
-  Nyarugenge: ["Kigali", "Nyamirambo"],
+  Northern: ["Musanze", "Gicumbi", "Burera"],
+  Southern: ["Huye", "Nyanza", "Muhanga"],
+  Eastern: ["Rwamagana", "Nyagatare", "Kayonza"],
+  Western: ["Rusizi", "Rubavu", "Nyamasheke"],
 };
 
+const sectors: Record<string, string[]> = {
+  Gasabo: ["Gikomero", "Kacyiru", "Kimironko"],
+  Kicukiro: ["Nyarutarama", "Kanombe", "Gahanga"],
+  Nyarugenge: ["Nyamirambo", "Kimisagara", "Muhima"],
+  Musanze: ["Musanze", "Muhoza", "Kinigi"],
+};
 const ApplicationForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user } = useAuth(); 
+
+  // ✅ log entire Redux state for debugging
+  const companyState = useSelector((state: RootState) => state);
+  console.log("Redux Root State:", companyState);
 
   // ✅ use only company slice instead of full root
   const { loading, success, error, message } = useSelector(
@@ -71,7 +73,7 @@ const ApplicationForm: React.FC = () => {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [step, setStep] = useState(0);
-  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<any[] | string[]>([]);
 
   useEffect(() => {
     if (user?.companyId && user?.token) {
@@ -96,20 +98,16 @@ const ApplicationForm: React.FC = () => {
             password: "",
             agree: false,
           });
-
-          if (data.proofDocument) {
-            setUploadedFiles([
-              {
-                name: data.proofDocument.split("/").pop(),
-                url: `https://missiontrack-backend.onrender.com/${data.proofDocument}`,
-                fromServer: true,
-              } as any,
-            ]);
-          }
-        })
-        .catch((err) => console.error("Failed to fetch company:", err));
+        });
     }
   }, [user]);
+
+useEffect(()=>{
+  if(success){
+     navigate("/login");
+  }
+},[success,navigate]);
+
 
   // ------------------- Handlers -------------------
   const handleChange = (
@@ -263,7 +261,7 @@ const handleSubmit = (e: React.FormEvent) => {
                       label="Province"
                       name="province"
                       value={formData.province}
-                      options={provinces}
+                      options={ provinces }
                       placeholder="Province"
                       onChange={handleChange}
                       error={errors.province}
@@ -467,13 +465,16 @@ const handleSubmit = (e: React.FormEvent) => {
               )}
 
               {step < 2 ? (
+                <>
+                <div className="my-4"><p>Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Log in</Link></p></div> <br />
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="px-4 py-2 bg-primaryColor-700 text-white rounded-lg hover:bg-primaryColor-800"
+                  className="px-4 py-1 bg-primaryColor-700 text-white rounded-lg hover:bg-primaryColor-800"
                 >
                   Next
                 </button>
+                </>
               ) : (
                 <button
                   type="submit"
@@ -490,5 +491,5 @@ const handleSubmit = (e: React.FormEvent) => {
     </div>
   );
 };
-
+    
 export default ApplicationForm;

@@ -61,7 +61,7 @@ const HeaderManager: React.FC<HeaderProps> = ({ onMenuClick }) => {
             />
           </div>
           <span className="text-sm max-sm:hidden font-medium">
-            {user?.name || "Employee"}
+            {user?.fullName || "Employee"}
           </span>
         </div>
       </div>

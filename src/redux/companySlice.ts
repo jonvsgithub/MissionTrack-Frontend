@@ -1,3 +1,4 @@
+// src/redux/companySlice.ts
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -5,8 +6,10 @@ interface CompanyState {
   loading: boolean;
   success: boolean;
   error: string | null;
+  action:null;
   message: string | null;
   companies?: any[];
+  singleCompany?: any | null;
 }
 
 const initialState: CompanyState = {
@@ -15,10 +18,17 @@ const initialState: CompanyState = {
   error: null,
   message: null,
   companies: [],
+  action:null,
+  singleCompany: null,
 };
 
+
+type RejectString = string;
+
+
+
 // Async thunk for registering company
-export const registerCompany = createAsyncThunk(
+export const registerCompany = createAsyncThunk<any, any, { rejectValue: RejectString }>(
   "company/register",
   async (formData: any, { rejectWithValue }) => {
     try {
@@ -35,6 +45,25 @@ export const registerCompany = createAsyncThunk(
   }
 );
 
+export const getSingleCompany = createAsyncThunk(
+  "company/getSingle",
+  async (companyId: string, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`https://missiontrack-backend.onrender.com/api/company/${companyId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      return res.data;
+    } catch (err: any) {
+      console.error("getSingleCompany error object:", err);
+      return rejectWithValue(
+        err.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+);
+
 export const getAllCompanies = createAsyncThunk(
   "company/getAll",
   async (_, { rejectWithValue }) => {
@@ -42,19 +71,58 @@ export const getAllCompanies = createAsyncThunk(
       const res = await axios.get(
         "https://missiontrack-backend.onrender.com/api/company/allCompanies",
         {
-          headers:{
-            Authorization:`Bearer ${localStorage.getItem("token")}`
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         }
       );
       return res.data;
-    } catch (error: any) {
+    } catch (err: any) {
+      console.error("registerCompany error object:", err);
+
+      // If backend responded with JSON error body, prefer that message
+      if (err.response) {
+        const resp = err.response;
+        // Try common places for messages
+        const maybeMessage =
+          resp.data?.message ||
+          resp.data?.error ||
+          (typeof resp.data === "string" ? resp.data : null);
+
+        const statusPart = resp.status ? ` (status ${resp.status})` : "";
+        const message = maybeMessage
+          ? `${maybeMessage}${statusPart}`
+          : `Request failed${statusPart}`;
+
+        console.error("registerCompany server response:", resp.data);
+        return rejectWithValue(message);
+      }
+
+      // Network / other errors
+      const fallback = err.message || "Network error";
+      return rejectWithValue(fallback);
+    }
+  }
+);
+export const deleteCompany = createAsyncThunk(
+  "company/delete",
+  async (companyId: string, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(`https://missiontrack-backend.onrender.com/api/company/${companyId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      return res.data;
+    } catch (err: any) {
+      console.error("deleteCompany error object:", err);
       return rejectWithValue(
-        error.response?.data?.message || "Something went wrong"
+        err.response?.data?.message || "Something went wrong"
       );
     }
   }
 );
+
 
 const companySlice = createSlice({
   name: "company",
@@ -68,7 +136,6 @@ const companySlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // create new company
     builder
       .addCase(registerCompany.pending, (state) => {
         state.loading = true;
@@ -78,15 +145,33 @@ const companySlice = createSlice({
       .addCase(registerCompany.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.message = action.payload.message;
-        state.companies?.push(action.payload.company);
+        // backend usually returns { message, data, success }
+        state.message = action.payload?.message ?? "Company created";
       })
       .addCase(registerCompany.rejected, (state, action) => {
         state.loading = false;
+        // action.payload is the string we passed into rejectWithValue
+        state.error = (action.payload as string) || "Something went wrong";
+      });
+    // get single company
+    builder
+      .addCase(getSingleCompany.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(getSingleCompany.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.message = action.payload.message;
+        state.singleCompany = action.payload.data || null;
+        state.error = null;
+      })
+      .addCase(getSingleCompany.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload as string;
       });
-
-// GETTING all companies
+    // GETTING all companies
     builder
       .addCase(getAllCompanies.pending, (state) => {
         state.loading = true;
@@ -104,6 +189,8 @@ const companySlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
+
+    
   },
 });
 

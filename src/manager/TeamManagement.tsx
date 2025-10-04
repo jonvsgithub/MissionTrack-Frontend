@@ -102,20 +102,19 @@ const TeamManagement: React.FC = () => {
     );
   };
 
-// Filter employees
-const filteredEmployees = employees.filter((emp) => {
-  const matchesSearch =
-    emp.fullName.toLowerCase().includes(search.toLowerCase()) ||
-    emp.role.toLowerCase().includes(search.toLowerCase()) ||
-    (emp.department &&
-      emp.department.toLowerCase().includes(search.toLowerCase()));
+  // Filter employees
+  const filteredEmployees = employees.filter((emp) => {
+    const matchesSearch =
+      emp.fullName.toLowerCase().includes(search.toLowerCase()) ||
+      emp.role.toLowerCase().includes(search.toLowerCase()) ||
+      (emp.department &&
+        emp.department.toLowerCase().includes(search.toLowerCase()));
 
-  const matchesStatus =
-    statusFilter === "All Members" || emp.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "All Members" || emp.status === statusFilter;
 
-  return matchesSearch && matchesStatus;
-});
-
+    return matchesSearch && matchesStatus;
+  });
 
   // Pagination logic
   const indexOfLast = currentPage * itemsPerPage;

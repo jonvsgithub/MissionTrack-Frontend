@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiSolidShow } from "react-icons/bi";
 import { FaEnvelope, FaLock } from "react-icons/fa6";
 import { useAuth } from "../context/AuthContext";
@@ -190,6 +190,8 @@ const LoginForm: React.FC = () => {
               {loading ? "Signing in..." : "Login"}
             </button>
           </form>
+
+          <div className="my-3"><p>Don't have an account? <Link to="/apply" className="text-blue-600 hover:underline">Sign up</Link></p></div>
 
           {/* Forgot Password */}
           <div className="mt-5 mb-5 text-center">

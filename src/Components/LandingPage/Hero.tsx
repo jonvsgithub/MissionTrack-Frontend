@@ -34,7 +34,7 @@ const Hero: React.FC = () => {
               </div>
               <div className="flex justify-center gap-5">
                 <Link
-                  to="/login"
+                  to="/apply"
                   className="bg-primaryColor-700 text-white rounded-lg px-15 max-sm:p-1 ml-2 py-2"
                 >
                   Get Started

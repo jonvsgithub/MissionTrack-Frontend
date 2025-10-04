@@ -149,8 +149,10 @@ const Report: React.FC<ReportProps> = ({ missionId }) => {
 
   // 🔹 reusable report card
   const ReportCard = () => (
+  <div className="mr-10">
     <div className="max-w-sm mx-auto p-6 bg-white rounded-xl shadow-md space-y-4">
-      <div className="flex justify-between items-center">
+      
+        <div className="flex justify-between items-center">
         <div className="flex items-center text-gray-600 font-semibold">
           <FaCalendar />
           <span>2024 - 01 - 15</span>
@@ -183,12 +185,13 @@ const Report: React.FC<ReportProps> = ({ missionId }) => {
           Edit
         </button>
       </div>
+      </div>
     </div>
   );
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="w-[900px] py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
+      <div className=" py-2 mt-5 bg-gradient-to-l w-full from-accent-10 rounded-md to-primaryColor-50">
         <h1 className="font-bold text-2xl text-center">Daily Mission Report</h1>
       </div>
 

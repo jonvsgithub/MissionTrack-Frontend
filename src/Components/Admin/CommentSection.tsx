@@ -1,30 +1,82 @@
-import React from "react";
+interface CommentsSectionProps {
+  selectedAction: string;
+  comment: string;
+  setComment: (value: string) => void;
+  onConfirm: () => void;
+  onCancel: () => void;
+  loading: boolean;
+}
 
-const CommentsSection: React.FC = () => {
+export const CommentsSection: React.FC<CommentsSectionProps> = ({
+  selectedAction,
+  comment,
+  setComment,
+  onConfirm,
+  onCancel,
+  loading,
+}) => {
+  // Function to get the appropriate button styling based on action
+  const getConfirmButtonStyle = (action: string) => {
+    switch (action.toLowerCase()) {
+      case 'approve':
+        return "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-900 transition disabled:opacity-50";
+      case 'reject':
+        return "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50";
+      case 'block':
+        return "px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition disabled:opacity-50";
+      case 'activate':
+        return "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50";
+      default:
+        return "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50";
+    }
+  };
+
+  // Function to get loading text based on action
+  const getLoadingText = (action: string) => {
+    switch (action.toLowerCase()) {
+      case 'approve':
+        return "Approving...";
+      case 'reject':
+        return "Rejecting...";
+      case 'block':
+        return "Blocking...";
+      case 'activate':
+        return "Activating...";
+      default:
+        return "Processing...";
+    }
+  };
+
   return (
-    <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-xl mx-auto text-white">
-      {/* Title */}
-      <h2 className="text-lg font-semibold text-gray-200 mb-4">
-        Comments / Notes
+    <div className="border border-gray-700 rounded-xl p-4 w-[800px] mx-auto mt-3 bg-gray-50">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        {selectedAction} Comment / Note
       </h2>
 
-      {/* Text Area */}
-      <div className="mb-4">
-        <textarea
-          className="w-full h-28 p-4 text-gray-800 bg-white border border-gray-300 rounded-lg shadow-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-          placeholder="Enter your comment/notice for this company"
-        ></textarea>
-      </div>
+      <textarea
+        className="w-full h-24 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+        placeholder={`Enter your comment for ${selectedAction.toLowerCase()}ing this company`}
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+      />
 
-      {/* Button */}
-      <button
-        type="button"
-        className="px-5 py-2 rounded-lg bg-gray-800 border border-gray-600 text-sm font-medium text-gray-400 hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-gray-900"
-      >
-        Add Comment
-      </button>
+      <div className="flex space-x-4">
+        <button
+          onClick={onCancel}
+          disabled={loading}
+          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onConfirm}
+          disabled={loading}
+          className={getConfirmButtonStyle(selectedAction)}
+        >
+          {loading ? getLoadingText(selectedAction) : `Confirm ${selectedAction}`}
+        </button>
+
+      </div>
     </div>
   );
 };
-
-export default CommentsSection;

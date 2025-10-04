@@ -2,6 +2,9 @@ import React from "react";
 import { FaEdit } from "react-icons/fa";
 import { FaEye, FaTrash } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { deleteCompany } from "../../redux/companySlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../redux/store";
 
 // Reusable component for the status/plan/payment badges
 const Badge = ({ text, type }) => {
@@ -36,9 +39,21 @@ const Badge = ({ text, type }) => {
 };
 
 // ✅ Styled Companies Table
-const CompaniesTable = ({ data }) => {
-  const navigate = useNavigate();
+type CompaniesTableProps = {
+  data: Array<{
+    id: string;
+    companyName: string;
+    companyEmail: string;
+    status: string;
+    manager: { fullName: string } | null | undefined;
+    state: string;
+    createdAt: string | number | Date;
+  }>;
+};
 
+const CompaniesTable: React.FC<CompaniesTableProps> = ({ data }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200">
       {/* Table Header */}
@@ -56,6 +71,7 @@ const CompaniesTable = ({ data }) => {
         data.map(
           (
             company: {
+              id: string;
               companyName: string;
               companyEmail: string;
               status: string;
@@ -101,16 +117,24 @@ const CompaniesTable = ({ data }) => {
               <div className="flex justify-center gap-2">
                 <button
                   className="p-2 text-primaryColor-500 rounded-full hover:bg-gray-200 transition"
-                  onClick={() => navigate("adminactions")}
+                  onClick={() => navigate((`/admin/company/${company.id}`))}
                 >
                   <FaEye />
                 </button>
                 <button className="p-2 text-accent-500 rounded-full hover:bg-gray-200 transition">
                   <FaEdit />
                 </button>
-                <button className="p-2 text-red-500 rounded-full hover:bg-gray-200 transition">
+                <button
+                  className="p-2 text-red-500 rounded-full hover:bg-gray-200 transition"
+                  onClick={() => {
+                    if (window.confirm("Are you sure you want to delete this company?")) {
+                      dispatch(deleteCompany(company.id));
+                    }
+                  }}
+                >
                   <FaTrash />
                 </button>
+
               </div>
             </div>
           )

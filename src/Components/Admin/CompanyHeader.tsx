@@ -38,7 +38,7 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({ companyName, status }) =>
     <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-5xl mx-auto flex justify-between items-center">
       {/* Left: Back button */}
       <button
-        onClick={() => navigate("/companies")}
+       onClick={() => navigate("/admin/companies")}
         className="flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200"
       >
         {backArrowIcon}

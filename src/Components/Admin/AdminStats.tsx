@@ -16,7 +16,7 @@ const AdminStats: React.FC<AdminStatsProps> = ({
   underReview,
   upcomingPayments,
   blockedCompanies,
-    rejectedCompanies,
+rejectedCompanies,
 }) => {
     return (
         <div className="grid     sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 md:space-y-0 md:space-x-4 p-4">
@@ -99,7 +99,7 @@ const AdminStats: React.FC<AdminStatsProps> = ({
                     <p className="text-sm text-gray-500">+19 from last month</p>
                 </div>
             </div>
-                          <div className="p-6 bg-white w-[220px] rounded-xl shadow-md flex-1">
+                          <div className="p-6 bg-white w-[270px] rounded-xl shadow-md flex-1">
                 <div className="flex justify-between items-center">
                     <p className="text-gray-700 font-medium">
                         Rejected <span className="block"> Companies</span>

@@ -1,6 +1,11 @@
 import React from "react";
+import { FaBuilding, FaFilePdf, FaRegEnvelope, FaUserTie } from "react-icons/fa6";
+import { FiPhone } from "react-icons/fi";
 
-// Type definition for reusable InfoField
+interface CompanyInformationCardProps {
+  company: any;
+}
+
 type InfoFieldProps = {
   label: string;
   value: string;
@@ -9,7 +14,6 @@ type InfoFieldProps = {
   link?: string;
 };
 
-// Reusable component for each information field
 const InfoField: React.FC<InfoFieldProps> = ({
   label,
   value,
@@ -41,83 +45,15 @@ const InfoField: React.FC<InfoFieldProps> = ({
   );
 };
 
-// Main component for the Company Information card
-const CompanyInformationCard: React.FC = () => {
-  // SVG icons
-  const documentIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6 text-gray-700"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      aria-label="Company Information"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M9 12h6m-6 4h6m2 5h-7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"
-      />
-    </svg>
-  );
-
-  const emailIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      aria-label="Email"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M3 8l7.893 5.421a1.99 1.99 0 002.214 0L21 8m-2 4a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h10a2 2 0 012 2v5z"
-      />
-    </svg>
-  );
-
-  const phoneIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      aria-label="Phone"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M3 5a2 2 0 012-2h3.293a1 1 0 01.707.293l1.293 1.293a1 1 0 01.293.707V12a1 1 0 01-1 1H9a1 1 0 01-1-1v-2a1 1 0 011-1h1a1 1 0 011 1v2a1 1 0 01-1 1h-1a1 1 0 01-1-1v-2zm9 0a2 2 0 012-2h3.293a1 1 0 01.707.293l1.293 1.293a1 1 0 01.293.707V12a1 1 0 01-1 1h-1a1 1 0 01-1-1v-2a1 1 0 011-1h1a1 1 0 011 1v2a1 1 0 01-1 1h-1a1 1 0 01-1-1v-2z"
-      />
-    </svg>
-  );
-
-  const licenseIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-4 w-4"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      aria-label="License"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M9 12h6m-6 4h6m2 5h-7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2z"
-      />
-    </svg>
-  );
+const CompanyInformationCard: React.FC<CompanyInformationCardProps> = ({ company }) => {
+  const documentIcon = <FaBuilding className="text-primaryColor-500" />;
+  const emailIcon = <FaRegEnvelope />;
+  const phoneIcon = <FiPhone />;
+  const licenseIcon = <FaFilePdf className="text-red-500" />;
+  const ownerIcon = <FaUserTie className="text-purple-600" />;
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-lg w-full max-w-sm mx-auto">
+    <div className="p-6 bg-white rounded-xl shadow-lg w-full my-3">
       {/* Header */}
       <div className="flex items-center space-x-2 mb-6">
         {documentIcon}
@@ -126,24 +62,40 @@ const CompanyInformationCard: React.FC = () => {
         </h2>
       </div>
 
-      {/* Info fields */}
-      <InfoField label="Company Name" value="TechStart Inc." />
-      <InfoField label="Email" value="mail@techstart.com" icon={emailIcon} />
-      <InfoField
-        label="Phone Number"
-        value="+250 784 543 345"
-        icon={phoneIcon}
-      />
+      {/* Two-column layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Left: Company Info */}
+        <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+          <InfoField label="Company Name" value={company.companyName} />
+          <InfoField label="Company Email" value={company.companyEmail} icon={emailIcon} />
+          <InfoField label="Company Contact" value={company.companyContact} icon={phoneIcon} />
 
-      {/* Business License */}
-      <div className="mt-6 border border-gray-200 rounded-lg p-3">
-        <InfoField
-          label="Business License"
-          value="Tech Start inc Business license.pdf"
-          icon={licenseIcon}
-          isLink={true}
-          link="/files/business-license.pdf"
-        />
+          <div className="mt-6 border border-gray-200 rounded-lg p-3">
+            <InfoField
+              label="Business License"
+              value={company.proofDocument?.split("/").pop() || "No file"}
+              icon={licenseIcon}
+              isLink={true}
+              link={company.proofDocument}
+            />
+          </div>
+        </div>
+
+        {/* Right: Owner/Manager Info */}
+        {company.manager && (
+          <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+            <div className="flex items-center space-x-2 mb-4">
+              {ownerIcon}
+              <h3 className="text-md font-semibold text-gray-800">
+                Company Owner / Manager
+              </h3>
+            </div>
+
+            <InfoField label="Full Name" value={company.manager.fullName} />
+            <InfoField label="Email" value={company.manager.email} icon={emailIcon} />
+            <InfoField label="Phone" value={company.manager.phoneNumber} icon={phoneIcon} />
+          </div>
+        )}
       </div>
     </div>
   );
