@@ -14,7 +14,7 @@ const ManagerHome: React.FC = () => {
     <>
     <div className="flex flex-col min-h-screen  w-full bg-[#E6EAF5] pr-5">
       {/* Header Section */}
-      <div className="  py-2 mt-5 px-6 bg-gradient-to-l from-accent-10 to-primaryColor-50 rounded-md shadow-sm">
+      <div className="  py-2 mt-5 mr-15 px-6 ml-5 bg-gradient-to-l from-accent-10 to-primaryColor-50 rounded-md shadow-sm">
         <h1 className="font-bold text-xl text-center">
           Hello Manager, Here’s Mission Requests Overview
         </h1>
@@ -23,7 +23,7 @@ const ManagerHome: React.FC = () => {
       {/* Main Dashboard */}
       <main className=" mx-auto py-6 px-4">
         {/* Top Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 mr-10 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <PendingRequests />
           <ApprovedMissions />
           <MissionsInProgress />
@@ -33,7 +33,7 @@ const ManagerHome: React.FC = () => {
         {/* Charts + Team Section */}
         <div className="flex gap-6 max-sm:flex-col mt-8">
           {/* Left: Charts & Quick Links */}
-          <div className="lg:col-span-2 grid grid-cols-1 sm:w-[700px] w-[350px] md:grid-cols-2 gap-6">
+          <div className="lg:col-span-2 grid grid-cols-1 sm:w-[700px] lg:w-[865px] md:grid-cols-2 gap-6">
             <MissionPurpose />
             <MissionsPerEmployee />
             <QuickLinks />
