@@ -37,7 +37,7 @@ const MissionCard: React.FC<MissionCardProps> = ({
   };
 
   return (
-    <li className="rounded-lg bg-white shadow-sm flex gap-5 p-5 items-start w-[900px] max-sm:w-11/12 mx-auto">
+    <li className="rounded-lg bg-white shadow-sm flex gap-5 p-2 items-start w-[900px] max-sm:w-11/12 mx-auto">
       <div className="mt-3 bg-gray-100 p-2">{getIcon()}</div>
       <div>
         <h1 className="text-xl font-semibold">{title}</h1>
@@ -51,13 +51,21 @@ const MissionCard: React.FC<MissionCardProps> = ({
 const MissionList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-  const { missions, loading, error } = useSelector((state: RootState) => state.EmployeeMissions);
+  const { missions, loading, error } = useSelector((state: RootState) => state.EmployeeMissions as {
+    missions: any[] | { missions: any[] };
+    loading: boolean;
+    error: string | null;
+  });
 
   useEffect(() => {
     dispatch(fetchEmployeeMissions());
   }, [dispatch]);
 
-  const mappedMissions: MissionCardProps[] = (missions || []).map((m: any) => ({
+  const missionArray = Array.isArray(missions)
+    ? missions
+    : missions?.missions || [];
+
+  const mappedMissions: MissionCardProps[] = missionArray.map((m: any) => ({
     title: m.missionTitle,
     description: m.missionDescription || "No description provided",
     timestamp: `From ${m.startDate} to ${m.endDate}`,
@@ -69,7 +77,7 @@ const MissionList: React.FC = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
+      <div className="py-2 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
         <h1 className="font-bold text-2xl text-center">Your Missions</h1>
       </div>
 
@@ -91,7 +99,7 @@ const MissionList: React.FC = () => {
       {loading && <p className="text-center text-gray-500">Loading missions...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
       {/* Missions List */}
-        <ul className="flex flex-col gap-[10px] mt-5 items-center w-full">
+      <ul className="flex flex-col gap-[10px] mt-5 items-center w-full">
         {filteredMissions.length > 0 ? (
           filteredMissions.map((mission, index) => (
             <MissionCard key={index} {...mission} />

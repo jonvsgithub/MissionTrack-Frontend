@@ -41,28 +41,28 @@ const Sidebar: React.FC = () => {
       )}`}
     >
       <div className="flex-1 overflow-y-auto p-5">
-    <nav className="space-y-2">
-  {navItems.map(({ icon: Icon, label, path }) => {
-    const isActive = location.pathname === path;
-    return (
-      <Link
-        key={label}
-        to={path}
-        className={`flex items-center text-lg gap-3 px-3 py-2 rounded-md transition-colors 
-          ${isActive
-            ? "bg-gray-200 text-black font-bold"
-            : twTheme(
-              "text-gray-700 hover:bg-gray-100",
-              "text-gray-300 hover:bg-gray-700"
-            )
-          }`}
-      >
-        <Icon size={20} className="text-black" />
-        {label}
-      </Link>
-    );
-  })}
-</nav>
+        <nav className="space-y-2">
+          {navItems.map(({ icon: Icon, label, path }) => {
+            const isActive = location.pathname === path;
+            return (
+              <Link
+                key={label}
+                to={path}
+                className={`flex items-center text-lg gap-3 px-3 py-2 rounded-md transition-colors 
+                   ${isActive
+                    ? "bg-gray-200 text-black font-bold"
+                    : twTheme(
+                      "text-gray-700 hover:bg-gray-100",
+                      "text-gray-300 hover:bg-gray-700"
+                    )
+                  }`}
+              >
+                <Icon size={20} className="text-black" />
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
 
 
         <div className="mt-10">

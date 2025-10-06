@@ -6,7 +6,7 @@ interface MissionState {
     success: boolean;
     error: string | null;
     message: string | null;
-    missions?: any[];
+    missions?:any[],
     mission?: any | null;
 }
 
@@ -59,7 +59,7 @@ const missionsSlice = createSlice({
             .addCase(fetchEmployeeMissions.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                state.missions = action.payload;
+               state.missions = action.payload.missions || action.payload || [];
             })
             .addCase(fetchEmployeeMissions.rejected, (state, action) => {
                 state.loading = false;

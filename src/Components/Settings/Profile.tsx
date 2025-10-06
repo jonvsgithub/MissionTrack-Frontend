@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import Input from "../Input";
-import { FaBell, FaCalendar, FaEnvelope, FaPhoneAlt } from "react-icons/fa";
+import { FaBell, FaCalendar } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
 import { MdLockOutline } from "react-icons/md";
 import { Link, Outlet } from "react-router-dom";
-import Header from "../HeaderDash";
-import Sidebar from "../Dashboard/Sidebar";
 
 
 
