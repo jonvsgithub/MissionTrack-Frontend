@@ -1,29 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { clearState, fetchExpenseLogs, fetchExpenseLogsByMissionId, uploadExpenseLog } from "../../redux/EmployeeRedux/ExpenseLogs";
+import { clearState, deleteExpenseLog, fetchExpenseLogsByMissionId, uploadExpenseLog } from "../../redux/EmployeeRedux/ExpenseLogs";
 import { AppDispatch, RootState } from "../../redux/store";
-import { LucideIcon } from "lucide-react";
+import { MdDelete, MdEdit, MdLocationPin } from "react-icons/md";
 
-interface OverviewCardProps {
-  title: string;
-  value: number;
-  color: string;
-  icon: LucideIcon;
-}
-const MissionExpenses: React.FC<OverviewCardProps> = () => {
+const MissionExpenses: React.FC = () => {
 
-  const { expenseLogs, error, success, loading } = useSelector((state: RootState) => state.ExpenseLogs);
-   const { missions } = useSelector((state: RootState) => state.EmployeeMissions as {
-      missions: any[] | { missions: any[] };
-      loading: boolean;
-      error: string | null;
-    });
+  const { expenseLogs, success } = useSelector((state: RootState) => state.ExpenseLogs);
+  const { missions } = useSelector((state: RootState) => state.EmployeeMissions as {
+    missions: any[] | { missions: any[] };
+    loading: boolean;
+    error: string | null;
+  });
   const [activeTab, setActiveTab] = useState<"daily" | "calendar" | "add">("daily");
   const [accommodationFile, setAccommodationFile] = useState<File | null>(null);
   const [mealFile, setMealFile] = useState<File | null>(null);
   const [transportFile, setTransportFile] = useState<File | null>(null);
   const [selectedMission, setSelectedMission] = useState<any | null>(null);
+  const [loadingExpenses, setLoadingExpenses] = useState(false);
+  const [loadingMissions, setLoadingMissions] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+
+
+  // Filter missions for approved and completed ones
+  const approvedCompletedMissions = Array.isArray(missions)
+    ? missions.filter(
+      (mission) =>
+        mission.status === "pending" || mission.status === "manager_approved" || mission.status === "financial_approved" || mission.status === "completed"
+    )
+    : [];
 
 
 
@@ -56,16 +64,30 @@ const MissionExpenses: React.FC<OverviewCardProps> = () => {
     }
   };
 
-  const handleMissionClick = (missionId: string) => {
-    const mission = missions.find((m) => m.id === missionId);
+  const handleMissionClick = async (missionId: string) => {
+    setLoadingExpenses(true);
+    const missionArray = Array.isArray(missions) ? missions : missions.missions || [];
+    const mission = missionArray.find((m) => m.id === missionId);
     setSelectedMission(mission);
-    dispatch(fetchExpenseLogsByMissionId(missionId)); // We'll create this thunk
-    setActiveTab("daily"); // automatically switch to daily tab
+    await dispatch(fetchExpenseLogsByMissionId(missionId));
+    setLoadingExpenses(false);
+    setActiveTab("daily");
   };
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    if (!selectedMission) {
+      alert("Please select a mission first.");
+      setIsSubmitting(false);
+      return;
+    }
+    if (!accommodationFile && !mealFile && !transportFile) {
+      alert("Please upload at least one receipt.");
+      setIsSubmitting(false);
+      return;
+    }
     const formData = new FormData();
     formData.append("date", (document.getElementById("date") as HTMLInputElement).value);
     formData.append("missionId", selectedMission?.id);
@@ -76,20 +98,49 @@ const MissionExpenses: React.FC<OverviewCardProps> = () => {
 
     try {
       await dispatch(uploadExpenseLog(formData)).unwrap();
-      alert("Expense uploaded!");
+      alert("Expense uploaded successfully!");
       setAccommodationFile(null);
       setMealFile(null);
       setTransportFile(null);
-      dispatch(fetchExpenseLogs());
+      dispatch(fetchExpenseLogsByMissionId(selectedMission?.id));
     } catch (err) {
       console.error(err);
       alert("Failed to upload expense");
     }
+    finally {
+      setIsSubmitting(false);
+    }
   };
 
+  // Delete Expenselog
+
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this expense log?")) return;
+
+    setDeletingId(id);
+    try {
+      await dispatch(deleteExpenseLog(id)).unwrap();
+      alert("Expense log deleted successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete expense log!");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+
   useEffect(() => {
-    dispatch(fetchExpenseLogs())
-  }, [dispatch])
+    dispatch(fetchExpenseLogsByMissionId(selectedMission?.id));
+  }, [dispatch, selectedMission]);
+
+  useEffect(() => {
+    setLoadingMissions(true);
+    setTimeout(() => {
+      setLoadingMissions(false);
+    }, 1000);
+  }, []);
+
   useEffect(() => {
     if (success) {
       setFormData({
@@ -108,26 +159,62 @@ const MissionExpenses: React.FC<OverviewCardProps> = () => {
   return (
     <>
 
-      <div className="w-[1020px] rounded-lg bg-white p-1">
+      <div className="w-full rounded-lg bg-white p-1">
         {/* Header with gradient */}
-        <div className="w- py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
+        <div className="w-full py-2  bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
           <h1 className="font-bold text-2xl text-center">Mission Expenses</h1>
         </div>
 
         <div className=" px-6  rounded-lg">
-          <div className="grid grid-cols-3 gap-4 my-4">
-            {approvedCompletedMissions.slice(0, 3).map((mission) => (
-              <div
-                key={mission.id}
-                className="p-4 bg-white rounded-lg shadow cursor-pointer hover:shadow-lg"
-                onClick={() => handleMissionClick(mission.id)}
-              >
-                <h3 className="font-bold text-lg">{mission.title}</h3>
-                <p className="text-gray-600">{mission.location}</p>
-                <p className="text-sm text-gray-500">{`From ${new Date(mission.date).toLocaleDateString()} To ${new Date(mission.endDate).toLocaleDateString()}`}</p>
+          <div className="my-4">
+            {loadingMissions ? (
+              <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+                <p className="ml-2 text-gray-500">Loading missions...</p>
               </div>
-            ))}
+            ) : (
+              <div className="grid grid-cols-3 gap-4">
+                {approvedCompletedMissions.length > 0 ? (
+                  approvedCompletedMissions.slice(0, 3).map((mission) => (
+                    <div
+                      key={mission.id}
+                      className="p-4 bg-white rounded-lg border shadow hover:shadow-lg cursor-pointer"
+                      onClick={() => handleMissionClick(mission.id)}
+                    >
+                      <h3 className="font-bold text-lg">{mission.missionTitle}</h3>
+                      <div className="flex justify-between items-center">
+                        <p className="text-gray-600 flex gap-1 mt-1">
+                          <MdLocationPin className="mt-1" />
+                          {mission.location}
+                        </p>
+                        <p
+                          className={`text-sm italic font-semibold ${mission.status === "completed"
+                            ? "text-purple-600"
+                            : mission.status === "financial_approved"
+                              ? "text-blue-500"
+                              : mission.status === "pending"
+                                ? "text-orange-400" : "text-green-500"
+                            }`}
+                        >
+                         {mission.status === "financial_approved" ? "Ongoing" : mission.status}
+                        </p>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        From {new Date(mission.startDate).toLocaleDateString()} to{" "}
+                        {new Date(mission.endDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500 py-4">
+                    No approved or pending missions found.
+                  </p>
+                )}
+              </div>
+            )}
           </div>
+
+
 
           {/* Tabs */}
           <div className="flex border-b justify-between px-4">
@@ -165,74 +252,102 @@ const MissionExpenses: React.FC<OverviewCardProps> = () => {
         {/* Daily Tab */}
         {activeTab === "daily" && (
           <div>
-            {expenseLogs.map((exp) => (
-              <div key={exp.id} className="border ml-5 mt-7 rounded-md p-3 bg-white">
-                <div className="flex justify-between items-center border p-2 rounded-lg mb-3">
-                  <span className="text-sm font-semibold text-gray-600">
-                    {new Date(exp.date).toDateString()}
-                  </span>
-                  <span className="text-sm font-bold text-red-500">
-                    {exp.accommodationAmount + exp.mealsAmount + exp.transportAmount} Rwf
-                  </span>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex gap-2">
-                      <span className="text-gray-700">Accommodation</span>
-                      {exp.accommodationFile && (
-                        <a
-                          href={exp.accommodationFile}
-                          target="_blank"
-                          className="text-green-600 cursor-pointer underline"
-                        >
-                          View
-                        </a>
-                      )}
-                    </div>
-                    <span className="text-red-500 font-medium">{exp.accommodationAmount} Rwf</span>
-                  </div>
-
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex gap-2">
-                      <span className="text-gray-700">Meal</span>
-                      {exp.mealsFile && (
-                        <a
-                          href={exp.mealsFile}
-                          target="_blank"
-                          className="text-green-600 cursor-pointer underline"
-                        >
-                          View
-                        </a>
-                      )}
-                    </div>
-                    <span className="text-red-500 font-medium">{exp.mealsAmount} Rwf</span>
-                  </div>
-
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex gap-2">
-                      <span className="text-gray-700">Transport</span>
-                      {exp.transportFile && (
-                        <a
-                          href={exp.transportFile}
-                          target="_blank"
-                          className="text-green-600 cursor-pointer underline"
-                        >
-                          View
-                        </a>
-                      )}
-                    </div>
-                    <span className="text-red-500 font-medium">{exp.transportAmount} Rwf</span>
-                  </div>
-
-                  {exp.description && (
-                    <div className="mt-2 text-sm text-gray-600">Notes: {exp.description}</div>
-                  )}
-                </div>
+            {loadingExpenses ? (
+              <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-blue-500"></div>
+                <p className="ml-2 text-gray-500">Loading expenses...</p>
               </div>
-            ))}
+            ) : expenseLogs.length > 0 ? (
+              expenseLogs.map((exp) => (
+                <div key={exp.id} className="border ml-5 mt-7 rounded-md p-3 bg-white">
+                  <div className="flex justify-between items-center border p-2 rounded-lg mb-3">
+                    <span className="text-sm font-semibold text-gray-600">
+                      {new Date(exp.date).toDateString()}
+                    </span>
+                    <span className="text-sm font-semibold text-gray-600">
+                      {exp.status}
+                    </span>
+                    <div className="flex gap-2">
+                      <MdEdit />
+                      {deletingId === String(exp.id) ? (
+                        <div className="flex items-center text-red-500 text-sm">
+                          <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-red-500 mr-1"></div>
+                          Deleting...
+                        </div>
+                      ) : (
+                        <MdDelete
+                          onClick={() => handleDelete(String(exp.id))}
+                          className="cursor-pointer text-red-500 hover:text-red-700"
+                        />
+                      )}
+
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center text-sm">
+                      <div className="flex gap-2">
+                        <span className="text-gray-700">Accommodation</span>
+                        {exp.accommodationFile && (
+                          <a
+                            href={exp.accommodationFile}
+                            target="_blank"
+                            className="text-green-600 underline"
+                          >
+                            View
+                          </a>
+                        )}
+                      </div>
+                      <span className="text-red-500 font-medium">{exp.accommodationAmount} Rwf</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-sm">
+                      <div className="flex gap-2">
+                        <span className="text-gray-700">Meal</span>
+                        {exp.mealsFile && (
+                          <a href={exp.mealsFile} target="_blank" className="text-green-600 underline">
+                            View
+                          </a>
+                        )}
+                      </div>
+                      <span className="text-red-500 font-medium">{exp.mealsAmount} Rwf</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-sm">
+                      <div className="flex gap-2">
+                        <span className="text-gray-700">Transport</span>
+                        {exp.transportFile && (
+                          <a
+                            href={exp.transportFile}
+                            target="_blank"
+                            className="text-green-600 underline"
+                          >
+                            View
+                          </a>
+                        )}
+                      </div>
+                      <span className="text-red-500 font-medium">{exp.transportAmount} Rwf</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      {exp.description && (
+                        <div className="mt-2 text-sm text-gray-600">Notes: {exp.description}</div>
+                      )}
+                      <span className="text-sm font-bold text-red-500">
+                        Total::{exp.accommodationAmount + exp.mealsAmount + exp.transportAmount} Rwf
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 py-4">
+                No expense logs for this mission yet.
+              </p>
+            )}
           </div>
         )}
+
 
 
         {/* Calendar Tab */}
@@ -337,10 +452,13 @@ const MissionExpenses: React.FC<OverviewCardProps> = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="bg-blue-600 w-1/2 flex items-center justify-center text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  disabled={isSubmitting}
+                  className={`bg-blue-600 w-1/2 flex items-center justify-center text-white px-4 py-2 rounded-md ${isSubmitting ? "opacity-60 cursor-not-allowed" : "hover:bg-blue-700"
+                    }`}
                 >
-                  Submit receipts
+                  {isSubmitting ? "Submitting..." : "Submit receipts"}
                 </button>
+
               </div>
             </form>
           </div>

@@ -12,7 +12,7 @@ type MissionCardProps = {
   title: string;
   description: string;
   timestamp: string;
-  status: "completed" | "approved" | "pending" | "rejected";
+  status: "completed" | "approved" | "pending" | "rejected"|"Financial_approved";
 };
 
 const MissionCard: React.FC<MissionCardProps> = ({
@@ -25,7 +25,7 @@ const MissionCard: React.FC<MissionCardProps> = ({
     switch (status) {
       case "completed":
         return <SiTicktick size={30} className="text-green-500" />;
-      case "approved":
+      case "Financial_approved":
         return <FaCheck size={30} className="text-green-500" />;
       case "pending":
         return <MdOutlinePendingActions size={30} className="text-[#FFB361]" />;

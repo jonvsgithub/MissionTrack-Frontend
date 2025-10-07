@@ -37,7 +37,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className="">
       <aside
-        className={`hidden w-57 sm:fixed  top-20 h-full left-0  sm:flex sm:flex-col justify-between shadow-md z-40 overflow-y-auto ${twTheme(
+        className={`hidden w-64 sm:fixed  top-20 h-full left-0  sm:flex sm:flex-col justify-between shadow-md z-40 overflow-y-auto ${twTheme(
           "bg-blue-50",
           "bg-gray-900 text-white"
         )}`}

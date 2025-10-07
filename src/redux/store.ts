@@ -4,6 +4,7 @@ import actionReducer from "./companyRedux/actionSlice";
 import profileReducer from "./profileSlice";
 import missionsReducer from "./EmployeeRedux/EmpMissions";
 import expenseLogsReducer from "./EmployeeRedux/ExpenseLogs";
+import dailyReportReducer from "./EmployeeRedux/DailyReport";
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     adminAction: actionReducer,
     profile: profileReducer,
     EmployeeMissions: missionsReducer,
-    ExpenseLogs:expenseLogsReducer
+    ExpenseLogs:expenseLogsReducer,
+    DailyReports:dailyReportReducer
   },
 });
 
