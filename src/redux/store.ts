@@ -3,13 +3,17 @@ import companyReducer from "./companyRedux/companySlice";
 import actionReducer from "./companyRedux/actionSlice";
 import profileReducer from "./profileSlice";
 import missionsReducer from "./EmployeeRedux/EmpMissions";
+import expenseLogsReducer from "./EmployeeRedux/ExpenseLogs";
+import dailyReportReducer from "./EmployeeRedux/DailyReport";
 
 export const store = configureStore({
   reducer: {
     company: companyReducer,
     adminAction: actionReducer,
     profile: profileReducer,
-    EmployeeMissions: missionsReducer
+    EmployeeMissions: missionsReducer,
+    ExpenseLogs:expenseLogsReducer,
+    DailyReports:dailyReportReducer
   },
 });
 

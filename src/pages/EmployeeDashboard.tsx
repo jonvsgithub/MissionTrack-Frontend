@@ -20,7 +20,7 @@ const Dashboard: React.FC = () => {
       <div className={`flex mt-20  ${twTheme("bg-[#E6EAF5]", "bg-gray-900")}`}>
         <Sidebar />
         {/* Main content area with proper margin for sidebar */}
-        <main className="flex-1 ml-64 p-6 overflow-y-auto">
+        <main className="flex-1 ml-64 p-1 overflow-y-auto">
           <Outlet/>
         </main>
       </div>
