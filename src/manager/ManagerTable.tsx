@@ -29,9 +29,11 @@ const Badge = ({ text }: { text: string }) => {
 };
 
 type Mission = {
+  files: any[]; // change from boolean to array
+  issuedTo: any;
   id: string;
   missionName: string;
-  email: string;
+  email: any;
   status: string;
   plan: string;
   manager: string;
@@ -101,24 +103,24 @@ const MissionTable: React.FC<MissionTableProps> = ({ data }) => {
   };
 
   const handleDelete = async (missionId: string) => {
-  if (!window.confirm("Are you sure you want to delete this mission?")) return;
+    if (!window.confirm("Are you sure you want to delete this mission?")) return;
 
-  try {
-    const token = localStorage.getItem("token");
-    await axios.delete(
-      `https://missiontrack-backend.onrender.com/api/missions/${missionId}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(
+        `https://missiontrack-backend.onrender.com/api/missions/${missionId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    setMissions((prev) => prev.filter((m) => m.id !== missionId));
+      setMissions((prev) => prev.filter((m) => m.id !== missionId));
 
-    // ✅ Success message
-    alert("Mission deleted successfully ✅");
-  } catch (error) {
-    console.error("Error deleting mission:", error);
-    alert("Failed to delete mission. Please try again.");
-  }
-};
+      // ✅ Success message
+      alert("Mission deleted successfully ✅");
+    } catch (error) {
+      console.error("Error deleting mission:", error);
+      alert("Failed to delete mission. Please try again.");
+    }
+  };
 
 
   return (
@@ -167,114 +169,122 @@ const MissionTable: React.FC<MissionTableProps> = ({ data }) => {
         </div>
       )}
 
-      {/* Mission Details Modal */}
-      {selectedMission && !showCommentModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-2xl w-[600px] max-w-[90%] p-6 relative border border-gray-100">
-            <button
-              onClick={() => setSelectedMission(null)}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
-            >
-              ✕
-            </button>
+ {/* Mission Details Modal */}
+{selectedMission && (
+  <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
+    <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl p-6 relative">
+      {/* Close Button */}
+      <button
+        onClick={() => setSelectedMission(null)}
+        className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-xl font-bold"
+      >
+        ×
+      </button>
 
-            <div className="mb-4 border-b pb-2">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Mission Details
-              </h2>
-              <p className="text-sm text-gray-500">
-                Review mission request information
-              </p>
-            </div>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-primaryColor-50 to-blue-400 -m-6 mb-6 p-6 rounded-t-2xl text-center text-white">
+        <h2 className="text-2xl font-bold">Mission Details</h2>
+        <p className="text-sm opacity-90">Review full mission request information</p>
+      </div>
 
-            <div className="overflow-hidden rounded-lg border border-gray-200">
-              <table className="w-full text-sm text-left">
-                <tbody className="divide-y divide-gray-200">
-                  <tr>
-                    <td className="font-medium text-gray-600 px-4 py-2 w-1/3">
-                      Title
-                    </td>
-                    <td className="text-gray-800 px-4 py-2">
-                      {selectedMission.missionName}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium text-gray-600 px-4 py-2">
-                      Email
-                    </td>
-                    <td className="text-gray-800 px-4 py-2">
-                      {selectedMission.email}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium text-gray-600 px-4 py-2">
-                      Manager
-                    </td>
-                    <td className="text-gray-800 px-4 py-2">
-                      {selectedMission.manager}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium text-gray-600 px-4 py-2">
-                      Job Position
-                    </td>
-                    <td className="text-gray-800 px-4 py-2">
-                      {selectedMission.plan}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium text-gray-600 px-4 py-2">
-                      Status
-                    </td>
-                    <td className="px-4 py-2">
-                      <Badge text={selectedMission.status} />
-                    </td>
-                  </tr>
-                  {selectedMission.description && (
-                    <tr>
-                      <td className="font-medium text-gray-600 px-4 py-2">
-                        Description
-                      </td>
-                      <td className="text-gray-800 px-4 py-2">
-                        {selectedMission.description}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-3">
-              {selectedMission.status === "pending" ? (
-                <>
-                  <button
-                    onClick={() => handleApprove(selectedMission.id)}
-                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleReject(selectedMission)}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 text-sm"
-                  >
-                    Reject
-                  </button>
-                </>
-              ) : (
-                <span className="text-gray-500 text-sm self-center">
-                  Already Reviewed
-                </span>
-              )}
-              <button
-                onClick={() => setSelectedMission(null)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
-              >
-                Close
-              </button>
-            </div>
-          </div>
+      {/* Mission Info */}
+      <div className="grid grid-cols-2 gap-6 text-sm mb-4">
+        <div>
+          <p className="font-semibold text-gray-600">Mission Title</p>
+          <p className="text-gray-800">{selectedMission.missionName || <span className="italic text-gray-400">N/A</span>}</p>
         </div>
+
+        <div>
+          <p className="font-semibold text-gray-600">Employee Email</p>
+          <p className="text-gray-800">{selectedMission.issuedTo?.email || <span className="italic text-gray-400">Not available</span>}</p>
+        </div>
+
+        <div>
+          <p className="font-semibold text-gray-600">Manager</p>
+          <p className="text-gray-800">{selectedMission.manager || <span className="italic text-gray-400">N/A</span>}</p>
+        </div>
+
+        <div>
+          <p className="font-semibold text-gray-600">Job Position</p>
+          <p className="text-gray-800">{selectedMission.plan || <span className="italic text-gray-400">N/A</span>}</p>
+        </div>
+
+        <div>
+          <p className="font-semibold text-gray-600">Start Date</p>
+          <p className="text-gray-800">{selectedMission.startDate || <span className="italic text-gray-400">N/A</span>}</p>
+        </div>
+
+        <div>
+          <p className="font-semibold text-gray-600">End Date</p>
+          <p className="text-gray-800">{selectedMission.endDate || <span className="italic text-gray-400">N/A</span>}</p>
+        </div>
+
+        <div>
+          <p className="font-semibold text-gray-600">Status</p>
+          <Badge text={selectedMission.status} />
+        </div>
+
+        <div>
+          <p className="font-semibold text-gray-600">Last Activity</p>
+          <p className="text-gray-800">{selectedMission.lastActivity || <span className="italic text-gray-400">N/A</span>}</p>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="mb-4">
+        <p className="font-semibold text-gray-600">Description</p>
+        <p className="text-gray-800 whitespace-pre-line">{selectedMission.description || <span className="italic text-gray-400">No description provided</span>}</p>
+      </div>
+
+      {/* Attachments */}
+      {Array.isArray(selectedMission.files) && selectedMission.files.length > 0 ? (
+        <div className="mb-6">
+          <p className="font-semibold text-gray-600 mb-2">Attachments</p>
+          <ul className="space-y-2">
+            {selectedMission.files.map((file: any, index: number) => {
+              const fileUrl = typeof file === "string" ? file : file.fileUrl;
+              const fileName = typeof file === "string" ? file.split("/").pop() : file.fileName;
+              return (
+                <li key={index} className="flex items-center justify-between bg-gray-50 border rounded-lg px-4 py-2 hover:bg-gray-100 transition">
+                  <span className="text-gray-700 truncate">{fileName}</span>
+                  <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-primaryColor-50 font-medium hover:underline">
+                    View
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : (
+        <p className="text-gray-400 italic mb-6">No attachments available</p>
       )}
+
+      {/* Footer Buttons */}
+      <div className="flex justify-center gap-4 mt-6">
+        <button
+          onClick={() => handleApprove(selectedMission.id)}
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-xl"
+        >
+          Approve
+        </button>
+        <button
+          onClick={() => handleReject(selectedMission)}
+          className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-xl"
+        >
+          Reject
+        </button>
+        <button
+          onClick={() => setSelectedMission(null)}
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-6 py-2 rounded-xl"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
 
       {/* Rejection Comment Modal */}
       {showCommentModal && (
@@ -302,11 +312,10 @@ const MissionTable: React.FC<MissionTableProps> = ({ data }) => {
                 onClick={() =>
                   updateStatus(selectedMission!.id, "Reject", commentText)
                 }
-                className={`px-3 py-1 text-sm rounded-md text-white ${
-                  commentText.trim()
+                className={`px-3 py-1 text-sm rounded-md text-white ${commentText.trim()
                     ? "bg-red-500 hover:bg-red-600"
                     : "bg-red-300 cursor-not-allowed"
-                }`}
+                  }`}
               >
                 Submit
               </button>

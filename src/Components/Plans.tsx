@@ -16,7 +16,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
   features,
 }) => {
   return (
-    <div className="flex-1 p-6 w-[250px] rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+    <div className="flex-1 p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
       
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold text-gray-800">{planName}</h3>
@@ -91,7 +91,7 @@ const Plans: React.FC = () => {
   ];
 
   return (
-    <div className="p-8 bg-white rounded-2xl">
+    <div className="p-8 bg-white lg:w-[1000px]  rounded-2xl">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Subscription plans
       </h2>

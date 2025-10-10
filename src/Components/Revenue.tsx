@@ -49,7 +49,7 @@ const Revenue: React.FC = () => {
     const alertIcon = <LuTriangleAlert size={20} />
 
     return (
-        <div className="flex flex-col text-xl md:flex-row space-y-4 md:space-y-0 md:space-x-4 p-4">
+        <div className="flex lg:w-[1000px] text-xl md:flex-row  md:space-y-0 md:space-x-4">
             <DashboardCard
                 title="Month Revenue"
                 value="4,987,543 Rwf"
