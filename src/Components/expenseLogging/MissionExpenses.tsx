@@ -25,11 +25,10 @@ const MissionExpenses: React.FC = () => {
 
 
 
-  // Filter missions for approved and completed ones
   const approvedCompletedMissions = Array.isArray(missions)
     ? missions.filter(
       (mission) =>
-        mission.status === "pending" || mission.status === "manager_approved" || mission.status === "financial_approved" || mission.status === "completed"
+        mission.status === "completed" || mission.status === "financial_approved" 
     )
     : [];
 

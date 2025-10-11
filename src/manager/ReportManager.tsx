@@ -117,7 +117,7 @@ const ReportManager: React.FC = () => {
       ) : reports.length === 0 ? (
         <p className="text-center mt-5 text-gray-600">No reports available</p>
       ) : (
-        <ul className="grid bg-accent-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[10px] mt-5 items-center w-full">
+        <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[10px] mt-5 items-center w-full">
           {reports.map((report) => {
             const progressPercentage =
               (report.budgetUsed / report.totalBudget) * 100;
@@ -135,7 +135,7 @@ const ReportManager: React.FC = () => {
                   <span
                     className={`rounded-full px-3 py-1 text-sm font-semibold ${
                       report.status === "Completed"
-                        ? "bg-accent-600 text-white"
+                        ? " text-white"
                         : "bg-orange-200 text-orange-800"
                     }`}
                   >
