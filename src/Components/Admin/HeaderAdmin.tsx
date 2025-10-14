@@ -41,10 +41,7 @@ const HeaderAdmin: React.FC = () => {
             size={22}
             className={twTheme("text-gray-700", "text-gray-200")}
           />
-          {/* Notification badge */}
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-            4
-          </span>
+         
         </Link>
 
         {/* Profile */}

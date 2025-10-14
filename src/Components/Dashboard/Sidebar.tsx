@@ -22,7 +22,7 @@ const Sidebar: React.FC = () => {
     theme === "light" ? light : dark;
 
   const navItems = [
-    { icon: VscHome, label: "Dashboard", path: "" },
+    { icon: VscHome, label: "Dashboard", path: "employee" },
     { icon: CiBellOn, label: "Notifications", path: "notifications" },
     { icon: FiUser, label: "Profile", path: "profileA" },
   ];

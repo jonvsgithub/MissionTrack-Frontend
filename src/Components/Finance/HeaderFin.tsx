@@ -42,20 +42,13 @@ const HeaderFin: React.FC = () => {
             className={twTheme("text-gray-700", "text-gray-200")}
           />
           {/* Notification badge */}
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-            4
-          </span>
+       
         </Link>
 
         {/* Profile */}
-        <div className="flex items-center mr-15 gap-2 cursor-pointer">
-          <div className="bg-blue-700 rounded-full p-3">
-            <FiUser
-              size={22}
-              className={twTheme("text-white", "text-gray-200")}
-            />
-          </div>
-          <span className="text-sm font-medium">{user?.name || "Finance"}</span>
+    <div className="flex items-center mr-15 gap-2 cursor-pointer">
+          <img src={user?.profilePhoto || "/src/assets/profile.jpg"}alt="Profile" className="w-12 h-12 rounded-full object-cover" />
+          <span className="text-sm font-medium">{user?.fullName || "Finance"}</span>
         </div>
       </div>
     </header>

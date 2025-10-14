@@ -80,3 +80,5 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
     </div>
   );
 };
+
+export default CommentsSection;

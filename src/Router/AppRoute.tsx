@@ -24,7 +24,6 @@ import Pending from "../Components/Pending";
 import AllCompanies from "../pages/AllCompanies";
 import AdminDashboard from "../pages/AdminDashboard";
 import Rejected from "../Components/Rejected";
-import Subscriptions from "../Components/Subscriptions";
 import AllMission from "../pages/AllMission";
 import FinanceDashboard from "../pages/FinanceDashboard";
 import AdminHome from "../pages/AdminHome";
@@ -32,6 +31,11 @@ import ManagerHome from "../pages/ManagerHome";
 import EmployeeHome from "../pages/EmployeeHome";
 import ProfileHome from "../Components/Settings/ProfileHome";
 import CompanyInformationPage from "../Components/Admin/companyInformationPage";
+import ApprovedMission from "../Components/Finance/ApprovedMission";
+import FundingAssignment from "../Components/Finance/FundingAssignment";
+import OngoingMissions from "../Components/Finance/OngoingMissions";
+import Subscriptions from "../Components/Subscriptions";
+import ProfileF from "../Components/Finance/ProfileF";
 
 const AppRoute = () => {
   // const location = useLocation();
@@ -81,14 +85,15 @@ const AppRoute = () => {
           <Route index element={<AdminHome />} />
           <Route path="home" element={<AdminHome />} />
           <Route path="companies" element={<AllCompanies />} />
+             <Route path="subscriptions" element={<Subscriptions />} />
+          <Route path="/admin/company/:companyId" element={<CompanyInformationPage />} />
           <Route path="profileA" element={<Profile />} >
             <Route index element={<ProfileHome />} />
             <Route path="profileA" element={<ProfileHome />} />
             <Route path="preferencea" element={<Notification />} />
             <Route path="passwordA" element={<Password />} />
           </Route>
-          <Route path="subscriptions" element={<Subscriptions />} />
-          <Route path="/admin/company/:companyId" element={<CompanyInformationPage />} />
+       
         </Route>
 
         {/* Public Routes */}
@@ -99,15 +104,20 @@ const AppRoute = () => {
         <Route path="/forgot-password" element={<RecoverPassword />} />
         <Route path="/reset-password/:token" element={<UpdatePassword />} />
         <Route path="/apply" element={<ApplicationForm />} />
-        <Route path="/team" element={<TeamManagement />} />
+       
         <Route path="/missions/:id" element={<ReportDetails />} />
         <Route path="/pending" element={<Pending />} />
         <Route path="/pending" element={<Pending />} />
         <Route path="/rejected" element={<Rejected />} />
-        <Route path="/companies" element={<AllCompanies />} />
-        <Route path="/subscriptions" element={<Subscriptions />} />
-        <Route path="/all" element={<AllMission />} />
+      
         <Route path="/finance" element={<FinanceDashboard />} />
+        <Route path="/approved" element={<ApprovedMission/>}/>
+        <Route path="/funding" element={<FundingAssignment/>}/>
+        <Route path="/ongoing" element={<OngoingMissions/>}/>
+            <Route path="/profileFina" element={<ProfileF />} />
+         
+      
+        
 
       </Routes>
     </>

@@ -19,15 +19,15 @@ const FinanceSidebar: React.FC = () => {
     // Sidebar navigation
     const navItems = [
         { icon: VscHome, label: "Dashboard", path: "/finance" },
-        { icon: CiBellOn, label: "Notifications", path: "/notificationsF" },
-        { icon: FiUser, label: "Profile", path: "/profileF" },
+       
+        { icon: FiUser, label: "Profile", path: "/profileFina" },
     ];
 
     // Quick actions (fixed icons)
     const quickActions = [
-        { icon: GrGroup, label: "Approved Missions", path: "/finance" },
-        { icon: FaFileAlt, label: "Funding assignments", path: "/subscriptions" },
-        { icon: FaChartBar, label: "Ongoing Missions", path: "/finance" },
+        { icon: GrGroup, label: "Approved Missions", path: "/approved" },
+        { icon: FaFileAlt, label: "Funding assignments", path: "/funding" },
+        { icon: FaChartBar, label: "Ongoing Missions", path: "/ongoing" },
         { icon: FaChartBar, label: "Reports&Trends", path: "/finance" },
 
     ];
