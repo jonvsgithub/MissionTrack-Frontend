@@ -42,7 +42,7 @@ const AdminSidebar: React.FC = () => {
     return (
         <div className="">
             <aside
-                className={`hidden w-60 sm:fixed  top-20 h-full left-0  sm:flex sm:flex-col justify-between shadow-md z-40 overflow-y-auto ${twTheme(
+                className={`hidden w-57 sm:fixed  top-20 h-full left-0  sm:flex sm:flex-col justify-between shadow-md z-40 overflow-y-auto ${twTheme(
                     "bg-blue-50",
                     "bg-gray-900 text-white"
                 )}`}
@@ -89,7 +89,7 @@ const AdminSidebar: React.FC = () => {
                         {/* Logout Button */}
                         <button
                                onClick={handleLogout}
-                               className=" bg-accent-600 mt-10 text-white font-semibold py-2 rounded-2xl w-full flex items-center justify-center gap-2 hover:bg-accent-700 transition"
+                               className=" bg-accent-600 text-white font-semibold py-2 rounded-2xl w-full flex items-center justify-center gap-2 hover:bg-accent-700 transition"
                              >
                               <MdLogout size={24} /> Logout
                              </button>
