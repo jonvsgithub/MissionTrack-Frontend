@@ -46,7 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     const response = await fetch(
-      "https://missiontrack-backend.onrender.com/api/users/login",
+      "http://localhost:5000/api/users/login",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

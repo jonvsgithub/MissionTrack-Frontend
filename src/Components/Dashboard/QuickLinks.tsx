@@ -18,7 +18,7 @@ const QuickLinks: React.FC = () => {
 
       <div className="space-y-3">
         {/* Create a new request */}
-        <Link to={"/request"}
+        <Link to={"/employee/request"}
           className={`flex items-center gap-3 w-full rounded-lg px-4 py-3 transition ${
             isLight ? "bg-gray-50" : "bg-gray-700"
           }`}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Login - MissionTrack</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 24px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 14px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .employee-btn {
+            background: #10b981;
+            color: white;
+        }
+        .employee-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        .manager-btn {
+            background: #3b82f6;
+            color: white;
+        }
+        .manager-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        .admin-btn {
+            background: #8b5cf6;
+            color: white;
+        }
+        .admin-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+        .finance-btn {
+            background: #f59e0b;
+            color: white;
+        }
+        .finance-btn:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        .note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Mock Login - MissionTrack</h1>
+        <p>Click a button to set mock authentication and view the redesigned pages</p>
+        
+        <button class="employee-btn" onclick="mockLogin('employee')">
+            👤 Login as Employee
+        </button>
+        
+        <button class="manager-btn" onclick="mockLogin('manager')">
+            👔 Login as Manager
+        </button>
+        
+        <button class="admin-btn" onclick="mockLogin('admin')">
+            🔐 Login as Admin
+        </button>
+        
+        <button class="finance-btn" onclick="mockLogin('finance')">
+            💰 Login as Finance
+        </button>
+
+        <div class="note">
+            <strong>Note:</strong> This sets mock authentication in localStorage. Remove it later by clearing browser storage or logging out.
+        </div>
+    </div>
+
+    <script>
+        function mockLogin(role) {
+            // Set mock authentication data
+            localStorage.setItem('token', 'mock-token-' + role);
+            localStorage.setItem('userId', 'mock-user-id-123');
+            localStorage.setItem('userName', 'Henry Doe');
+            localStorage.setItem('userRole', role);
+
+            // Redirect based on role
+            const routes = {
+                'employee': '/employee',
+                'manager': '/manager',
+                'admin': '/admin',
+                'finance': '/finance'
+            };
+
+            alert(`✅ Mock login successful! Redirecting to ${role} dashboard...`);
+            window.location.href = routes[role];
+        }
+    </script>
+</body>
+</html>

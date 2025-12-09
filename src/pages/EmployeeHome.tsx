@@ -2,58 +2,67 @@ import React from "react";
 import MissionOverview from "../Components/MissionOverview";
 import RecentActivities from "../Components/RecentActivities";
 import QuickLinks from "../Components/Dashboard/QuickLinks";
-import AnnualMissionStatuses from "../chart/AnnualMissionStatuses";
 import ThisMonthChart from "../chart/ThisMonthChart";
-import ExpensesChart from "../chart/ExpensesChart";
 import MissionProgress from "../Components/Dashboard/MissionProgress";
 import OngoingMissions from "../Components/Dashboard/OngoingMissions";
+import ExpenseOverview from "../Components/Dashboard/ExpenseOverview";
+import ExpensesSummary from "../Components/Dashboard/ExpensesSummary";
 
 const twTheme = (light: string, dark: string) => {
     return `${light} dark:${dark}`;
 };
 
 const EmployeeHome: React.FC = () => {
+    // Get user name from localStorage
+    const userName = localStorage.getItem("userName") || "User";
+    const firstName = userName.split(" ")[0]; // Get first name only
+
     return (
-           <main className={`min-h-screen ${twTheme("", "bg-gray-900")}`}>
-            {/* Overview */}
-            <div className="flex gap-10">
-                <div className="mb-5 bg-gradient-to-r from-primaryColor-10 to-accent-10 p-3 w-full justify-center items-center flex rounded-lg shadow">
-                    <h1 className={`font-bold text-xl ${twTheme("text-black", "text-white")}`}>
-                        Here's your mission request overview
+        <main className={`min-h-screen p-6 ${twTheme("bg-gray-50", "bg-gray-900")}`}>
+            {/* Personalized Header */}
+            <div className="mb-6">
+                <div className="bg-gradient-to-r from-blue-400 to-teal-400 p-4 rounded-lg shadow-sm">
+                    <h1 className={`font-bold text-xl ${twTheme("text-gray-800", "text-white")}`}>
+                        Hi {firstName}, Here is your Missions request overview
                     </h1>
                 </div>
             </div>
-            <div className="flex gap-10 flex-col">
+
+            {/* Mission Overview Cards */}
+            <div className="mb-6">
                 <MissionOverview />
-                {/* Grid Sections */}
-                <div className="flex gap-10">
-                    <div>
-                        <RecentActivities />
-                    </div>
-                    <div>
-                        <QuickLinks />
-                    </div>
-                    <div className="grid">
-                        <div className="w-[250px]">
-                            <OngoingMissions />
-                        </div>
-                        <div>
-                            <MissionProgress />
-                        </div>
-                    </div>
+            </div>
+
+            {/* Main Grid Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                {/* Left Column */}
+                <div className="space-y-6">
+                    <RecentActivities />
                 </div>
 
-                {/* Charts Section */}
-                <div className="flex mt-10 gap-4">
-                    <div className="w-[350px]">
-                        <AnnualMissionStatuses />
-                    </div>
-                    <div className="w-[350px">
-                        <ThisMonthChart />
-                    </div>
-                    <div className="w-[350px]">
-                        <ExpensesChart />
-                    </div>
+                {/* Middle Column */}
+                <div className="space-y-6">
+                    <QuickLinks />
+                    <OngoingMissions />
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-6">
+                    <MissionProgress />
+                    <ExpensesSummary />
+                </div>
+            </div>
+
+            {/* Bottom Section - Charts and Expenses */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* This Month Chart */}
+                <div>
+                    <ThisMonthChart />
+                </div>
+
+                {/* Expense Overview */}
+                <div>
+                    <ExpenseOverview />
                 </div>
             </div>
         </main>

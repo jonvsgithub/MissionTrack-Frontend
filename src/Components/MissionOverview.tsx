@@ -15,7 +15,26 @@ const MissionOverview: React.FC = () => {
   useEffect(() => {
     const fetchMissions = async () => {
       try {
-        const token = localStorage.getItem("token"); // ✅ your saved token
+        const token = localStorage.getItem("token");
+
+        // Check if using mock token
+        const isMockToken = token?.startsWith("mock-token");
+
+        if (isMockToken) {
+          // Use mock data for testing
+          const mockMissions: Mission[] = [
+            { id: "1", missionTitle: "TechCorp Meeting", status: "pending" },
+            { id: "2", missionTitle: "Client Visit - Kigali", status: "approved" },
+            { id: "3", missionTitle: "Training Session", status: "approved" },
+            { id: "4", missionTitle: "Site Inspection", status: "pending" },
+            { id: "5", missionTitle: "Budget Review", status: "manager_approved" },
+          ];
+          setMissions(mockMissions);
+          setLoading(false);
+          return;
+        }
+
+        // Real API call
         const res = await fetch(
           "https://missiontrack-backend.onrender.com/api/missions/employee",
           {
@@ -28,9 +47,14 @@ const MissionOverview: React.FC = () => {
         const data = await res.json();
         if (data.success) {
           setMissions(data.data);
+        } else {
+          // If API fails, use empty array
+          setMissions([]);
         }
       } catch (error) {
         console.error("Error fetching missions:", error);
+        // On error, use empty array instead of staying in loading state
+        setMissions([]);
       } finally {
         setLoading(false);
       }
@@ -49,33 +73,33 @@ const MissionOverview: React.FC = () => {
 
   const stats = [
     {
-      title: "All Missions",
+      title: "Upcoming Missions",
       value: allMissions,
       color: "text-blue-600",
       icon: ClipboardList,
     },
     {
-      title: "Approved",
+      title: "Approved Requests",
       value: completed,
       color: "text-green-600",
       icon: CheckCircle,
     },
     {
-      title: "Pending",
-      value: pending,
-      color: "text-yellow-600",
-      icon: Clock,
+      title: "Completed Missions",
+      value: completed,
+      color: "text-blue-600",
+      icon: CheckCircle,
     },
     {
-      title: "Rejected",
-      value: rejected,
-      color: "text-red-600",
-      icon: XCircle,
+      title: "Pending",
+      value: pending,
+      color: "text-orange-600",
+      icon: Clock,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6 ml-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {loading ? (
         <p className="col-span-4 text-center text-gray-500">Loading...</p>
       ) : (

@@ -1,349 +1,307 @@
-import React, { useEffect, useState } from "react";
-import Input from "../Input";
-import { FiCalendar } from "react-icons/fi";
+import React, { useState } from "react";
+import ReportsList from "./ReportsList";
 import DragDrop from "../DragDrop";
-import { IoEyeOutline } from "react-icons/io5";
-import { LuFileCheck } from "react-icons/lu";
-import { FaEdit } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
-import { MdLocationPin } from "react-icons/md";
-import { AllReports, clearReports, fetchReportsByMissionId, createDailyReport } from "../../redux/EmployeeRedux/DailyReport";
-import { BiPlus } from "react-icons/bi";
-import { Modal,message } from "antd";
+import {
+  FaFilePdf,
+  FaFileWord,
+  FaFileExcel,
+  FaFileImage,
+  FaFileAlt,
+  FaFile,
+} from "react-icons/fa";
+import { BiArrowBack } from "react-icons/bi";
 
-const Report: React.FC = () => {
-  const { missions } = useSelector((state: RootState) => state.EmployeeMissions as {
-    missions: any[] | { missions: any[] };
-    loading: boolean;
-    error: string | null;
-  });
-  const { reports, loading, error } = useSelector((state: RootState) => state.DailyReports);
+// File type icon helper
+const getFileIcon = (fileName: string) => {
+  const ext = fileName.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "pdf":
+      return <FaFilePdf className="text-red-500 text-xl" />;
+    case "doc":
+    case "docx":
+      return <FaFileWord className="text-blue-500 text-xl" />;
+    case "xls":
+    case "xlsx":
+      return <FaFileExcel className="text-green-600 text-xl" />;
+    case "png":
+    case "jpg":
+    case "jpeg":
+    case "gif":
+      return <FaFileImage className="text-yellow-500 text-xl" />;
+    case "txt":
+      return <FaFileAlt className="text-gray-600 text-xl" />;
+    default:
+      return <FaFile className="text-gray-500 text-xl" />;
+  }
+};
+
+const ReportMain: React.FC = () => {
+  const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
-    description: "",
     date: "",
-    activities: "",
+    dailyActivities: "",
+    documentDescription: "",
     notes: "",
   });
 
-  const [errors, setErrors] = useState<{
-    description?: string;
-    date?: string;
-    activities?: string;
-    files?: string;
-  }>({});
-
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [showForm, setShowForm] = useState(false);
-  const [selectedMission, setSelectedMission] = useState<any | null>(null);
-  const [open, setOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const dispatch = useDispatch<AppDispatch>();
-  // to get All reports
-  useEffect(() => {
-    dispatch(AllReports())
-  }, [dispatch]);
-
-  const approvedCompletedMissions = Array.isArray(missions)
-    ? missions.filter((m) =>
-      ["financial_approved", "completed"].includes(
-        m.status
-      )
-    )
-    : [];
-
-
-
-  useEffect(() => {
-    if (selectedMission) {
-      dispatch(fetchReportsByMissionId(selectedMission.id));
-    }
-  }, [dispatch, selectedMission]);
-
-
-  const handleMissionClick = async (missionId: string) => {
-    dispatch(clearReports());
-    setShowForm(false);
-    setSelectedMission(null);
-    try {
-      const missionArray = Array.isArray(missions) ? missions : missions.missions;
-      const found = missionArray.find((m: any) => m.id === missionId) ?? null;
-      setSelectedMission(found);
-      await dispatch(fetchReportsByMissionId(missionId)).unwrap();
-    } catch (error) {
-      console.error("Error fetching reports:", error);
-      message.error("Failed to fetch reports for this mission");
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: "" });
     }
   };
 
   const validateForm = () => {
-    const newErrors: typeof errors = {};
-    if (!formData.date) {
-      newErrors.date = "Date is required.";
-    }
-    if (!formData.activities.trim()) {
-      newErrors.activities = "Daily activities are required.";
-    }
-    if (!formData.description.trim()) {
-      newErrors.description = "Document description is required.";
-    }
-    if (uploadedFiles.length === 0) {
-      newErrors.files = "At least one file must be uploaded.";
-    }
+    const newErrors: { [key: string]: string } = {};
+    if (!formData.date) newErrors.date = "Date is required";
+    if (!formData.dailyActivities.trim())
+      newErrors.dailyActivities = "Daily activities are required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-   if (!validateForm()) {
-      message.warning("Please fill in all required fields");
-      return;
-    }
-      if (!selectedMission) {
-      message.error("No mission selected");
-      return;
-    }
-    setSubmitting(true);
-    const reportData = new FormData();
-    reportData.append("description", formData.description);
-    reportData.append("date", formData.date);
-    reportData.append("dailyActivity", formData.activities);
-    reportData.append("missionId", selectedMission.id);
-    if(uploadedFiles.length > 0){
-      reportData.append("document", uploadedFiles[0]);
-    }
-    try {
-      await dispatch(createDailyReport(reportData)).unwrap();
-      message.success("Report created successfully!");
-      setOpen(false);
-      setFormData({
-        description: "",
-        date: "",
-        activities: "",
-        notes: "",
-      });
-      setUploadedFiles([]);
-      setErrors({});
-      setShowForm(false);
-    
-      if (selectedMission) {
-        dispatch(fetchReportsByMissionId(selectedMission.id));
-      }
-    } catch (error) {
-      console.error("Error creating report:", error);
-      message.error(
-        (error && typeof error === "object" && "message" in error ? (error as any).message : undefined) ||
-        "Failed to create report. Please try again."
-      );
-    }
-  };
-  const removeFile = (index: number) => {
-    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+    if (!validateForm()) return;
+
+    // TODO: Submit to API
+    console.log("Form submitted:", formData, uploadedFiles);
+    alert("Report saved successfully!");
+
+    // Reset and go back to list
+    handleCancel();
   };
 
-  const ReportCard = ({ report }: { report: any }) => (
-    <div className="max-w-sm mx-auto p-6 bg-white rounded-xl border border-gray-400 shadow-md space-y-4">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center text-gray-600 font-semibold gap-2">
-          <FiCalendar />
-          <span>{new Date(report.date).toLocaleDateString()}</span>
-        </div>
-        <div className="flex items-center gap-1 px-3 py-1 bg-accent-700 rounded-full">
-          <LuFileCheck className="text-white" />
-          <span className="text-white text-xs font-medium">Submitted</span>
-        </div>
-      </div>
+  const handleCancel = () => {
+    setFormData({
+      date: "",
+      dailyActivities: "",
+      documentDescription: "",
+      notes: "",
+    });
+    setUploadedFiles([]);
+    setErrors({});
+    setShowForm(false);
+  };
 
-      <div className="space-y-1">
-        <h3 className="text-lg font-bold text-[#0C326E]">{report.description}</h3>
-        <p className="text-sm text-gray-600">{report.dailyActivity}</p>
-      </div>
-
-      <div className="flex justify-between space-x-4 pt-4 border-t border-gray-200">
-       {report.documents || report.filePath ? (
-        <a
-          href={`https://missiontrack-backend.onrender.com/${report.filePath || report.documents}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 flex items-center justify-center gap-2 px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          <IoEyeOutline size={20} />
-          View_Doc
-        </a>
-      ) : (
-        <button 
-          disabled
-          className="flex-1 flex items-center justify-center gap-2 px-8 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-400 cursor-not-allowed"
-        >
-          <IoEyeOutline size={20} />
-          No Doc
-        </button>
-      )}
-        <button className="flex-1 flex items-center justify-center gap-2 px-2 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
-          <FaEdit />
-          Edit
-        </button>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col min-h-screen bg-white p-4 rounded-lg">
-      <div className="w-full py-2  bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
-        <h1 className="font-bold text-2xl text-center ">Daily Mission Report</h1>
-      </div>
-
-      {/* Missions list */}
-      <div className="my-4">
-        {(Array.isArray(missions) ? missions : missions.missions).length === 0 ? (
-          <p className="text-center text-gray-500 py-4">No missions found.</p>
-        ) : (
-          <div className="grid grid-cols-3 gap-4">
-            {approvedCompletedMissions.map((mission) => (
-              <div
-                key={mission.id}
-                className={`p-4 bg-white rounded-lg border shadow hover:shadow-lg cursor-pointer ${selectedMission?.id === mission.id ? "ring-2 ring-blue-300" : ""
-                  }`}
-                onClick={() => handleMissionClick(mission.id)}
-              >
-                <h3 className="font-bold text-lg">{mission.missionTitle}</h3>
-                <div className="flex justify-between items-center">
-                  <p className="text-gray-600 flex gap-1 mt-1">
-                    <MdLocationPin className="mt-1" />
-                    {mission.location}
-                  </p>
-                  <p
-                    className={`text-sm italic font-semibold ${mission.status === "completed"
-                      ? "text-purple-600"
-                      : mission.status === "financial_approved"
-                        ? "text-blue-500"
-                        : mission.status === "pending"
-                          ? "text-orange-400"
-                          : "text-green-500"
-                      }`}
-                  >
-                    {mission.status === "financial_approved" ? "Ongoing" : mission.status}
-                  </p>
-                </div>
-                <p className="text-sm text-gray-500">
-                  From {new Date(mission.startDate).toLocaleDateString()} to{" "}
-                  {new Date(mission.endDate).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {selectedMission && (
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={() => {setShowForm(true); setOpen(true); }}
-            className="bg-blue-600 hover:bg-blue-800 cursor-pointer text-white px-4 py-2 gap-1 flex rounded-md"
-          >
-            <BiPlus size={23} /> Report From {selectedMission.location}
-          </button>
-        </div>
-      )}
-
-      {/* Reports area */}
-      {loading ? (
-        <div className="flex justify-center py-4">
-          <div className="animate-spin h-6 w-6 border-t-2 border-b-2 border-blue-500 rounded-full"></div>
-          <p className="ml-2 text-gray-500">Loading reports...</p>
-        </div>
-      ) : reports && reports.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          {reports.map((report: any) => (
-            <ReportCard key={report.id} report={report} />
-          ))}
-        </div>
-      ) : (
-        <p className="text-center text-gray-500 py-4">
-          {selectedMission ? "No reports for this mission yet." : "No reports found."}
-        </p>
-      )}
-
-
-      <Modal
-        title={`Add New Report for ${selectedMission?.missionTitle}`}
-        open={showForm}
-        onCancel={() => setOpen(false)}
-        footer={null} 
-        centered
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Date"
-            name="date"
-            type="date"
-            value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-            icon={<FiCalendar />}
-          />
-          {errors.date && <span className="text-red-500 text-sm">{errors.date}</span>}
-
-          <Input
-            label="Daily Activities"
-            name="dailyActivity"
-            placeholder="Write your activities here..."
-            value={formData.activities}
-            onChange={(e) => setFormData({ ...formData, activities: e.target.value })}
-          />
-          {errors.activities && <span className="text-red-500 text-sm">{errors.activities}</span>}
-
-          <Input
-            label="Document Description"
-            name="description"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          />
-          {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
-
-          <div className="border-2 border-dashed border-gray-400 rounded-md p-3">
-            <DragDrop onFileSelect={(files: File[]) => setUploadedFiles((prev) => [...prev, ...files])} />
-            {uploadedFiles.length > 0 && (
-              <ul className="mt-2">
-                {uploadedFiles.map((f, i) => (
-                  <li key={i} className="flex justify-between items-center text-sm">
-                    <span>{f.name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeFile(i)}
-                      className="text-red-500 text-xs"
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          {errors.files && <span className="text-red-500 text-sm">{errors.files}</span>}
-
-          <div className="flex justify-center gap-5 pt-4">
+  // If showing form, render the form
+  if (showForm) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Header with Back Button */}
+          <div className="mb-6">
             <button
-              type="button"
-              className="bg-transparent text-red-500 border border-red-500 rounded px-4 py-2 mt-3"
               onClick={() => setShowForm(false)}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4"
             >
-              Cancel
+              <BiArrowBack size={20} />
+              <span>Back to Reports</span>
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-blue-500 text-white rounded px-4 py-2 mt-3"
-            >
-            {submitting ? "Saving..." : "Save Report"}
-            </button>
+            <div className="bg-gradient-to-r from-blue-400 to-teal-400 p-4 rounded-lg shadow-sm">
+              <h1 className="font-bold text-2xl text-center text-gray-800">
+                Daily Mission Report Form
+              </h1>
+            </div>
           </div>
-        </form>
-      </Modal>
 
-    </div>
-  );
+          {/* Form Card */}
+          <div className="bg-white rounded-xl shadow-md p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Today's Activities Section */}
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                  Today's Activities
+                </h2>
+
+                {/* Date Field */}
+                <div className="mb-4">
+                  <label
+                    htmlFor="date"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                  />
+                  {errors.date && (
+                    <span className="text-red-500 text-sm">{errors.date}</span>
+                  )}
+                </div>
+
+                {/* Daily Activities Field */}
+                <div>
+                  <label
+                    htmlFor="dailyActivities"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Daily Activities
+                  </label>
+                  <textarea
+                    id="dailyActivities"
+                    name="dailyActivities"
+                    value={formData.dailyActivities}
+                    onChange={handleChange}
+                    rows={3}
+                    placeholder="Briefly describe what you accomplished today (e.g., client meeting, site inspection, training session)"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all resize-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Briefly describe what you accomplished today (e.g., client meeting, site inspection, training session)
+                  </p>
+                  {errors.dailyActivities && (
+                    <span className="text-red-500 text-sm">
+                      {errors.dailyActivities}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Attachments Section */}
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                  Attachments
+                </h2>
+
+                <div className="grid grid-cols-2 gap-6">
+                  {/* Left Column - Upload */}
+                  <div className="space-y-4">
+                    <div>
+                      <label
+                        htmlFor="documentDescription"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
+                        What document is this?
+                      </label>
+                      <input
+                        type="text"
+                        id="documentDescription"
+                        name="documentDescription"
+                        value={formData.documentDescription}
+                        onChange={handleChange}
+                        placeholder="Eg: meeting notes, signed forms, or photos."
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Eg: meeting notes, signed forms, or photos.
+                      </p>
+                    </div>
+
+                    {/* Drag & Drop Area */}
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg min-h-[200px]">
+                      <DragDrop
+                        onFileSelect={(files) =>
+                          setUploadedFiles([...uploadedFiles, ...files])
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right Column - Uploaded Files */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Uploaded
+                    </label>
+                    <div className="border rounded-lg border-gray-300 p-3 min-h-[280px] max-h-[280px] overflow-y-auto bg-gray-50">
+                      {uploadedFiles.length === 0 ? (
+                        <p className="text-gray-400 text-sm text-center mt-10">
+                          No files uploaded yet
+                        </p>
+                      ) : (
+                        <div className="space-y-2">
+                          {uploadedFiles.map((file, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between p-3 bg-white rounded-md border border-gray-200 hover:border-gray-300 transition-all"
+                            >
+                              <div className="flex items-center gap-3">
+                                {getFileIcon(file.name)}
+                                <div>
+                                  <span className="text-sm font-medium text-gray-700">
+                                    {file.name}
+                                  </span>
+                                  <p className="text-xs text-gray-500">
+                                    {(file.size / 1024).toFixed(2)} KB
+                                  </p>
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setUploadedFiles(
+                                    uploadedFiles.filter((_, i) => i !== index)
+                                  )
+                                }
+                                className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Note/Remark Section */}
+              <div>
+                <label
+                  htmlFor="notes"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Note/Remark
+                </label>
+                <textarea
+                  id="notes"
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="Any comment"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all resize-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">Any comment</p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-center gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="px-8 py-2.5 rounded-lg text-red-500 border-2 border-red-500 hover:bg-red-50 font-medium transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-8 py-2.5 rounded-lg text-white bg-green-600 hover:bg-green-700 font-medium transition-all shadow-sm"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Otherwise, show the reports list
+  return <ReportsList onNewReport={() => setShowForm(true)} />;
 };
 
-export default Report;
+export default ReportMain;

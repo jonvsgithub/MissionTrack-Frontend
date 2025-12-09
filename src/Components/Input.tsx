@@ -17,7 +17,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className="mb-4 w-full">
         <label
           htmlFor={name}
-          className="block font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           {label}
         </label>
@@ -33,11 +33,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             aria-invalid={!!error}
             aria-describedby={error ? errorId : undefined}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-              error
+            className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all ${error
                 ? "border-red-500 ring-red-200"
-                : "border-gray-300 ring-blue-200"
-            } ${icon ? "pl-10" : ""} ${className || ""}`}
+                : "border-gray-300 hover:border-gray-400"
+              } ${icon ? "pl-10" : ""} ${className || ""}`}
             {...props}
           />
         </div>

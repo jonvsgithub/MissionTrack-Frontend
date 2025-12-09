@@ -11,20 +11,18 @@ interface OverviewCardProps {
 
 const OverviewCard: React.FC<OverviewCardProps> = ({ title, value, color, icon: Icon }) => {
   return (
-    <div className="bg-white shadow rounded-lg p-4 grid items-center">
-      {/* Icon */}
-      <div className={`p-2 rounded-full mr-4 flex justify-between items-center`}>
+    <div className="bg-white shadow-sm rounded-xl p-5 flex flex-col justify-between min-h-[120px]">
+      {/* Header with title and icon */}
+      <div className="flex justify-between items-start mb-3">
         <span className="text-sm font-medium text-gray-600">{title}</span>
-        <Icon className={`w-6 h-6 ${color}`} />
-         
+        <Icon className={`w-5 h-5 ${color}`} />
       </div>
 
-      {/* Text */}
-      <div>
-        <div className={`text-xl font-bold ${color}`}>{value}</div>
-      </div>
+      {/* Value */}
+      <div className={`text-3xl font-bold ${color}`}>{value}</div>
     </div>
   );
 };
 
 export default OverviewCard;
+

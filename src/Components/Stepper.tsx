@@ -8,30 +8,47 @@ interface StepperProps {
 
 const Stepper: React.FC<StepperProps> = ({ steps, currentStep }) => {
   return (
-    <div className="flex items-center justify-center gap-4 mt-4"> 
+    <div className="flex items-center justify-center my-6">
       {steps.map((step, index) => {
         const isActive = index === currentStep;
         const isCompleted = index < currentStep;
 
         return (
-          <div key={index} className="flex flex-col items-center gap-1">
-            {/* Circle */}
-            <div
-              className={`flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full border transition-all duration-300
-                ${isCompleted ? "bg-accent-500 text-white border-accent-500" : ""}
-                ${isActive ? "border-accent-500 text-accent-600" : "border-gray-300 text-gray-400"}
-              `}
-            >
-              {isCompleted ? <FaCheck size={12} /> : index + 1}
+          <React.Fragment key={index}>
+            {/* Step Container */}
+            <div className="flex flex-col items-center gap-2">
+              {/* Circle Indicator */}
+              <div
+                className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-300 font-semibold
+                  ${isCompleted ? "bg-green-600 text-white border-green-600" : ""}
+                  ${isActive ? "border-green-600 bg-green-50 text-green-600" : ""}
+                  ${!isActive && !isCompleted ? "border-gray-300 bg-white text-gray-400" : ""}
+                `}
+              >
+                {isCompleted ? <FaCheck size={16} /> : index + 1}
+              </div>
+
+              {/* Label */}
+              <span
+                className={`text-xs font-medium whitespace-nowrap
+                  ${isActive ? "text-green-600" : "text-gray-500"}
+                `}
+              >
+                {step}
+              </span>
             </div>
 
-            {/* Label */}
-            <span
-              className={`text-[10px] sm:text-xs ${isActive ? "text-accent-600 font-semibold" : "text-gray-500"}`}
-            >
-              {step}
-            </span>
-          </div>
+            {/* Connecting Line */}
+            {index < steps.length - 1 && (
+              <div className="flex items-center mb-6">
+                <div
+                  className={`h-0.5 w-16 sm:w-24 transition-all duration-300
+                    ${index < currentStep ? "bg-green-600" : "bg-gray-300"}
+                  `}
+                />
+              </div>
+            )}
+          </React.Fragment>
         );
       })}
     </div>

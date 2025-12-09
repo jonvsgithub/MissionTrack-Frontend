@@ -1,21 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useTheme } from "../../hook/useTheme";
 
 type Mission = {
   id: string;
   missionTitle: string;
-  status: "pending" | "in-progress" | "completed" | "rejected";
+  location?: string;
+  status: "pending" | "in-progress" | "completed" | "rejected" | "approved" | "manager_approved";
 };
 
 const OngoingMissions: React.FC = () => {
-  const { theme } = useTheme();
   const [missions, setMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMissions = async () => {
       try {
-        const token = localStorage.getItem("token"); // ✅ saved token
+        const token = localStorage.getItem("token");
+        const isMockToken = token?.startsWith("mock-token");
+
+        if (isMockToken) {
+          // Use mock data for testing
+          const mockMissions: Mission[] = [
+            {
+              id: "1",
+              missionTitle: "M.E.M- Rubavu",
+              location: "Rubavu District",
+              status: "approved"
+            },
+          ];
+          setMissions(mockMissions);
+          setLoading(false);
+          return;
+        }
+
         const res = await fetch(
           "https://missiontrack-backend.onrender.com/api/missions/employee",
           {
@@ -27,14 +43,17 @@ const OngoingMissions: React.FC = () => {
         );
         const data = await res.json();
         if (data.success) {
-          // ✅ Only ongoing missions (pending or in-progress)
+          // ✅ Only approved/ongoing missions
           const ongoing = data.data.filter(
-            (m: Mission) => m.status === "pending" || m.status === "in-progress"
+            (m: Mission) => m.status === "approved" || m.status === "manager_approved" || m.status === "in-progress"
           );
           setMissions(ongoing);
+        } else {
+          setMissions([]);
         }
       } catch (err) {
         console.error("Error fetching ongoing missions:", err);
+        setMissions([]);
       } finally {
         setLoading(false);
       }
@@ -44,35 +63,28 @@ const OngoingMissions: React.FC = () => {
   }, []);
 
   return (
-    <div
-      className={`rounded-xl shadow-sm p-5 ${
-        theme === "light" ? "bg-white text-black" : "bg-gray-800 text-white"
-      }`}
-    >
-      <h3 className="font-bold mb-4">Ongoing Missions</h3>
+    <div className="rounded-xl shadow-sm p-5 bg-white w-[280px]">
+      <h3 className="font-semibold text-gray-800 mb-4">Ongoing</h3>
 
       {loading ? (
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-gray-500 text-sm">Loading...</p>
       ) : missions.length === 0 ? (
-        <p className="text-gray-500">No ongoing missions</p>
+        <p className="text-gray-500 text-sm">No ongoing missions</p>
       ) : (
         <div className="space-y-3">
-          {missions.map((mission) => (
+          {missions.slice(0, 1).map((mission) => (
             <div
               key={mission.id}
-              className="flex items-center justify-between rounded-lg px-4 py-3"
+              className="space-y-2"
             >
-              {/* Title + colored dot */}
-              <div className="flex items-center gap-3">
-                <p className="font-medium">{mission.missionTitle}</p>
-                <span
-                  className={`w-3 h-3 rounded-full ${
-                    mission.status === "pending"
-                      ? "bg-yellow-500"
-                      : "bg-green-500"
-                  }`}
-                />
+              {/* Mission Title */}
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-gray-800">{mission.missionTitle}</p>
+                <span className="w-3 h-3 rounded-full bg-green-500" />
               </div>
+
+              {/* Location */}
+              <p className="text-sm text-gray-600">{mission.location || "Location not specified"}</p>
             </div>
           ))}
         </div>

@@ -11,7 +11,7 @@ import {
   FaFile,
 } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
-import { GrFormNextLink, GrNext } from "react-icons/gr";
+import { GrFormNextLink } from "react-icons/gr";
 
 // 🔹 file type icon helper
 const getFileIcon = (fileName: string) => {
@@ -38,7 +38,7 @@ const getFileIcon = (fileName: string) => {
 };
 
 const Details: React.FC = () => {
-  // ✅ Form stat
+  // ✅ Form state
   const [formData, setFormData] = useState({
     missionTitle: "",
     names: "",
@@ -47,6 +47,7 @@ const Details: React.FC = () => {
     startDate: "",
     endDate: "",
     description: "",
+    documentDescription: "",
   });
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -163,13 +164,13 @@ const Details: React.FC = () => {
   return (
     <>
 
-      <div className="min-h-[600px] w-full bg-[#E6EAF5] max-w-5xl   flex flex-col">
-        <div className="flex flex-col p-4 bg-white rounded-md shadow-md">
+      <div className="min-h-[600px] w-full bg-[#E6EAF5] max-w-5xl flex flex-col">
+        <div className="flex flex-col p-6 bg-white rounded-lg shadow-md">
           {/* Title */}
-          <div className="w-full py-2  bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
-            <h1 className="font-bold text-2xl text-center">Request a Work Mission</h1>
+          <div className="w-full py-4 bg-gradient-to-r from-blue-400 to-teal-400 rounded-lg">
+            <h1 className="font-bold text-2xl text-center text-gray-800">Request a work mission</h1>
           </div>
-          <p className="text-gray-700 text-center mt-2">
+          <p className="text-gray-600 text-center mt-3 text-sm">
             Provide mission details, and supporting documents for approval.
           </p>
 
@@ -177,36 +178,96 @@ const Details: React.FC = () => {
           <Stepper steps={steps} currentStep={currentStep} />
 
           {/* Step content */}
-          <div className="min-h-[450px] w-full bg-white rounded-md shadow mt-5">
-            <div className="flex flex-col p-5">
+          <div className="min-h-[450px] w-full bg-white rounded-lg shadow-sm mt-5 border border-gray-100">
+            <div className="flex flex-col p-6">
               {/* Step 1 */}
               {currentStep === 0 && (
                 <div className="flex flex-col w-full space-y-4">
-                  <Input label="Mission Title" type="text" className="bg-gray-100" name="missionTitle" value={formData.missionTitle} onChange={handleChange} />
-                  {errors.missionTitle && <span className="text-red-500 text-sm">{errors.missionTitle}</span>}
+                  <Input 
+                    label="Mission Title" 
+                    type="text" 
+                    className="bg-gray-50" 
+                    name="missionTitle" 
+                    value={formData.missionTitle} 
+                    onChange={handleChange} 
+                  />
+                  {errors.missionTitle && <span className="text-red-500 text-sm -mt-2">{errors.missionTitle}</span>}
+                  
                   <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <Input label="Names" className="bg-gray-100" type="text" name="names" value={formData.names} onChange={handleChange} />
-                      {errors.names && <span className="text-red-500 text-sm">{errors.names}</span>}
+                      <Input 
+                        label="Names" 
+                        className="bg-gray-50" 
+                        type="text" 
+                        name="names" 
+                        value={formData.names} 
+                        onChange={handleChange} 
+                      />
+                      {errors.names && <span className="text-red-500 text-sm -mt-2">{errors.names}</span>}
                     </div>
                     <div>
-                      <Input label="Title/Position"className="bg-gray-100" type="text" name="position" value={formData.position} onChange={handleChange} />
-                      {errors.position && <span className="text-red-500 text-sm">{errors.position}</span>}
+                      <Input 
+                        label="Title/Position"
+                        className="bg-gray-50" 
+                        type="text" 
+                        name="position" 
+                        value={formData.position} 
+                        onChange={handleChange} 
+                      />
+                      {errors.position && <span className="text-red-500 text-sm -mt-2">{errors.position}</span>}
                     </div>
                   </div>
+                  
                   <div className="grid grid-cols-3 gap-6">
                     <div>
-                      <Input label="Destination" type="text" className="bg-gray-100" name="destination" value={formData.destination} onChange={handleChange} />
-                      {errors.destination && <span className="text-red-500 text-sm">{errors.destination}</span>}
+                      <Input 
+                        label="Destination" 
+                        type="text" 
+                        className="bg-gray-50" 
+                        name="destination" 
+                        value={formData.destination} 
+                        onChange={handleChange} 
+                      />
+                      {errors.destination && <span className="text-red-500 text-sm -mt-2">{errors.destination}</span>}
                     </div>
                     <div>
-                      <Input label="Start Date" type="date" className="bg-gray-100" name="startDate" value={formData.startDate} onChange={handleChange} />
-                      {errors.startDate && <span className="text-red-500 text-sm">{errors.startDate}</span>}
+                      <Input 
+                        label="Start Date" 
+                        type="date" 
+                        className="bg-gray-50" 
+                        name="startDate" 
+                        value={formData.startDate} 
+                        onChange={handleChange} 
+                      />
+                      {errors.startDate && <span className="text-red-500 text-sm -mt-2">{errors.startDate}</span>}
                     </div>
                     <div>
-                      <Input label="End Date" type="date" className="bg-gray-100" name="endDate" value={formData.endDate} onChange={handleChange} />
-                      {errors.endDate && <span className="text-red-500 text-sm">{errors.endDate}</span>}
+                      <Input 
+                        label="End Date" 
+                        type="date" 
+                        className="bg-gray-50" 
+                        name="endDate" 
+                        value={formData.endDate} 
+                        onChange={handleChange} 
+                      />
+                      {errors.endDate && <span className="text-red-500 text-sm -mt-2">{errors.endDate}</span>}
                     </div>
+                  </div>
+
+                  {/* Mission Description */}
+                  <div>
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                      Mission Description
+                    </label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleChange}
+                      rows={4}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50 transition-all resize-none"
+                      placeholder="Describe the purpose and objectives of this mission..."
+                    />
                   </div>
                 </div>
               )}
@@ -214,60 +275,96 @@ const Details: React.FC = () => {
               {/* Step 2 */}
               {currentStep === 1 && (
                 <div className="grid grid-cols-2 gap-6 text-gray-700">
-                  <div className="flex flex-col mt-6 space-y-4">
-                    <Input label="Document Description" className="bg-gray-100" type="text" name="description" value={formData.description} onChange={handleChange} />
-                    {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
-                    <div className="resize-y overflow-auto min-h-[150px] max-h-[400px] border-2 border-dashed border-gray-400 rounded-md">
+                  <div className="flex flex-col space-y-4">
+                    <div>
+                      <label htmlFor="documentDescription" className="block text-sm font-medium text-gray-700 mb-2">
+                        What document is this?
+                      </label>
+                      <input
+                        type="text"
+                        id="documentDescription"
+                        name="documentDescription"
+                        value={formData.documentDescription}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-gray-50 transition-all"
+                        placeholder="Ex: travel invitation/ Medical clearance..."
+                      />
+                    </div>
+                    <div className="resize-y overflow-auto min-h-[200px] max-h-[400px] border-2 border-dashed border-gray-300 rounded-lg">
                       <DragDrop onFileSelect={(files) => setUploadedFiles([...uploadedFiles, ...files])} />
                     </div>
-                    {errors.files && <span className="text-red-500 text-sm">{errors.files}</span>}
                   </div>
-                  <div className="mt-4 border rounded-md border-gray-300 space-y-2 p-2 h-[250px] overflow-y-auto">
-                    {uploadedFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between underline p-2">
-                        <div className="flex items-center gap-3">
-                          {getFileIcon(file.name)}
-                          <span>{file.name}</span>
-                        </div>
-                        <button onClick={() => setUploadedFiles(uploadedFiles.filter((_, i) => i !== index))} className="text-red-500 hover:text-red-700 text-sm">
-                          Remove
-                        </button>
-                      </div>
-                    ))}
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Uploaded
+                    </label>
+                    <div className="border rounded-lg border-gray-300 space-y-2 p-3 h-[300px] overflow-y-auto bg-gray-50">
+                      {uploadedFiles.length === 0 ? (
+                        <p className="text-gray-400 text-sm text-center mt-10">No files uploaded yet</p>
+                      ) : (
+                        uploadedFiles.map((file, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-white rounded-md border border-gray-200 hover:border-gray-300 transition-all">
+                            <div className="flex items-center gap-3">
+                              {getFileIcon(file.name)}
+                              <div>
+                                <span className="text-sm font-medium text-gray-700">{file.name}</span>
+                                <p className="text-xs text-gray-500">{(file.size / 1024).toFixed(2)} KB</p>
+                              </div>
+                            </div>
+                            <button 
+                              onClick={() => setUploadedFiles(uploadedFiles.filter((_, i) => i !== index))} 
+                              className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Step 3 */}
               {currentStep === 2 && (
-                <div className="text-center mt-40 text-gray-700">
-                  <h2 className="text-lg font-semibold mb-4">
+                <div className="text-center mt-32 text-gray-700">
+                  <h2 className="text-lg font-semibold mb-2">
                     All Set? Click Submit Request to send it for approval.
                   </h2>
+                  <p className="text-sm text-gray-500">
+                    Your request will be reviewed by your manager
+                  </p>
                 </div>
               )}
 
               {/* Navigation */}
-              <div className="flex gap-6 justify-center">
+              <div className="flex gap-6 justify-center mt-8">
                 {currentStep > 0 && (
-                  <button onClick={handleBack} className="px-4 py-2 rounded text-primaryColor-500 border-2 border-primaryColor-500 w-[200px]">
+                  <button 
+                    onClick={handleBack} 
+                    className="px-6 py-2.5 rounded-lg text-gray-700 border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 w-[200px] font-medium transition-all"
+                  >
                     Back
                   </button>
                 )}
                 {currentStep < steps.length - 1 ? (
-                  <button onClick={handleNext} className="px-4 flex py-2 items-center justify-center rounded text-white bg-accent-700 w-[200px]">
+                  <button 
+                    onClick={handleNext} 
+                    className="px-6 flex py-2.5 items-center justify-center rounded-lg text-white bg-green-600 hover:bg-green-700 w-[200px] font-medium transition-all shadow-sm"
+                  >
                     Next <GrFormNextLink size="25"/>
                   </button>
                 ) : (
                   <button
                     onClick={handleSubmit}
                     disabled={isLoading}
-                    className={`px-4 py-2 rounded w-[200px] border-2 ${isLoading
+                    className={`px-6 py-2.5 rounded-lg w-[200px] font-medium transition-all shadow-sm ${isLoading
                         ? "bg-gray-400 text-white cursor-not-allowed"
-                        : "text-accent-500 border-accent-500"
+                        : "text-white bg-green-600 hover:bg-green-700"
                       }`}
                   >
-                    {isLoading ? "Submitting..." : "Submit"}
+                    {isLoading ? "Submitting..." : "Submit request"}
                   </button>
 
                 )}
@@ -277,25 +374,25 @@ const Details: React.FC = () => {
 
           {/* ✅ Success Modal */}
           {isSubmitted && (
-            <div className="fixed inset-0 flex items-center h-[600px] justify-center bg-black/60 bg-opacity-50 z-50">
-              <div className="bg-white rounded-lg shadow-lg h-[600px]  max-w-md text-center relative">
+            <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+              <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full text-center relative">
                 <button
                   onClick={() => setIsSubmitted(false)}
-                  className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
                 >
                   ✕
                 </button>
-                <div className="flex flex-col justify-center  items-center">
-                  <div className="bg-accent-600 p-3 flex  justify-center  rounded-full">
-                    <FaCheck size={50} className="text-white" />
+                <div className="flex flex-col justify-center items-center space-y-4">
+                  <div className="bg-green-600 p-4 flex justify-center rounded-full">
+                    <FaCheck size={40} className="text-white" />
                   </div>
-                  <h1 className="text-2xl font-bold">Success</h1>
-                  <p className="mt-4 text-gray-700">
+                  <h1 className="text-2xl font-bold text-gray-800">Success</h1>
+                  <p className="text-gray-600">
                     Your mission request has been successfully submitted
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="mt-6 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    className="mt-4 px-8 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-all"
                   >
                     Close
                   </button>

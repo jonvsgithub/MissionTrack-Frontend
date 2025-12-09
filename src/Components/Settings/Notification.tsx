@@ -1,10 +1,4 @@
 import React, { useState } from "react";
-import { FiUser } from "react-icons/fi";
-import { MdLockOutline } from "react-icons/md";
-import { FaBell, FaCalendar } from "react-icons/fa";
-import Header from "../HeaderDash";
-import Sidebar from "../Dashboard/Sidebar";
-import { Link } from "react-router-dom";
 
 interface NotificationItemProps {
   title: string;
@@ -13,18 +7,28 @@ interface NotificationItemProps {
   onChange: () => void;
 }
 
-const NotificationItem: React.FC<NotificationItemProps> = ({ title, description, checked, onChange }) => (
-  <div className="p-3 rounded-lg shadow-sm flex items-center justify-between w-full mx-auto">
+const NotificationItem: React.FC<NotificationItemProps> = ({
+  title,
+  description,
+  checked,
+  onChange,
+}) => (
+  <div className="flex items-center justify-between py-4 px-5 bg-gray-50 rounded-lg">
     <div>
-      <h1 className="text-xl font-semibold">{title}</h1>
-      <p className="text-sm text-gray-800">{description}</p>
+      <h3 className="font-medium text-gray-800">{title}</h3>
+      <p className="text-sm text-gray-600 mt-0.5">{description}</p>
     </div>
 
     {/* Toggle Switch */}
     <label className="relative inline-flex items-center cursor-pointer">
-      <input type="checkbox" className="sr-only peer" checked={checked} onChange={onChange} />
-      <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition"></div>
-      <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer peer-checked:translate-x-5 transition"></div>
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        checked={checked}
+        onChange={onChange}
+      />
+      <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-all duration-200"></div>
+      <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all duration-200 peer-checked:translate-x-5"></div>
     </label>
   </div>
 );
@@ -32,9 +36,10 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ title, description,
 const Notification: React.FC = () => {
   const [preferences, setPreferences] = useState({
     email: true,
-    push: false,
-    mission: true,
-    budget: false,
+    push: true,
+    missionStatus: true,
+    budgetAlerts: true,
+    missionStatus2: false,
   });
 
   const handleToggle = (key: keyof typeof preferences) => {
@@ -44,60 +49,62 @@ const Notification: React.FC = () => {
   const handleSubmit = () => {
     console.log("Saved Preferences:", preferences);
     // TODO: Send to backend API
+    alert("Preferences saved successfully!");
   };
 
   return (
-    <>
-    
-        <div className="h-[600px] bg-gradient-to-br to-accent-10/50 rounded-md shadow">
-          <div className="flex flex-col w-full">
-            
+    <div>
+      {/* Header */}
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">
+        Notification Preferences
+      </h2>
 
-            {/* Header */}
-            <div>
-              <div className="p-4 flex justify-between">
-                <h1 className="text-xl font-semibold">Notification Preferences</h1>
-              </div>
+      {/* Notification Settings */}
+      <div className="space-y-3 max-w-2xl">
+        <NotificationItem
+          title="Email Notification"
+          description="Receive notification via Email"
+          checked={preferences.email}
+          onChange={() => handleToggle("email")}
+        />
 
-              {/* Notification Settings */}
-              <div className="flex flex-col gap-4">
-                <NotificationItem
-                  title="Email Notification"
-                  description="Receive notification via Email"
-                  checked={preferences.email}
-                  onChange={() => handleToggle("email")}
-                />
-                <NotificationItem
-                  title="Push Notification"
-                  description="Receive push notifications"
-                  checked={preferences.push}
-                  onChange={() => handleToggle("push")}
-                />
-                <NotificationItem
-                  title="Mission Status"
-                  description="Get notified when mission status changes"
-                  checked={preferences.mission}
-                  onChange={() => handleToggle("mission")}
-                />
-                <NotificationItem
-                  title="Budget Alerts"
-                  description="Receive alerts about budgets"
-                  checked={preferences.budget}
-                  onChange={() => handleToggle("budget")}
-                />
+        <NotificationItem
+          title="Push Notification"
+          description="Receive Push Notification"
+          checked={preferences.push}
+          onChange={() => handleToggle("push")}
+        />
 
-                <button
-                  onClick={handleSubmit}
-                  className="mt-3 ml-7 px-4 w-[250px] py-2 rounded bg-primaryColor-800 text-white hover:bg-primaryColor-700"
-                >
-                  Save Preferences
-                </button>
-              </div>
+        <NotificationItem
+          title="Mission Status"
+          description="Get notified when mission status changes"
+          checked={preferences.missionStatus}
+          onChange={() => handleToggle("missionStatus")}
+        />
 
-            </div>
-          </div>
-        </div>
-    </>
+        <NotificationItem
+          title="Budget Alerts"
+          description="Get notified when mission status changes"
+          checked={preferences.budgetAlerts}
+          onChange={() => handleToggle("budgetAlerts")}
+        />
+
+        <NotificationItem
+          title="Mission Status"
+          description="Get notified when mission status changes"
+          checked={preferences.missionStatus2}
+          onChange={() => handleToggle("missionStatus2")}
+        />
+      </div>
+
+      {/* Save Button */}
+      <button
+        onClick={handleSubmit}
+        className="mt-6 px-8 py-2.5 rounded-lg text-white bg-blue-600 hover:bg-blue-700 font-medium transition-all"
+      >
+        Save Preferences
+      </button>
+    </div>
   );
 };
 

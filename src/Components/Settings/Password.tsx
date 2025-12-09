@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import Input from "../Input";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changePassword, clearActionState } from "../../redux/profileSlice";
 import { AppDispatch, RootState } from "../../redux/store";
-import { FiLock, FiShield, FiCheckCircle, FiAlertCircle, FiEye, FiEyeOff } from "react-icons/fi";
+import { FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 
 const Password: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,22 +27,9 @@ const Password: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
- 
-
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => {
-        setSuccessMessage("");
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
-
     setErrors((prev) => ({ ...prev, [name]: undefined }));
     setSuccessMessage("");
     dispatch(clearActionState());
@@ -75,11 +61,13 @@ const Password: React.FC = () => {
     }
 
     try {
-      await dispatch(changePassword({
-        currentPassword: formData.currentPassword,
-        newPassword: formData.newPassword,
-        confirmNewPassword: formData.confirmNewPassword,
-      })).unwrap();
+      await dispatch(
+        changePassword({
+          currentPassword: formData.currentPassword,
+          newPassword: formData.newPassword,
+          confirmNewPassword: formData.confirmNewPassword,
+        })
+      ).unwrap();
 
       setFormData({
         currentPassword: "",
@@ -87,147 +75,128 @@ const Password: React.FC = () => {
         confirmNewPassword: "",
       });
       setSuccessMessage("Password updated successfully!");
-
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (err: any) {
       console.error("Failed to change password:", err);
     }
   };
 
-
-
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
-      <div className="w-full max-w-2xl">
-        {/* Header Card */}
-        <div className="bg-white rounded-t-2xl shadow-lg p-6 border-b-2 border-blue-100">
-          <div className="flex items-center gap-4">
-            <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-4 rounded-xl shadow-lg">
-              <FiShield className="text-white text-3xl" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">Change Password</h1>
-              <p className="text-gray-500 text-sm mt-1">Keep your account secure with a strong password</p>
-            </div>
+    <div>
+      {/* Header */}
+      <h2 className="text-xl font-semibold text-gray-800 mb-6">Change Password</h2>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+          {successMessage}
+        </div>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+          {error}
+        </div>
+      )}
+
+      {/* Form */}
+      <div className="max-w-md space-y-5">
+        {/* Current Password */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Current Password
+          </label>
+          <div className="relative">
+            <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type={showCurrentPassword ? "text" : "password"}
+              name="currentPassword"
+              value={formData.currentPassword}
+              onChange={handleChange}
+              placeholder="Label Lorem ipsum"
+              className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              {showCurrentPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+            </button>
           </div>
+          {errors.currentPassword && (
+            <p className="text-red-500 text-sm mt-1">{errors.currentPassword}</p>
+          )}
         </div>
 
-        {/* Main Content Card */}
-        <div className="bg-white rounded-b-2xl shadow-lg p-8">
-          {/* Success Message */}
-          {successMessage && (
-            <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex items-start gap-3 animate-fade-in">
-              <FiCheckCircle className="text-green-500 text-xl mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-green-800 font-medium">{successMessage}</p>
-                <p className="text-green-600 text-sm mt-1">Your password has been updated successfully</p>
-              </div>
-            </div>
-          )}
-
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg flex items-start gap-3 animate-fade-in">
-              <FiAlertCircle className="text-red-500 text-xl mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-red-800 font-medium">Error</p>
-                <p className="text-red-600 text-sm mt-1">{error}</p>
-              </div>
-            </div>
-          )}
-
-          {/* Password Fields */}
-          <div className="space-y-5">
-            {/* Current Password */}
-            <div className="relative">
-              <Input
-                label="Current Password"
-                type={showCurrentPassword ? "text" : "password"}
-                name="currentPassword"
-                value={formData.currentPassword}
-                onChange={handleChange}
-                placeholder="Enter your current password"
-                error={errors.currentPassword}
-                disabled={loading}
-                icon={<FiLock className="text-gray-400" />}
-              />
-              <button
-                type="button"
-                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 transition"
-                disabled={loading}
-              >
-                {showCurrentPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-              </button>
-            </div>
-
-            {/* New Password */}
-            <div className="relative">
-              <Input
-                label="New Password"
-                type={showNewPassword ? "text" : "password"}
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleChange}
-                placeholder="Enter your new password"
-                error={errors.newPassword}
-                disabled={loading}
-                icon={<FiLock className="text-gray-400" />}
-              />
-              <button
-                type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 transition"
-                disabled={loading}
-              >
-                {showNewPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-              </button>
-            </div>
-
-            {/* Confirm Password */}
-            <div className="relative">
-              <Input
-                label="Confirm New Password"
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmNewPassword"
-                value={formData.confirmNewPassword}
-                onChange={handleChange}
-                placeholder="Confirm your new password"
-                error={errors.confirmNewPassword}
-                disabled={loading}
-                icon={<FiLock className="text-gray-400" />}
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700 transition"
-                disabled={loading}
-              >
-                {showConfirmPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-              </button>
-            </div>
+        {/* New Password */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            New Password
+          </label>
+          <div className="relative">
+            <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type={showNewPassword ? "text" : "password"}
+              name="newPassword"
+              value={formData.newPassword}
+              onChange={handleChange}
+              placeholder="1234567890"
+              className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              {showNewPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+            </button>
           </div>
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className={`mt-6 w-full px-6 py-3 rounded-xl font-medium text-white transition-all duration-200 flex items-center justify-center gap-2 ${loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              }`}
-          >
-            {loading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Updating Password...
-              </>
-            ) : (
-              <>
-                <FiShield />
-                Update Password
-              </>
-            )}
-          </button>
+          {errors.newPassword && (
+            <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>
+          )}
         </div>
+
+        {/* Confirm New Password */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Confirm New Password
+          </label>
+          <div className="relative">
+            <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmNewPassword"
+              value={formData.confirmNewPassword}
+              onChange={handleChange}
+              placeholder="1234567890"
+              className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+            </button>
+          </div>
+          {errors.confirmNewPassword && (
+            <p className="text-red-500 text-sm mt-1">{errors.confirmNewPassword}</p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          className={`w-full px-6 py-2.5 rounded-lg font-medium transition-all ${loading
+              ? "bg-gray-400 text-white cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+        >
+          {loading ? "Updating..." : "Update Password"}
+        </button>
       </div>
     </div>
   );
