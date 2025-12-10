@@ -9,109 +9,130 @@ import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
 
 // --------------------
-// Reusable Card
+// Types
 // --------------------
 type MissionStatus = "pending" | "approved" | "rejected";
 
-interface MissionCardProps {
-  initials: string;
+interface Mission {
+  id: string;
   name: string;
   role: string;
   title: string;
   location: string;
-  dateRange: string;
+  startDate: string;
+  endDate: string;
   status: MissionStatus;
-  onApprove?: () => void;
-  onReject?: () => void;
-  onDetails?: () => void;
+  initials?: string;
+}
+
+// --------------------
+// Reusable Card
+// --------------------
+interface MissionCardProps {
+  mission: Mission;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
+  onDetails: (id: string) => void;
 }
 
 const MissionCard: React.FC<MissionCardProps> = ({
-  initials,
-  name,
-  role,
-  title,
-  location,
-  dateRange,
-  status,
+  mission,
   onApprove,
   onReject,
   onDetails,
 }) => {
-  const statusStyles: Record<MissionStatus, string> = {
-    pending: "text-yellow-600 border border-yellow-600 bg-yellow-100",
-    approved: "text-white bg-accent-800 border border-accent-400",
-    rejected: "text-red-600 border border-red-600 bg-red-50",
-  };
+  const {
+    id,
+    initials,
+    name,
+    role,
+    title,
+    location,
+    startDate,
+    endDate,
+    status,
+  } = mission;
 
   return (
-    <li className="max-w-md mx-auto grid md:w-[320px] lg:w-[450px]  rounded-xl shadow-md overflow-hidden m-4 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <div className="h-12 w-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">
-              {initials}
-            </div>
+    <div className="bg-white rounded-xl shadow-sm p-6 flex flex-col h-full border border-gray-100">
+      {/* Card Header */}
+      <div className="flex justify-between items-start mb-6">
+        <div className="flex gap-4">
+          <div className="h-12 w-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+            {initials || name.charAt(0)}
           </div>
-          <div className="ml-4">
-            <div className="text-xl font-bold text-gray-900">{name}</div>
-            <p className="text-gray-500">{role}</p>
+          <div>
+            <h3 className="font-bold text-gray-900 text-lg">{name}</h3>
+            <p className="text-sm text-gray-500">{role}</p>
           </div>
         </div>
-        <div
-          className={`px-3 py-1 text-sm font-semibold rounded-full ${statusStyles[status]}`}
-        >
-          {status}
+
+        {/* Status Badge (Top Right) */}
+        {status === "pending" && (
+          <span className="px-4 py-1 rounded-md text-xs font-medium text-orange-500 border border-orange-300 bg-orange-50">
+            Pending
+          </span>
+        )}
+        {status === "approved" && (
+          <span className="px-4 py-1 rounded-md text-xs font-medium text-white bg-green-700">
+            Approved
+          </span>
+        )}
+        {status === "rejected" && (
+          <span className="px-4 py-1 rounded-md text-xs font-medium text-red-500 border border-red-200 bg-red-50">
+            Rejected
+          </span>
+        )}
+      </div>
+
+      {/* Card Body */}
+      <div className="space-y-3 mb-8 flex-1">
+        <div className="flex items-center gap-3 text-gray-700 text-sm font-medium">
+          <PiBagSimple size={20} className="text-gray-500" />
+          <span>{title}</span>
+        </div>
+        <div className="flex items-center gap-3 text-gray-700 text-sm font-medium">
+          <IoLocationOutline size={20} className="text-gray-500" />
+          <span>{location}</span>
+        </div>
+        <div className="flex items-center gap-3 text-gray-700 text-sm font-medium">
+          <BsCalendar2Event size={18} className="text-gray-500" />
+          <span>
+            {startDate} - {endDate}
+          </span>
         </div>
       </div>
 
-      {/* Details */}
-      <div className="mt-6 space-y-4">
-        <div className="flex items-center">
-          <PiBagSimple size={25} />
-          <p className="ml-3 text-gray-700">{title}</p>
-        </div>
-        <div className="flex items-center">
-          <IoLocationOutline size={25} />
-          <p className="ml-3 text-gray-700">{location}</p>
-        </div>
-        <div className="flex items-center">
-          <BsCalendar2Event size={25} />
-          <p className="ml-3 text-gray-700">{dateRange}</p>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="mt-6 flex justify-between space-x-4">
+      {/* Card Actions */}
+      <div className="flex gap-3 mt-auto">
         <button
-          onClick={onDetails}
-          className="flex-1 gap-2 flex items-center justify-center px-10 py-2 border border-gray-300 rounded-2xl shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+          onClick={() => onDetails(id)}
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-400 rounded-md text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
         >
-          <MdOutlineRemoveRedEye size={25} />
+          <MdOutlineRemoveRedEye size={18} />
           Details
         </button>
 
         {status === "pending" && (
-          <div className="grid grid-cols-2 gap-2">
+          <>
             <button
-              onClick={onApprove}
-              className="flex-1 gap-2 flex items-center justify-center px-4 py-2 rounded-2xl shadow-sm text-sm font-medium text-white bg-accent-600"
+              onClick={() => onApprove(id)}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 rounded-md text-sm font-semibold text-white hover:bg-green-700 transition-colors"
             >
-              <FaCheck size={20} />
+              <FaCheck size={16} />
               Approve
             </button>
             <button
-              onClick={onReject}
-              className="flex-1 gap-2 flex items-center justify-center px-4 py-2 rounded-2xl shadow-sm text-sm font-medium text-red-600"
+              onClick={() => onReject(id)}
+              className="flex items-center justify-center gap-2 px-4 py-2 border border-red-300 bg-red-50 rounded-md text-sm font-semibold text-red-500 hover:bg-red-100 transition-colors"
             >
-              <RxCross2 size={20} />
-              Reject
+              <RxCross2 size={16} />
+              Rejected
             </button>
-          </div>
+          </>
         )}
       </div>
-    </li>
+    </div>
   );
 };
 
@@ -120,13 +141,17 @@ const MissionCard: React.FC<MissionCardProps> = ({
 // --------------------
 const RequestManager: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [missions, setMissions] = useState<any[]>([]);
+  const [missions, setMissions] = useState<Mission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"All" | "Pending" | "Approved" | "Rejected">("All");
 
   useEffect(() => {
     const fetchMissions = async () => {
       try {
-        const token = localStorage.getItem("token"); // ✅ get token
+        const token = localStorage.getItem("user")
+          ? JSON.parse(localStorage.getItem("user")!).token
+          : "";
+
         const res = await axios.get(
           "https://missiontrack-backend.onrender.com/api/reports/",
           {
@@ -135,7 +160,19 @@ const RequestManager: React.FC = () => {
             },
           }
         );
-        setMissions(res.data.data || []);
+        // Map API data to Mission interface
+        const data = res.data.data.map((m: any) => ({
+          id: m.id,
+          name: m.name || "Unknown",
+          role: m.role || "Employee",
+          title: m.title || "Untitled Mission",
+          location: m.location || "Unknown",
+          startDate: m.startDate ? m.startDate.split("T")[0] : "",
+          endDate: m.endDate ? m.endDate.split("T")[0] : "",
+          status: m.status || "pending",
+          initials: m.name ? m.name.charAt(0).toUpperCase() : "U",
+        }));
+        setMissions(data);
       } catch (err) {
         console.error("Error fetching missions:", err);
       } finally {
@@ -146,61 +183,95 @@ const RequestManager: React.FC = () => {
     fetchMissions();
   }, []);
 
-  const filteredMissions = missions.filter((m) =>
-    m.title?.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter Logic
+  const filteredByTab = missions.filter((m) => {
+    if (activeTab === "All") return true;
+    return m.status.toLowerCase() === activeTab.toLowerCase();
+  });
+
+  const finalFiltered = filteredByTab.filter((m) =>
+    m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  return (
-    <div className="flex-1 flex flex-col min-h-screen bg-[#E6EAF5] pr-5">
-      <div className="py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
-        <h1 className="font-bold text-2xl text-center">Requests</h1>
-      </div>
+  // Counts for tabs
+  const getCount = (status: string) => {
+    if (status === "All") return missions.length;
+    return missions.filter((m) => m.status.toLowerCase() === status.toLowerCase()).length;
+  };
 
-      {/* Search Box */}
-      <div className="relative mb-4 mt-10 flex justify-center">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-400 p-2 pl-10 rounded w-1/2 max-sm:w-10/12 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder=""
-        />
-        {searchTerm === "" && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black flex items-center pointer-events-none">
-            <FiSearch className="mr-2" />
-            <span>Search missions...</span>
+  const tabs = ["All", "Pending", "Approved", "Rejected"];
+
+  return (
+    <div className="flex-1 flex flex-col min-h-screen bg-[#E6EAF5] overflow-hidden">
+      <main className="flex-1 overflow-y-auto p-6">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-300 to-teal-200 rounded-lg p-4 mb-8 shadow-sm">
+          <h1 className="font-bold text-xl text-gray-800">Mission Requests</h1>
+        </div>
+
+        {/* Search and Filters */}
+        <div className="bg-white p-3 rounded-lg shadow-sm mb-6 flex gap-4">
+          <div className="flex-1 relative">
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm"
+              placeholder="Search"
+            />
+          </div>
+          <div className="w-40">
+            <select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md text-sm text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <option>Filter</option>
+              <option>Date</option>
+              <option>Name</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="bg-white rounded-lg shadow-sm mb-8 p-1 flex">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab as any)}
+              className={`flex-1 py-3 text-sm font-semibold rounded-md transition-all ${activeTab === tab
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-500 hover:bg-gray-50"
+                }`}
+            >
+              {tab} ({getCount(tab)})
+            </button>
+          ))}
+        </div>
+
+        {/* Mission Grid */}
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {finalFiltered.length > 0 ? (
+              finalFiltered.map((m) => (
+                <MissionCard
+                  key={m.id}
+                  mission={m}
+                  onApprove={(id) => console.log("Approve", id)}
+                  onReject={(id) => console.log("Reject", id)}
+                  onDetails={(id) => console.log("Details", id)}
+                />
+              ))
+            ) : (
+              <div className="col-span-full py-20 text-center text-gray-500">
+                No requests found in this category.
+              </div>
+            )}
           </div>
         )}
-      </div>
-
-      {/* Mission Cards */}
-      {loading ? (
-        <p className="text-center text-black">Loading...</p>
-      ) : (
-        <ul className="grid grid-cols-2 gap-[30px] mt-5 items-center w-full">
-          {filteredMissions.length > 0 ? (
-            filteredMissions.map((m, idx) => (
-              <MissionCard
-                key={idx}
-                initials={m.name ? m.name.charAt(0).toUpperCase() : "U"}
-                name={m.name || "Unknown"}
-                role={m.role || "Employee"}
-                title={m.title || "No Title"}
-                location={m.location || "Unknown"}
-                dateRange={`${m.startDate || ""} - ${m.endDate || ""}`}
-                status={(m.status as MissionStatus) || "pending"}
-                onApprove={() => console.log("Approve", m.id)}
-                onReject={() => console.log("Reject", m.id)}
-                onDetails={() => console.log("Details", m.id)}
-              />
-            ))
-          ) : (
-            <p className="text-center text-gray-500 col-span-2">
-              No missions found
-            </p>
-          )}
-        </ul>
-      )}
+      </main>
     </div>
   );
 };
