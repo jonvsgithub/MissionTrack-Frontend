@@ -7,6 +7,7 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import axios from "axios";
+import MissionDetailsModal, { DetailsMission } from "./MissionDetailsModal";
 
 // --------------------
 // Types
@@ -22,7 +23,9 @@ interface Mission {
   startDate: string;
   endDate: string;
   status: MissionStatus;
-  initials?: string;
+  initials: string;
+  description?: string;
+  documents?: string[];
 }
 
 // --------------------
@@ -59,7 +62,7 @@ const MissionCard: React.FC<MissionCardProps> = ({
       <div className="flex justify-between items-start mb-6">
         <div className="flex gap-4">
           <div className="h-12 w-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
-            {initials || name.charAt(0)}
+            {initials}
           </div>
           <div>
             <h3 className="font-bold text-gray-900 text-lg">{name}</h3>
@@ -67,7 +70,7 @@ const MissionCard: React.FC<MissionCardProps> = ({
           </div>
         </div>
 
-        {/* Status Badge (Top Right) */}
+        {/* Status Badge */}
         {status === "pending" && (
           <span className="px-4 py-1 rounded-md text-xs font-medium text-orange-500 border border-orange-300 bg-orange-50">
             Pending
@@ -145,6 +148,9 @@ const RequestManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"All" | "Pending" | "Approved" | "Rejected">("All");
 
+  // Modal State
+  const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
+
   useEffect(() => {
     const fetchMissions = async () => {
       try {
@@ -160,7 +166,7 @@ const RequestManager: React.FC = () => {
             },
           }
         );
-        // Map API data to Mission interface
+        // Map API data
         const data = res.data.data.map((m: any) => ({
           id: m.id,
           name: m.name || "Unknown",
@@ -171,6 +177,9 @@ const RequestManager: React.FC = () => {
           endDate: m.endDate ? m.endDate.split("T")[0] : "",
           status: m.status || "pending",
           initials: m.name ? m.name.charAt(0).toUpperCase() : "U",
+          // Mocking description/docs if missing, or use actual API field if available
+          description: m.description || "Visit key clients to discuss new project opportunities and strengthen business relationships. Will meet with 5 Major clients over 4 days",
+          documents: m.documents || ["Flight ticket.pdf", "Clients meetings schedules.xls"],
         }));
         setMissions(data);
       } catch (err) {
@@ -194,13 +203,35 @@ const RequestManager: React.FC = () => {
     m.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Counts for tabs
+  // Counts
   const getCount = (status: string) => {
     if (status === "All") return missions.length;
     return missions.filter((m) => m.status.toLowerCase() === status.toLowerCase()).length;
   };
 
   const tabs = ["All", "Pending", "Approved", "Rejected"];
+
+  // Handlers
+  const handleDetailsClick = (id: string) => {
+    const mission = missions.find((m) => m.id === id);
+    if (mission) setSelectedMission(mission);
+  };
+
+  const handleApprove = (id: string, feedback?: string) => {
+    console.log("Approved", id, "Feedback:", feedback);
+    // Add API call here
+    // Optimistic Update
+    setMissions(prev => prev.map(m => m.id === id ? { ...m, status: "approved" } : m));
+    setSelectedMission(null);
+  };
+
+  const handleReject = (id: string, feedback?: string) => {
+    console.log("Rejected", id, "Feedback:", feedback);
+    // Add API call here
+    // Optimistic Update
+    setMissions(prev => prev.map(m => m.id === id ? { ...m, status: "rejected" } : m));
+    setSelectedMission(null);
+  };
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-[#E6EAF5] overflow-hidden">
@@ -259,9 +290,9 @@ const RequestManager: React.FC = () => {
                 <MissionCard
                   key={m.id}
                   mission={m}
-                  onApprove={(id) => console.log("Approve", id)}
-                  onReject={(id) => console.log("Reject", id)}
-                  onDetails={(id) => console.log("Details", id)}
+                  onApprove={(id) => handleApprove(id)} // Pass through handler
+                  onReject={(id) => handleReject(id)}
+                  onDetails={(id) => handleDetailsClick(id)}
                 />
               ))
             ) : (
@@ -272,6 +303,16 @@ const RequestManager: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Details Modal */}
+      {selectedMission && (
+        <MissionDetailsModal
+          mission={selectedMission}
+          onClose={() => setSelectedMission(null)}
+          onApprove={handleApprove}
+          onReject={handleReject}
+        />
+      )}
     </div>
   );
 };
