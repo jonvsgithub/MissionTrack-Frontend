@@ -21,7 +21,10 @@ const ReportManager: React.FC = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const token = localStorage.getItem("token"); // ✅ stored after login
+        const token = localStorage.getItem("user")
+          ? JSON.parse(localStorage.getItem("user")!).token
+          : "";
+
         const response = await axios.get(
           "https://missiontrack-backend.onrender.com/api/reports/",
           {
@@ -33,7 +36,12 @@ const ReportManager: React.FC = () => {
         );
 
         if (response.data.success) {
-          setReports(response.data.data || []);
+          // Normalize status case for badges
+          const data = (response.data.data || []).map((r: any) => ({
+            ...r,
+            status: r.status === "completed" ? "Completed" : "Ongoing" // Normalize or map status
+          }));
+          setReports(data);
         }
       } catch (error) {
         console.error("Error fetching reports:", error);
@@ -45,146 +53,132 @@ const ReportManager: React.FC = () => {
     fetchReports();
   }, []);
 
+  // Format currency helpers
+  const formatK = (num: number) => `${Math.round(num / 1000)}k`;
+  const formatCurrency = (num: number) => `$${num.toLocaleString()}`;
+
+  // Derived stats
+  const totalMissions = reports.length;
+  const activeMissions = reports.filter(r => r.status !== "Completed").length;
+
+  const totalBudget = reports.reduce((acc, r) => acc + r.totalBudget, 0);
+  const spentBudget = reports.reduce((acc, r) => acc + r.budgetUsed, 0);
+
+  const completedCount = reports.filter(r => r.status === "Completed").length;
+  const avgCompletion = totalMissions > 0 ? Math.round((completedCount / totalMissions) * 100) : 0;
+
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-[#E6EAF5] pr-5">
-      <div className="py-2 mt-5 bg-gradient-to-l from-accent-10 rounded-md to-primaryColor-50">
-        <h1 className="font-bold text-2xl text-center">Reports</h1>
+      <div className="py-2 mt-5 bg-gradient-to-r from-blue-300 to-teal-200 rounded-md shadow-sm">
+        <h1 className="font-bold text-xl text-gray-800 ml-4">Mission reports</h1>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-5 gap-2">
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-500">
-              Total missions
-            </span>
-            <span className="text-sm font-medium text-gray-500">Active</span>
+      <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        {/* Total Missions */}
+        <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-2">
+            <span className="text-gray-700 font-medium text-lg">Total missions</span>
+            <span className="text-gray-500 font-medium">Active</span>
           </div>
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-900">
-              {reports.length}
-            </span>
-            <span className="text-2xl font-bold text-orange-500">
-              {reports.filter((r) => r.status !== "Completed").length}
-            </span>
+          <div className="flex justify-between items-end">
+            <span className="text-3xl font-bold text-gray-900">{totalMissions}</span>
+            <span className="text-3xl font-bold text-orange-400">{activeMissions}</span>
           </div>
         </div>
 
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-500">
-              Total Budget
-            </span>
-            <span className="text-sm font-medium text-gray-500">Spent</span>
+        {/* Total Budget */}
+        <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-2">
+            <span className="text-gray-700 font-medium text-lg">Total budget</span>
+            <span className="text-gray-500 font-medium">Spent</span>
           </div>
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-900">
-              {reports.reduce((acc, r) => acc + r.totalBudget, 0) / 1000}k
-            </span>
-            <span className="text-2xl font-bold text-accent-500">
-              {reports.reduce((acc, r) => acc + r.budgetUsed, 0) / 1000}k
-            </span>
+          <div className="flex justify-between items-end">
+            <span className="text-3xl font-bold text-gray-900">{formatCurrency(totalBudget)}</span>
+            <span className="text-3xl font-bold text-green-500">{formatCurrency(spentBudget)}</span>
           </div>
         </div>
 
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-500">
-              Av.g completion
-            </span>
-            <span className="text-sm font-medium text-gray-500">Completed</span>
+        {/* Avg Completion */}
+        <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-2">
+            <span className="text-gray-700 font-medium text-lg">Av.g completion</span>
+            <span className="text-gray-500 font-medium">Completed</span>
           </div>
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-900">
-              {reports.length > 0
-                ? `${Math.round(
-                    (reports.filter((r) => r.status === "Completed").length /
-                      reports.length) *
-                      100
-                  )} %`
-                : "0 %"}
-            </span>
-            <span className="text-2xl font-bold text-primaryColor-600">
-              {reports.filter((r) => r.status === "Completed").length}
-            </span>
+          <div className="flex justify-between items-end">
+            <span className="text-3xl font-bold text-gray-900">{avgCompletion}%</span>
+            <span className="text-3xl font-bold text-blue-600">{completedCount}</span>
           </div>
         </div>
       </div>
 
-      {/* Reports List */}
+      {/* Reports Grid */}
       {loading ? (
-        <p className="text-center mt-5 text-gray-600">Loading reports...</p>
+        <div className="flex justify-center py-20">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
       ) : reports.length === 0 ? (
-        <p className="text-center mt-5 text-gray-600">No reports available</p>
+        <div className="flex justify-center py-20 text-gray-500">No reports found.</div>
       ) : (
-        <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[10px] mt-5 items-center w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
           {reports.map((report) => {
-            const progressPercentage =
-              (report.budgetUsed / report.totalBudget) * 100;
+            const progress = Math.min((report.budgetUsed / report.totalBudget) * 100, 100);
+            const isCompleted = report.status === "Completed";
 
             return (
-              <li
-                key={report.id}
-                className="flex w-full max-w-sm flex-col rounded-lg bg-white p-6 shadow-md"
-              >
+              <div key={report.id} className="bg-white rounded-xl p-6 shadow-sm flex flex-col">
                 {/* Header */}
-                <div className="flex items-start justify-between">
-                  <h2 className="text-xl font-bold text-gray-900">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-base font-bold text-gray-900 leading-tight max-w-[70%]">
                     {report.title}
-                  </h2>
+                  </h3>
                   <span
-                    className={`rounded-full px-3 py-1 text-sm font-semibold ${
-                      report.status === "Completed"
-                        ? " text-white"
-                        : "bg-orange-200 text-orange-800"
-                    }`}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold ${isCompleted ? "bg-[#107C41] text-white" : "bg-orange-400 text-white"
+                      }`}
                   >
                     {report.status}
                   </span>
                 </div>
 
-                {/* Manager & Dates */}
-                <div className="mt-4 space-y-2 text-gray-600">
-                  <div className="flex gap-2 items-center">
-                    <FiUser size={20} />
-                    <span className="text-gray-700">{report.manager}</span>
+                {/* Info */}
+                <div className="space-y-2 mb-6">
+                  <div className="flex items-center gap-2 text-gray-500 text-sm">
+                    <FiUser size={16} />
+                    <span>{report.manager}</span>
                   </div>
-                  <div className="flex gap-2 items-center">
-                    <BsCalendar2Event size={20} />
-                    <span className="text-gray-700">{report.dateRange}</span>
+                  <div className="flex items-center gap-2 text-gray-500 text-sm">
+                    <BsCalendar2Event size={16} />
+                    <span>{report.dateRange}</span>
                   </div>
                 </div>
 
-                {/* Budget */}
-                <div className="mt-6">
-                  <div className="flex items-center justify-between text-gray-600">
-                    <span className="font-semibold text-gray-900">
-                      Budget Used
+                {/* Budget Bar */}
+                <div className="mt-auto">
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="font-bold text-gray-800 flex items-center gap-1">
+                      <span className="text-gray-600 font-semibold">$</span> Budget Used
                     </span>
-                    <span className="text-gray-900">
-                      {report.budgetUsed / 1000}k / {report.totalBudget / 1000}k
-                      Rwf
+                    <span className="text-gray-500 text-xs font-medium">
+                      {formatK(report.budgetUsed)} Rwf/{formatK(report.totalBudget)} Rwf
                     </span>
                   </div>
-                  <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-gray-200">
+                  <div className="h-1.5 w-full bg-gray-200 rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-blue-500"
-                      style={{ width: `${progressPercentage}%` }}
-                    ></div>
+                      className={`h-full rounded-full ${isCompleted ? 'bg-[#107C41]' : 'bg-blue-600'}`}
+                      style={{ width: `${progress}%` }}
+                    />
                   </div>
                 </div>
 
-                {/* View Button */}
-                <div className="mt-6">
-                  <button className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 py-2.5 text-center font-semibold text-white transition-colors duration-200 hover:bg-blue-700">
-                    <MdOutlineRemoveRedEye size={25} />
-                    View Report
-                  </button>
-                </div>
-              </li>
+                {/* Action Button */}
+                <button className="mt-6 w-full bg-[#1C58D2] hover:bg-blue-700 text-white py-2.5 rounded-md font-semibold text-sm flex items-center justify-center gap-2 transition-colors">
+                  <MdOutlineRemoveRedEye size={18} />
+                  View Report
+                </button>
+              </div>
             );
           })}
-        </ul>
+        </div>
       )}
     </div>
   );
