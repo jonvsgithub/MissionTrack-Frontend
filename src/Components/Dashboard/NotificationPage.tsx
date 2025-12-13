@@ -216,6 +216,8 @@ const NotificationPage: React.FC = () => {
             <option>All companies</option>
             <option>Company A</option>
             <option>Company B</option>
+            <option>Company C</option>
+            <option>Company D</option>
           </select>
         </div>
 
