@@ -39,19 +39,19 @@ const NotificationPage: React.FC = () => {
     {
       id: "1",
       title: "Mission approved",
-      message: "Your mission to london has been approved .Congratulations!",
+      message: "Your mission to United Kingdom has been approved .Congratulations!",
       time: "One day ago",
       status: "approved",
       missionDetails: {
         requester: {
-          name: "Sarah Johnson",
-          position: "Marketing Manager",
-          initials: "SJ",
+          name: "Jonathan Ndayizeye",
+          position: "Chief Technology Officer",
+          initials: "CTO",
         },
-        missionTitle: "Mission Title",
-        location: "Location",
-        startDate: "Jan 12,2025",
-        endDate: "Jan 12,2025",
+        missionTitle: "AI Summit",
+        location: "UK",
+        startDate: "Jan 12,2026",
+        endDate: "Jan 22,2025",
         description:
           "Visit key clients to discuss new project opportunities and strengthen business relationships. Will meet with 5 Major clients over 4 days",
         documents: ["Flight ticket.pdf", "Clients meetings schedules.xls"],
