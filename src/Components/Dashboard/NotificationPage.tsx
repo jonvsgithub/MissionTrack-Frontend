@@ -61,14 +61,14 @@ const NotificationPage: React.FC = () => {
     {
       id: "2",
       title: "Umurava Initiative Summit - Approved, Funding in Progress",
-      message: "Mission to saturn is waiting your approval. Please review the details.",
+      message: "Mission to senegal is waiting your approval. Please review the details.",
       time: "1 days ago",
       status: "funding_in_progress",
       missionDetails: {
         requester: {
-          name: "Sarah Johnson",
-          position: "Marketing Manager",
-          initials: "SJ",
+          name: "Jonathan Ndayizeye",
+          position: "chief Technology Officer",
+          initials: "CTO",
         },
         missionTitle: "Mission Title",
         location: "Location",
