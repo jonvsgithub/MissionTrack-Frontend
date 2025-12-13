@@ -34,7 +34,7 @@ const NotificationPage: React.FC = () => {
   const [selectedCompany, setSelectedCompany] = useState("All companies");
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
 
-  // Mock notifications data
+  // Mock notifications data, before intergration
   const notifications: Notification[] = [
     {
       id: "1",

@@ -1,7 +1,7 @@
 import React from "react";
 
 const ExpensesSummary: React.FC = () => {
-    // Sample data - should come from API
+    // Sample data - should come from APIs
     const totalBudget = 800000;
     const totalUsed = 600000;
     const percentageUsed = ((totalUsed / totalBudget) * 100).toFixed(0);
@@ -59,7 +59,7 @@ const ExpensesSummary: React.FC = () => {
 
                 {/* Check Expenses Link */}
                 <button className="text-sm text-blue-600 hover:text-blue-700 font-medium underline">
-                    Check Expenses
+                    Check Expense
                 </button>
             </div>
         </div>
