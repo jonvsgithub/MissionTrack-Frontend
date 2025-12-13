@@ -70,7 +70,6 @@ const ReportMain: React.FC = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    // TODO: Submit to API
     console.log("Form submitted:", formData, uploadedFiles);
     alert("Report saved successfully!");
 
@@ -263,7 +262,7 @@ const ReportMain: React.FC = () => {
                   htmlFor="notes"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Note/Remark
+                  Notes/Remark
                 </label>
                 <textarea
                   id="notes"
@@ -300,7 +299,7 @@ const ReportMain: React.FC = () => {
     );
   }
 
-  // Otherwise, show the reports list
+  
   return <ReportsList onNewReport={() => setShowForm(true)} />;
 };
 
